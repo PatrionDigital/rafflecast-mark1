@@ -31,6 +31,18 @@ export const addRaffleToDB = async (raffle) => {
   );
 };
 
+export const updateRafflePhaseInDB = async (raffleId, newPhase) => {
+  try {
+    await client.execute("UPDATE raffles SET phase = ? WHERE id = ?", [
+      newPhase,
+      raffleId,
+    ]);
+    console.log(`Raffle ${raffleId} updated to phase ${newPhase}`);
+  } catch (error) {
+    console.error(`Error updating raffle phase: ${error.message}`);
+  }
+};
+
 export const fetchRaffles = async () => {
   try {
     const result = await client.execute("SELECT * FROM raffles;");

@@ -1,4 +1,5 @@
 import { useRaffle } from "../context/useRaffle";
+import { updateRafflePhaseInDB } from "../utils/tursoUtils";
 
 const AdminPage = () => {
   const { raffles, updateRaffle } = useRaffle();
@@ -10,18 +11,24 @@ const AdminPage = () => {
     (raffle) => raffle.creator === creatorAddress
   );
 
-  const moveToNewPhase = (raffle) => {
+  const moveToNewPhase = async (raffle) => {
     const nextPhase = {
       Active: "Settled",
       Settled: "Finalized",
       Finalized: "Finalaized",
     };
 
-    const updatedRaffle = {
-      ...raffle,
-      phase: nextPhase[raffle.phase] || "Finalized",
-    };
-    updateRaffle(raffle.id, updatedRaffle);
+    const newPhase = nextPhase[raffle.phase];
+    if (newPhase && newPhase !== raffle.phase) {
+      updateRaffle(raffle.id, { phase: newPhase });
+
+      try {
+        await updateRafflePhaseInDB(raffle.id, newPhase);
+      } catch (error) {
+        console.error("Failed to update phase in database, reverting:", error);
+        updateRaffle(raffle.id, { phase: raffle.phase });
+      }
+    }
   };
 
   // Separate raffles by phase
