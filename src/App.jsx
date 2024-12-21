@@ -5,6 +5,7 @@ import BrowseRafflesPage from "./pages/BrowseRafflesPage";
 import AdminPage from "./pages/AdminPage";
 
 import "./App.css";
+import BrowseEntriesPage from "./pages/BrowseEntriesPage";
 
 function App() {
   return (
@@ -14,6 +15,10 @@ function App() {
           <Route path="/" element={<BrowseRafflesPage />} />
           <Route path="/create" element={<CreateRafflePage />} />
           <Route path="/admin" element={<AdminPage />} />
+          <Route
+            path="/admin/entries/:raffleId"
+            element={<BrowseEntriesPage />}
+          />
         </Routes>
       </Router>
     </>
