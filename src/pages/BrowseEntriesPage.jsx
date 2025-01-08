@@ -1,32 +1,44 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import { useRaffle } from "../context/useRaffle";
+import { useProfile } from "@farcaster/auth-kit";
 
 const BrowseEntriesPage = () => {
-  const { raffleId } = useParams();
-  const { entries } = useRaffle();
-  const [filteredEntries, setFilteredEntries] = useState([]);
+  const { entries, clearMessage } = useRaffle();
+  const { isAuthenticated, profile } = useProfile();
+  const [userEntries, setUserEntries] = useState([]);
 
   useEffect(() => {
-    if (raffleId) {
-      const entriesForRaffle = entries.filter(
-        (entry) => entry.raffleId === raffleId
-      );
-      setFilteredEntries(entriesForRaffle);
-    }
-  }, [raffleId, entries]);
+    // Reset the RaffleContext eventMessage when loading new component/page
+    clearMessage();
+  }, [clearMessage]);
 
-  if (!raffleId) return <p>Error: No Raffle ID provided.</p>;
-  if (filteredEntries.length === 0)
-    return <p>No entries found for this raffle.</p>;
+  useEffect(() => {
+    if (isAuthenticated && profile?.fid) {
+      const entriesForUser = entries.filter(
+        (entry) => entry.participant === profile.fid
+      );
+      setUserEntries(entriesForUser);
+    }
+  }, [entries, isAuthenticated, profile?.fid]);
+
+  if (!isAuthenticated)
+    return (
+      <p style={{ color: "red", fontWeight: "bold" }}>
+        Please log in with Warpcast to view your entries.
+      </p>
+    );
+
+  if (userEntries.length === 0) {
+    return <p>You have not entered any raffles</p>;
+  }
 
   return (
     <div>
-      <h1>Entries for Raffle {raffleId}</h1>
+      <h1>Your Entries</h1>
       <ul>
-        {filteredEntries.map((entry) => (
+        {userEntries.map((entry) => (
           <li key={entry.id}>
-            <p>Participant: {entry.participant}, Entered At: </p>
+            <p>Raffle ID: {entry.raffleId}, Entered At: </p>
             <p>{new Date(entry.enteredAt).toLocaleString()}</p>
           </li>
         ))}
