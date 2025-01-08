@@ -26,15 +26,16 @@ const ManageRafflesPage = () => {
   useEffect(() => {
     if (fid) {
       setLoading(true);
-      getRafflesByCreator(fid)
-        .then((fetchedRaffles) => {
-          console.log("Fetched Raffles:", fetchedRaffles);
-          setRaffles(fetchedRaffles);
-        })
-        .catch((error) => {
-          console.error("Error fetching raffles:", error);
-        })
-        .finally(() => setLoading(false));
+      try {
+        const fetchedRaffles = getRafflesByCreator(fid);
+
+        console.log("Fetched Raffles:", fetchedRaffles);
+        setRaffles(fetchedRaffles);
+      } catch (error) {
+        console.error("Error fetching raffles:", error);
+      } finally {
+        setLoading(false);
+      }
     }
   }, [fid, getRafflesByCreator]);
 
@@ -98,7 +99,7 @@ const ManageRafflesPage = () => {
         {raffles.map((raffle) => (
           <li key={raffle.id}>
             <h4>{raffle.name}</h4>
-            <p>Closing Date: {raffle.closingDate}</p>
+            <p>Closing Date: {new Date(raffle.closingDate).toLocaleString()}</p>
             <button
               onClick={() => handleCheckEntries(raffle.id)}
               disabled={fetchingEntries && selectedRaffle === raffle.id}
