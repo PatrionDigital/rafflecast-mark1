@@ -1,10 +1,18 @@
 import { useEffect, useState } from "react";
 import { useRaffle } from "../context/useRaffle";
-import { Link } from "react-router-dom";
+//import { Link } from "react-router-dom";
+import { useProfile } from "@farcaster/auth-kit";
 
 const BrowseRafflesPage = () => {
-  const { getRafflesByPhase, addEntry } = useRaffle();
+  const { getRafflesByPhase, addEntry, eventMessage, clearMessage } =
+    useRaffle();
+  const { isAuthenticated, profile } = useProfile();
   const [activeRaffles, setActiveRaffles] = useState([]);
+
+  useEffect(() => {
+    // Reset the RaffleContext eventMessage when loading new component/page
+    clearMessage();
+  }, [clearMessage]);
 
   useEffect(() => {
     const loadActiveRaffles = async () => {
@@ -15,7 +23,7 @@ const BrowseRafflesPage = () => {
   }, [getRafflesByPhase]);
 
   const handleJoinRaffle = async (raffleId) => {
-    const participant = "0x123..."; // Hardcoded for testing.
+    const participant = profile.fid;
 
     const entryData = {
       raffleId,
@@ -24,46 +32,49 @@ const BrowseRafflesPage = () => {
 
     try {
       await addEntry(entryData);
-
-      // Update local state to reflect the change (optional UI feedback)
-      /*
-      setActiveRaffles((prevRaffles) =>
-        prevRaffles.map((raffle) =>
-          raffle.id === raffleId
-            ? {
-                ...raffle,
-                participantCount: (raffle.participantCount || 0) + 1,
-              }
-            : raffle
-        )
-      );*/
-
-      alert(`Successfully joined raffle ${raffleId}!`);
     } catch (error) {
       console.error("Error joining raffle:", error);
-      alert("Could not join the raffle. Please try again.");
     }
   };
 
   return (
     <div>
-      <h1>Browse Raffles</h1>
-      <p>Here, users can view all active raffles.</p>
-      <h2>All Active Raffles</h2>
+      <h2>Browse Raffles</h2>
+      {!isAuthenticated && (
+        <p style={{ color: "red", fontWeight: "bold" }}>
+          Please log in with Warpcast to join raffles.
+        </p>
+      )}
+      {/** Message banner */}
+      {eventMessage && (
+        <div
+          style={{
+            background: "#f0f8ff",
+            color: "#333",
+            padding: "10px",
+            borderRadius: "5px",
+            marginBottom: "10px",
+          }}
+        >
+          {eventMessage}
+        </div>
+      )}
       <ul>
         {activeRaffles.length > 0 ? (
           activeRaffles.map((raffle) => (
             <li key={raffle.id}>
-              <strong>{raffle.name}</strong> - Linked Cast: {raffle.linkedCast}
+              <strong>{raffle.name}</strong> - Linked Cast: {raffle.linkedcast}
               <br />
               Creator: {raffle.creator}
               <br />
               <em>Phase: {raffle.phase}</em>
               <br />
-              <button onClick={() => handleJoinRaffle(raffle.id)}>Join</button>
-              <Link to={`/admin/entries/${raffle.id}`}>
-                <button>View Entries</button>
-              </Link>
+              <button
+                onClick={() => handleJoinRaffle(raffle.id)}
+                disabled={!isAuthenticated}
+              >
+                Join
+              </button>
             </li>
           ))
         ) : (
