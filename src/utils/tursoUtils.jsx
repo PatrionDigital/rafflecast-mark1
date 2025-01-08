@@ -1,6 +1,5 @@
 import { createClient } from "@libsql/client";
 import mitt from "mitt";
-import { v4 as uuidv4 } from "uuid";
 
 const eventEmitter = mitt();
 
@@ -9,45 +8,47 @@ const TURSO_TOKEN = import.meta.env.VITE_TURSO_AUTH_TOKEN;
 
 const client = createClient({ url: TURSO_URL, authToken: TURSO_TOKEN });
 
-const normalizeKeys = (data) => {
-  if (Array.isArray(data)) {
-    return data.map((item) => normalizeKeys(item));
-  } else if (typeof data === "object" && data !== null) {
-    return Object.keys(data).reduce((acc, key) => {
-      if (!isNaN(Number(key))) return acc;
-      acc[key.toLowerCase()] = data[key];
-      return acc;
-    }, {});
-  }
-  return data;
-};
-
-const normalizeRows = (rows) => rows.map(normalizeKeys);
-
 export const addRaffleToDB = async (raffle) => {
   const {
     creator,
-    name,
-    linkedCast,
+    id,
+    title,
+    description,
+    startDate,
     closingDate,
     challengePeriod,
-    phase,
     createdAt,
+    updatedAt,
+    phase,
+    criteria,
   } = raffle;
-  const id = uuidv4();
 
   try {
+    console.log("creator:", creator);
+    console.log("id:", id);
+    console.log("title:", title);
+    console.log("description:", description);
+    console.log("startDate:", startDate);
+    console.log("closingDate:", closingDate);
+    console.log("challengePeriod:", challengePeriod);
+    console.log("createdAt:", createdAt);
+    console.log("updatedAt:", updatedAt);
+    console.log("phase:", phase);
+    console.log("criteria:", JSON.stringify(criteria));
     await client.execute(
-      `INSERT INTO raffles (creator, id, name, linkedCast, closingDate, challengePeriod, phase, createdAt) VALUES (?,?,?,?,?,?,?,?)`,
+      `INSERT INTO raffles (creator, id, title, description, startDate, closingDate, challengePeriod, createdAt, updatedAt, phase, criteria) VALUES (?,?,?,?,?,?,?,?,?,?,?)`,
       [
         creator,
         id,
-        name,
-        linkedCast,
+        title,
+        description,
+        startDate,
         closingDate,
         challengePeriod,
-        phase,
         createdAt,
+        updatedAt,
+        phase,
+        JSON.stringify(criteria),
       ]
     );
     // Emit success event
@@ -63,8 +64,7 @@ export const addRaffleToDB = async (raffle) => {
 };
 
 export const addEntryToDB = async (entryData) => {
-  const { raffleId, participant, enteredAt } = entryData;
-  const id = uuidv4();
+  const { raffleId, participant, enteredAt, id } = entryData;
   try {
     await client.execute(
       `INSERT INTO entries (id, raffleId, participant, enteredAt) VALUES (?,?,?,?)`,
@@ -115,8 +115,7 @@ export const updateEntryInDB = async (entryId, updates) => {
 export const fetchRaffles = async () => {
   try {
     const result = await client.execute("SELECT * FROM raffles;");
-    const normalizedRows = normalizeRows(result.rows);
-    return normalizedRows;
+    return result.rows;
   } catch (error) {
     console.error("Error fetching raffles:", error);
     return [];
@@ -126,7 +125,7 @@ export const fetchRaffles = async () => {
 export const fetchEntries = async () => {
   try {
     const result = await client.execute("SELECT * FROM entries;");
-    return normalizeRows(result.rows);
+    return result.rows;
   } catch (error) {
     console.error("Error fetching entries:", error);
     return [];

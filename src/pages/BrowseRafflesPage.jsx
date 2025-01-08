@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRaffle } from "../context/useRaffle";
-//import { Link } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 import { useProfile } from "@farcaster/auth-kit";
 
 const BrowseRafflesPage = () => {
@@ -17,7 +17,11 @@ const BrowseRafflesPage = () => {
   useEffect(() => {
     const loadActiveRaffles = async () => {
       const fetchedActiveRaffles = await getRafflesByPhase("Active");
-      setActiveRaffles(fetchedActiveRaffles);
+      // Filter out any raffles that are missing the 'phase' property
+      const validRaffles = fetchedActiveRaffles.filter((raffle) =>
+        raffle && raffle.phase ? true : false
+      );
+      setActiveRaffles(validRaffles);
     };
     loadActiveRaffles();
   }, [getRafflesByPhase]);
@@ -26,8 +30,10 @@ const BrowseRafflesPage = () => {
     const participant = profile.fid;
 
     const entryData = {
+      id: uuidv4(),
       raffleId,
       participant,
+      enteredAt: new Date(),
     };
 
     try {
@@ -67,7 +73,7 @@ const BrowseRafflesPage = () => {
               <br />
               Creator: {raffle.creator}
               <br />
-              <em>Phase: {raffle.phase}</em>
+              <em>Phase: {raffle?.phase || "Not Available"}</em>
               <br />
               <button
                 onClick={() => handleJoinRaffle(raffle.id)}
@@ -79,7 +85,7 @@ const BrowseRafflesPage = () => {
           ))
         ) : (
           <p>
-            No raffles available. Why not <a href="/create">create one?</a>
+            No raffles available. Why not <a href="/creator">create one?</a>
           </p>
         )}
       </ul>
