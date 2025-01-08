@@ -1,67 +1,66 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 // Layouts
+import ParentLayout from "./pages/layouts/ParentLayout";
 import CreatorDashboardLayout from "./pages/layouts/CreatorDashboardLayout";
 import EntrantDashboardLayout from "./pages/layouts/EntrantDashboardLayout";
 
 // Pages
+import LandingPage from "./pages/LandingPage";
 import CreateRafflePage from "./pages/CreateRafflePage";
+import ManageRafflesPage from "./pages/ManageRafflesPage";
 import BrowseRafflesPage from "./pages/BrowseRafflesPage";
-import AdminPage from "./pages/AdminPage";
-import LoginPage from "./pages/LoginPage";
 
 import "./App.css";
 import BrowseEntriesPage from "./pages/BrowseEntriesPage";
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <ParentLayout />,
+    handle: {
+      navLinks: [
+        { path: "/creator", label: "Creator" },
+        { path: "/entrant", label: "Entrant" },
+      ],
+    },
+    children: [
+      { index: true, element: <LandingPage /> },
+      {
+        path: "entrant/*",
+        element: <EntrantDashboardLayout />,
+        handle: {
+          navLinks: [
+            { path: "/creator", label: "Creator" },
+            { path: "/entrant/raffles/browse", label: "Browse Raffles" },
+            { path: "/entrant/raffles/entered", label: "My Raffles" },
+          ],
+        },
+        children: [
+          { path: "raffles/browse", element: <BrowseRafflesPage /> },
+          { path: "raffles/entered", element: <BrowseEntriesPage /> },
+        ],
+      },
+      {
+        path: "creator/*",
+        element: <CreatorDashboardLayout />,
+        handle: {
+          navLinks: [
+            { path: "/entrant", label: "Entrant" },
+            { path: "/creator/raffles/new", label: "Create Raffle" },
+            { path: "/creator/raffles/manage", label: "Manage Raffles" },
+          ],
+        },
+        children: [
+          { path: "raffles/new", element: <CreateRafflePage /> },
+          { path: "raffles/manage", element: <ManageRafflesPage /> },
+        ],
+      },
+    ],
+  },
+]);
 
 function App() {
-  return (
-    <>
-      <Router>
-        <Routes>
-          {/** Creator Workflow */}
-          <Route
-            path="/creator/*"
-            element={
-              <CreatorDashboardLayout>
-                <Routes>
-                  <Route path="raffles/new" element={<CreateRafflePage />} />
-                  <Route path="raffles/manage" element={<AdminPage />} />
-                  <Route
-                    path="raffles/entries/:raffleId"
-                    element={<BrowseEntriesPage />}
-                  />
-                  <Route
-                    path="raffles/status"
-                    element={<BrowseRafflesPage />}
-                  />
-                </Routes>
-              </CreatorDashboardLayout>
-            }
-          />
-          {/** Entrant Workflow */}
-          <Route
-            path="entrant/*"
-            element={
-              <EntrantDashboardLayout>
-                <Routes>
-                  <Route path="raffles" />
-                  <Route path="raffles/entered" />
-                </Routes>
-              </EntrantDashboardLayout>
-            }
-          />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/" element={<BrowseRafflesPage />} />
-          <Route path="/create" element={<CreateRafflePage />} />
-          <Route path="/admin" element={<AdminPage />} />
-          <Route
-            path="/admin/entries/:raffleId"
-            element={<BrowseEntriesPage />}
-          />
-        </Routes>
-      </Router>
-    </>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;
