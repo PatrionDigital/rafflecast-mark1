@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { useProfile } from "@farcaster/auth-kit";
+import { v4 as uuidv4 } from "uuid";
 import { useRaffle } from "../context/useRaffle";
 
 const CreateRafflePage = () => {
-  const [raffleName, setRaffleName] = useState("");
+  const [raffleTitle, setRaffleTitle] = useState("");
   const [startDate, setStartDate] = useState(() => {
     const today = new Date();
     return today.toISOString().split("T")[0];
@@ -19,29 +20,89 @@ const CreateRafflePage = () => {
     return twoWeeksFromToday.toISOString().split("T")[0];
   });
 
+  const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const { isAuthenticated, profile } = useProfile();
   const { fid = "", custody = "" } = profile || {};
   const { addRaffle, eventMessage, clearMessage } = useRaffle();
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     // Reset the RaffleContext eventMessage when loading new component/page
     clearMessage();
   }, [clearMessage]);
 
+  const validateDates = ({ startDate, closingDate, challengePeriod }) => {
+    const now = new Date();
+    const start = new Date(startDate);
+    const close = new Date(closingDate);
+    const challengeEnd = new Date(challengePeriod);
+
+    if (start < now) {
+      return "Start date cannot be in the past.";
+    }
+    if (close <= start) {
+      return "Closing date must be after the start date.";
+    }
+    if (challengeEnd <= close) {
+      return "Challenge period must be on or after the closing date.";
+    }
+    return null;
+  };
+  const handleStartDateChange = (event) => {
+    const selectedDate = event.target.value;
+    const dateObject = new Date(selectedDate);
+    setStartDate(dateObject.toISOString()); // Keep full timestamp in state
+  };
+
+  const handleClosingDateChange = (event) => {
+    const selectedDate = event.target.value;
+    const dateObject = new Date(selectedDate);
+    setClosingDate(dateObject.toISOString()); // Keep full timestamp in state
+  };
+
+  const handleChallengePeriodChange = (event) => {
+    const selectedDate = event.target.value;
+    const dateObject = new Date(selectedDate);
+    setChallengePeriod(dateObject.toISOString()); // Keep full timestamp in state
+  };
+
   const handleCreateRaffle = async () => {
     if (!isAuthenticated) {
       return; // Block creating if user isn't logged in.
     }
+
+    setError("");
     setIsSubmitting(true);
+
+    const validationError = validateDates(
+      startDate,
+      closingDate,
+      challengePeriod
+    );
+
+    if (validationError) {
+      setError(validationError);
+      setIsSubmitting(false);
+      return;
+    }
+
     const newRaffle = {
+      id: uuidv4(),
       creator: fid,
-      name: raffleName,
-      linkedCast: "https://warpcase.com/test",
+      title: raffleTitle,
+      description: "A Rafflecast raffle",
       startDate,
       closingDate,
       challengePeriod,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      phase: "Active",
+      criteria: {
+        // hardcoded for testing
+        type: "recast",
+        linkedCast: "www.warpcast.com",
+      },
     };
     try {
       await addRaffle(newRaffle);
@@ -58,7 +119,7 @@ const CreateRafflePage = () => {
         <p>Please sign in with Warpcast to create a new raffle.</p>
       )}
       {/** Message banner */}
-      {eventMessage && (
+      {(eventMessage || error) && (
         <div
           style={{
             background: "#f0f8ff",
@@ -68,7 +129,7 @@ const CreateRafflePage = () => {
             marginBottom: "10px",
           }}
         >
-          {eventMessage}
+          {error || eventMessage}
         </div>
       )}
       {isAuthenticated && (
@@ -90,8 +151,8 @@ const CreateRafflePage = () => {
               Set Raffle Title:
               <input
                 type="text"
-                value={raffleName}
-                onChange={(e) => setRaffleName(e.target.value)}
+                value={raffleTitle}
+                onChange={(e) => setRaffleTitle(e.target.value)}
                 placeholder="Enter raffle title"
               />
             </label>
@@ -102,7 +163,7 @@ const CreateRafflePage = () => {
               <input
                 type="date"
                 value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
+                onChange={handleStartDateChange}
               />
             </label>
           </div>
@@ -112,7 +173,7 @@ const CreateRafflePage = () => {
               <input
                 type="date"
                 value={closingDate}
-                onChange={(e) => setClosingDate(e.target.value)}
+                onChange={handleClosingDateChange}
               />
             </label>
           </div>
@@ -122,7 +183,7 @@ const CreateRafflePage = () => {
               <input
                 type="date"
                 value={challengePeriod}
-                onChange={(e) => setChallengePeriod(e.target.value)}
+                onChange={handleChallengePeriodChange}
               />
             </label>
           </div>
