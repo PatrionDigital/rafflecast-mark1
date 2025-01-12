@@ -29,7 +29,7 @@ const ManageRafflesPage = () => {
       try {
         const fetchedRaffles = getRafflesByCreator(fid);
 
-        console.log("Fetched Raffles:", fetchedRaffles);
+        //console.log("Fetched Raffles:", fetchedRaffles);
         setRaffles(fetchedRaffles);
       } catch (error) {
         console.error("Error fetching raffles:", error);
@@ -39,12 +39,13 @@ const ManageRafflesPage = () => {
     }
   }, [fid, getRafflesByCreator]);
 
-  const handleCheckEntries = async (raffleID) => {
+  const handleCheckEntries = async (raffleId) => {
+    console.log("RaffleId to check:", raffleId);
     setFetchingEntries(true);
-    clearMessage();
-    setSelectedRaffle(raffleID);
+    //clearMessage();
+    setSelectedRaffle(raffleId);
     try {
-      const fetchedEntries = await getEntriesByRaffleId(raffleID);
+      const fetchedEntries = await getEntriesByRaffleId(raffleId);
       setEntries(fetchedEntries);
     } catch (error) {
       console.error("Error fetching entries:", error);
