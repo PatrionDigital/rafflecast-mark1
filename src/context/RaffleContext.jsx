@@ -18,7 +18,6 @@ export function RaffleProvider({ children }) {
   const [entries, setEntries] = useState([]);
   const [eventMessage, setEventMessage] = useState(null);
 
-  // Simulate initial data loading (replace with fetchRaffles/fetchEntries later)
   useEffect(() => {
     const loadData = async () => {
       const fetchedRaffles = await fetchRaffles();
@@ -85,6 +84,7 @@ export function RaffleProvider({ children }) {
     try {
       await addRaffleToDB(raffleData);
       setEventMessage("Raffle created successfully!");
+      console.log("Raffle added to DB successfully.");
     } catch (error) {
       console.error("Error adding raffle:", error.message);
       setEventMessage("An error occurred while creating the raffle.");
@@ -161,16 +161,73 @@ export function RaffleProvider({ children }) {
     }
   };
 
-  const getRafflesByPhase = async (phase) =>
-    raffles.filter((raffle) => raffle.phase === phase);
+  const getRafflesByPhase = async (phase) => {
+    const filteredRaffles = raffles.filter((raffle) => raffle.phase === phase);
 
-  const getRafflesByCreator = (creator) =>
-    raffles.filter((raffle) => raffle.creator === creator);
+    filteredRaffles.forEach((raffle) => {
+      if (typeof raffle.criteria === "string") {
+        try {
+          // Try to parse the criteria if it's a string
+          raffle.criteria = JSON.parse(raffle.criteria);
+        } catch (error) {
+          // Log an error if the JSON is invalid
+          console.error(
+            `Invalid criteria JSON for raffle ${raffle.id}:`,
+            raffle.criteria,
+            error
+          );
+        }
+      }
+    });
 
-  const getRaffleById = (id) => raffles.find((raffle) => raffle.id === id);
+    return filteredRaffles;
+  };
 
-  const getEntriesByRaffleId = (raffleId) =>
-    entries.filter((entry) => entry.raffleId === raffleId);
+  const getRafflesByCreator = (creator) => {
+    const filteredRaffles = raffles.filter(
+      (raffle) => raffle.creator === creator
+    );
+
+    filteredRaffles.forEach((raffle) => {
+      if (typeof raffle.criteria === "string") {
+        try {
+          raffle.criteria = JSON.parse(raffle.criteria);
+        } catch (error) {
+          console.error(
+            `Invalid criteria JSON for raffle ${raffle.id}:`,
+            raffle.criteria,
+            error
+          );
+        }
+      }
+    });
+
+    return filteredRaffles;
+  };
+
+  const getRaffleById = (raffleId) => {
+    const raffle = raffles.find((raffle) => raffle.id === raffleId);
+
+    // Check if the raffle exists and its criteria is a string
+    if (raffle && typeof raffle.criteria === "string") {
+      try {
+        // Parse the criteria and reinsert it back into the raffle object
+        raffle.criteria = JSON.parse(raffle.criteria);
+      } catch (error) {
+        console.error("Error parsing criteria:", error);
+      }
+    }
+
+    return raffle;
+  };
+
+  const getEntriesByRaffleId = (raffleId) => {
+    return entries.filter((entry) => entry.raffleId === raffleId);
+  };
+
+  const getEntriesByEntrant = (entrant) => {
+    return entries.filter((entry) => entry.participant === entrant);
+  };
 
   return (
     <RaffleContext.Provider
@@ -185,6 +242,7 @@ export function RaffleProvider({ children }) {
         getRafflesByCreator,
         getRaffleById,
         getEntriesByRaffleId,
+        getEntriesByEntrant,
         eventMessage,
         clearMessage,
       }}

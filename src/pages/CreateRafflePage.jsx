@@ -100,8 +100,8 @@ const CreateRafflePage = () => {
       phase: "Active",
       criteria: {
         // hardcoded for testing
-        type: "recast",
-        linkedCast: "www.warpcast.com",
+        type: "like",
+        linkedCast: "0xc2c6f9642ebe6f74eda4b5575c701431d16ca290",
       },
     };
     try {
