@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useProfile } from "@farcaster/auth-kit";
 import { useRaffle } from "../context/useRaffle";
+import { settleRaffle } from "../utils/raffleUtils";
 
 const ManageRafflesPage = () => {
   const { isAuthenticated, profile } = useProfile();
@@ -54,6 +55,29 @@ const ManageRafflesPage = () => {
     }
   };
 
+  const handleSettleRaffle = async (raffleId) => {
+    if (!raffles || raffles.length === 0) {
+      console.error("No raffles available to settle.");
+      return;
+    }
+
+    try {
+      const raffle = raffles.find((r) => r.id === raffleId);
+
+      const entriesForRaffle = await getEntriesByRaffleId(raffleId);
+
+      const result = await settleRaffle(raffle, entriesForRaffle);
+
+      if (result.success) {
+        console.log(`Raffle ${raffleId} has been settled.`);
+      } else {
+        console.error("Error settling raffle:", result.error);
+      }
+    } catch (error) {
+      console.error("Error settle raffle:", error);
+    }
+  };
+
   if (!isAuthenticated)
     return (
       <>
@@ -97,23 +121,39 @@ const ManageRafflesPage = () => {
         </div>
       )}
       <ul>
-        {raffles.map((raffle) => (
-          <li key={raffle.id}>
-            <h4>{raffle.name}</h4>
-            <p>Closing Date: {new Date(raffle.closingDate).toLocaleString()}</p>
-            <button
-              onClick={() => handleCheckEntries(raffle.id)}
-              disabled={fetchingEntries && selectedRaffle === raffle.id}
-            >
-              {fetchingEntries && selectedRaffle === raffle.id
-                ? "Loading..."
-                : "Check Entries"}
-            </button>
-            <button onClick={() => console.log(`Edit ${raffle.id}`)}>
-              Edit
-            </button>
-          </li>
-        ))}
+        {raffles.map((raffle) => {
+          const isClosingPassed = new Date(raffle.closingDate) < new Date();
+          const isInActivePhase = raffle.phase === "Active";
+
+          return (
+            <li key={raffle.id}>
+              <h4>{raffle.name}</h4>
+              <p>
+                Closing Date: {new Date(raffle.closingDate).toLocaleString()}
+              </p>
+              <button
+                onClick={() => handleCheckEntries(raffle.id)}
+                disabled={fetchingEntries && selectedRaffle === raffle.id}
+              >
+                {fetchingEntries && selectedRaffle === raffle.id
+                  ? "Loading..."
+                  : "Check Entries"}
+              </button>
+              <button onClick={() => console.log(`Edit ${raffle.id}`)}>
+                Edit
+              </button>
+
+              {isClosingPassed && isInActivePhase && (
+                <button
+                  onClick={() => handleSettleRaffle(raffle.id)}
+                  style={{ backgroundColor: "orange", color: "white" }}
+                >
+                  Settle Raffle
+                </button>
+              )}
+            </li>
+          );
+        })}
       </ul>
 
       {/** Show entries for the selected raffle */}
