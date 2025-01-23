@@ -36,7 +36,8 @@ export function RaffleProvider({ children }) {
   useEffect(() => {
     const cleanupListeners = [
       onRaffleCreated((data) => {
-        if (data.success) {
+        console.log("onRaffleCreated received:", data);
+        if (data && data.success && data.newRaffle) {
           setRaffles((prev) => [...prev, data.newRaffle]);
           setEventMessage("Raffle created successfully!");
         } else {
@@ -44,7 +45,8 @@ export function RaffleProvider({ children }) {
         }
       }),
       onRaffleEntry((data) => {
-        if (data.success) {
+        console.log("onRaffleEntry received:", data);
+        if (data && data.success && data.newEntry) {
           setEntries((prevEntries) => [...(prevEntries || []), data.newEntry]);
           setEventMessage("Entry added successfully!");
         } else {
@@ -52,7 +54,7 @@ export function RaffleProvider({ children }) {
         }
       }),
       onRafflePhaseUpdated((data) => {
-        if (data.success) {
+        if (data && data.success && data.raffleId && data.newPhase) {
           setRaffles((prev) =>
             prev.map((raffle) =>
               raffle.id === data.raffleId
