@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useProfile } from "@farcaster/auth-kit";
 import { v4 as uuidv4 } from "uuid";
 import { useRaffle } from "../context/useRaffle";
+import { useNavigate } from "react-router-dom";
 
 const CreateRafflePage = () => {
   const [raffleTitle, setRaffleTitle] = useState("");
@@ -9,11 +10,13 @@ const CreateRafflePage = () => {
     const today = new Date();
     return today.toISOString().split("T")[0];
   });
+  const [startTime, setStartTime] = useState("12:00");
   const [closingDate, setClosingDate] = useState(() => {
     const oneWeekFromToday = new Date();
     oneWeekFromToday.setDate(oneWeekFromToday.getDate() + 7);
     return oneWeekFromToday.toISOString().split("T")[0];
   });
+  const [closingTime, setClosingTime] = useState("12:00");
   const [challengePeriod, setChallengePeriod] = useState(() => {
     const twoWeeksFromToday = new Date();
     twoWeeksFromToday.setDate(twoWeeksFromToday.getDate() + 14);
@@ -26,6 +29,7 @@ const CreateRafflePage = () => {
   const { isAuthenticated, profile } = useProfile();
   const { fid = "", custody = "" } = profile || {};
   const { addRaffle, eventMessage, clearMessage } = useRaffle();
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Reset the RaffleContext eventMessage when loading new component/page
@@ -50,21 +54,19 @@ const CreateRafflePage = () => {
     return null;
   };
   const handleStartDateChange = (event) => {
-    const selectedDate = event.target.value;
-    const dateObject = new Date(selectedDate);
-    setStartDate(dateObject.toISOString()); // Keep full timestamp in state
+    setStartDate(event.target.value);
   };
-
+  const handleStartTimeChange = (event) => {
+    setStartTime(event.target.value);
+  };
   const handleClosingDateChange = (event) => {
-    const selectedDate = event.target.value;
-    const dateObject = new Date(selectedDate);
-    setClosingDate(dateObject.toISOString()); // Keep full timestamp in state
+    setClosingDate(event.target.value);
   };
-
+  const handleClosingTimeChange = (event) => {
+    setClosingTime(event.target.value);
+  };
   const handleChallengePeriodChange = (event) => {
-    const selectedDate = event.target.value;
-    const dateObject = new Date(selectedDate);
-    setChallengePeriod(dateObject.toISOString()); // Keep full timestamp in state
+    setChallengePeriod(event.target.value);
   };
 
   const handleCreateRaffle = async () => {
@@ -93,19 +95,35 @@ const CreateRafflePage = () => {
       title: raffleTitle,
       description: "A Rafflecast raffle",
       startDate,
+      startTime,
       closingDate,
+      closingTime,
       challengePeriod,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       phase: "Active",
-      criteria: {
+      criteria: JSON.stringify({
         // hardcoded for testing
         type: "like",
         linkedCast: "0xc2c6f9642ebe6f74eda4b5575c701431d16ca290",
-      },
+      }),
+      distributions: JSON.stringify({
+        rewards: [
+          {
+            token: "0x0000000000000000DEAD",
+            erc20: "true",
+            amountPerClaim: "0",
+            startTime: "12:00",
+            endTime: "12:00",
+            merkleRoot: "0x0000000000000000DEAD",
+            title: "Rafflecast Prize",
+          },
+        ],
+      }),
     };
     try {
       await addRaffle(newRaffle);
+      navigate("/creator/raffles/new/distribution");
     } catch (error) {
       console.error("Error creating raffle:", error);
     } finally {
@@ -166,6 +184,14 @@ const CreateRafflePage = () => {
                 onChange={handleStartDateChange}
               />
             </label>
+            <label>
+              Start Time:
+              <input
+                type="time"
+                value={startTime}
+                onChange={handleStartTimeChange}
+              />
+            </label>
           </div>
           <div>
             <label>
@@ -174,6 +200,14 @@ const CreateRafflePage = () => {
                 type="date"
                 value={closingDate}
                 onChange={handleClosingDateChange}
+              />
+            </label>
+            <label>
+              Closing Time:
+              <input
+                type="time"
+                value={closingTime}
+                onChange={handleClosingTimeChange}
               />
             </label>
           </div>

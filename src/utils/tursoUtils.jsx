@@ -15,12 +15,15 @@ export const addRaffleToDB = async (raffle) => {
     title,
     description,
     startDate,
+    startTime,
     closingDate,
+    closingTime,
     challengePeriod,
     createdAt,
     updatedAt,
     phase,
     criteria,
+    distributions,
   } = raffle;
 
   try {
@@ -36,19 +39,22 @@ export const addRaffleToDB = async (raffle) => {
     console.log("phase:", phase);
     console.log("criteria:", JSON.stringify(criteria));
     await client.execute(
-      `INSERT INTO raffles (creator, id, title, description, startDate, closingDate, challengePeriod, createdAt, updatedAt, phase, criteria) VALUES (?,?,?,?,?,?,?,?,?,?,?)`,
+      `INSERT INTO raffles (creator, id, title, description, startDate, startTime, closingDate, closingTime, challengePeriod, createdAt, updatedAt, phase, criteria, dsitributions) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
       [
         creator,
         id,
         title,
         description,
         startDate,
+        startTime,
         closingDate,
+        closingTime,
         challengePeriod,
         createdAt,
         updatedAt,
         phase,
-        JSON.stringify(criteria),
+        criteria,
+        distributions,
       ]
     );
     // Emit success event
