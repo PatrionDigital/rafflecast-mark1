@@ -17,6 +17,7 @@ const BrowseRafflesPage = () => {
     clearMessage,
   } = useRaffle();
   const { isAuthenticated, profile } = useProfile();
+  const [selectedAddress, setSelectedAddress] = useState("");
   const [activeRaffles, setActiveRaffles] = useState([]);
   const [eligibilityStatus, setEligibilityStatus] = useState({});
   const [casterData, setCasterData] = useState({});
@@ -114,6 +115,10 @@ const BrowseRafflesPage = () => {
   };
 
   const handleJoinRaffle = async (raffleId) => {
+    if (!selectedAddress) {
+      console.error("Please select an Ethereum address.");
+      return;
+    }
     const participant = profile.fid;
 
     const entryData = {
@@ -121,6 +126,7 @@ const BrowseRafflesPage = () => {
       raffleId,
       participant,
       enteredAt: new Date(),
+      prizeWallet: selectedAddress,
     };
 
     try {
@@ -164,6 +170,9 @@ const BrowseRafflesPage = () => {
               onJoinRaffle={handleJoinRaffle}
               onFetchUser={handleFetchUserFromCast}
               casterData={casterData}
+              selectedAddress={selectedAddress}
+              setSelectedAddress={setSelectedAddress}
+              profile={profile}
             />
           ))
         ) : (
@@ -184,6 +193,9 @@ const RaffleItem = ({
   onJoinRaffle,
   onFetchUser,
   casterData = {},
+  selectedAddress,
+  setSelectedAddress,
+  profile,
 }) => {
   const { linkedCast } = raffle.criteria || {};
   const caster = casterData?.[linkedCast];
@@ -222,6 +234,22 @@ const RaffleItem = ({
         <p>Loading cast information...</p>
       )}
       <br />
+      {isAuthenticated && (
+        <div>
+          <select
+            value={selectedAddress}
+            onChange={(e) => setSelectedAddress(e.target.value)}
+            disabled={!profile}
+          >
+            <option value=" ">Select Ethereum Address</option>
+            {profile.verifications.map((address, index) => (
+              <option key={index} value={address}>
+                {address}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
       <button
         onClick={() => onJoinRaffle(raffle.id)}
         disabled={shouldDisableJoin}
@@ -264,6 +292,9 @@ RaffleItem.propTypes = {
   onJoinRaffle: PropTypes.func.isRequired,
   onFetchUser: PropTypes.func.isRequired,
   casterData: PropTypes.object.isRequired,
+  selectedAddress: PropTypes.string,
+  setSelectedAddress: PropTypes.func.isRequired,
+  profile: PropTypes.object,
 };
 
 export default BrowseRafflesPage;

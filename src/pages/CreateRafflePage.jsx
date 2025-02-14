@@ -108,6 +108,7 @@ const CreateRafflePage = () => {
         linkedCast: "0xc2c6f9642ebe6f74eda4b5575c701431d16ca290",
       }),
       distributions: JSON.stringify({
+        // Empty Reward Distribution Data
         rewards: [
           {
             token: "0x0000000000000000DEAD",
@@ -123,7 +124,7 @@ const CreateRafflePage = () => {
     };
     try {
       await addRaffle(newRaffle);
-      navigate("/creator/raffles/new/distribution");
+      navigate("/creator/raffles/manage");
     } catch (error) {
       console.error("Error creating raffle:", error);
     } finally {

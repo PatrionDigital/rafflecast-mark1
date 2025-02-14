@@ -39,7 +39,7 @@ export const addRaffleToDB = async (raffle) => {
     console.log("phase:", phase);
     console.log("criteria:", JSON.stringify(criteria));
     await client.execute(
-      `INSERT INTO raffles (creator, id, title, description, startDate, startTime, closingDate, closingTime, challengePeriod, createdAt, updatedAt, phase, criteria, dsitributions) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+      `INSERT INTO raffles (creator, id, title, description, startDate, startTime, closingDate, closingTime, challengePeriod, createdAt, updatedAt, phase, criteria, distributions) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
       [
         creator,
         id,
@@ -70,11 +70,11 @@ export const addRaffleToDB = async (raffle) => {
 };
 
 export const addEntryToDB = async (entryData) => {
-  const { raffleId, participant, enteredAt, id } = entryData;
+  const { id, raffleId, participant, enteredAt, prizeWallet } = entryData;
   try {
     await client.execute(
-      `INSERT INTO entries (id, raffleId, participant, enteredAt) VALUES (?,?,?,?)`,
-      [id, raffleId, participant, enteredAt]
+      `INSERT INTO entries (id, raffleId, participant, enteredAt, prizeWallet) VALUES (?,?,?,?,?)`,
+      [id, raffleId, participant, enteredAt, prizeWallet]
     );
     // Emit success event
     eventEmitter.emit("raffleEntry", { success: true, id });

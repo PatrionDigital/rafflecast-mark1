@@ -62,6 +62,10 @@ const router = createBrowserRouter([
             element: <CreateDistributionPage />,
           },
           { path: "raffles/manage", element: <ManageRafflesPage /> },
+          {
+            path: "distribute-rewards/:raffleId",
+            element: <CreateDistributionPage />,
+          },
         ],
       },
     ],

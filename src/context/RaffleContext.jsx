@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState, useMemo } from "react";
 import PropTypes from "prop-types";
 import {
   fetchRaffles,
@@ -38,7 +38,13 @@ export function RaffleProvider({ children }) {
       onRaffleCreated((data) => {
         console.log("onRaffleCreated received:", data);
         if (data && data.success && data.newRaffle) {
-          setRaffles((prev) => [...prev, data.newRaffle]);
+          setRaffles((prev) => {
+            // Check if the raffle already exists
+            if (prev.some((raffle) => raffle.id === data.newRaffle.id)) {
+              return prev; // Skip adding if duplicate
+            }
+            return [...prev, data.newRaffle];
+          });
           setEventMessage("Raffle created successfully!");
         } else {
           setEventMessage(`Error creating raffle: ${data.error}`);
@@ -47,7 +53,13 @@ export function RaffleProvider({ children }) {
       onRaffleEntry((data) => {
         console.log("onRaffleEntry received:", data);
         if (data && data.success && data.newEntry) {
-          setEntries((prevEntries) => [...(prevEntries || []), data.newEntry]);
+          setEntries((prevEntries) => {
+            // Check if the entry already exists
+            if (prevEntries.some((entry) => entry.id === data.newEntry.id)) {
+              return prevEntries;
+            }
+            return [...(prevEntries || []), data.newEntry];
+          });
           setEventMessage("Entry added successfully!");
         } else {
           setEventMessage(`Error adding entry: ${data.error}`);
@@ -77,16 +89,13 @@ export function RaffleProvider({ children }) {
   }, []);
 
   const addRaffle = async (raffleData) => {
+    // TODO: Add Data validation
+
     // Optimistically Update the state
-    setRaffles((prev) => {
-      const updatedRaffles = [...(prev || []), raffleData];
-      console.log("Updated Raffles State:", updatedRaffles);
-      return updatedRaffles;
-    });
+    setRaffles((prev) => [...prev, raffleData]);
     try {
       await addRaffleToDB(raffleData);
       setEventMessage("Raffle created successfully!");
-      console.log("Raffle added to DB successfully.");
     } catch (error) {
       console.error("Error adding raffle:", error.message);
       setEventMessage("An error occurred while creating the raffle.");
@@ -99,6 +108,7 @@ export function RaffleProvider({ children }) {
   };
 
   const addEntry = async (entryData) => {
+    // TODO: Add Data Validation
     const { raffleId, participant } = entryData;
 
     // Check if the user has already entered the raffle
@@ -108,12 +118,8 @@ export function RaffleProvider({ children }) {
     );
 
     if (!hasEntered) {
-      // Optimistically Update State (only happens if not a duplicate entry)
-      setEntries((prev) => {
-        const updatedEntries = [...(prev || []), entryData];
-        console.log("Optimistic Entries State:", updatedEntries);
-        return updatedEntries;
-      });
+      // Optimistically Update the state
+      setEntries((prev) => [...prev, entryData]);
 
       try {
         // Try adding the entry to the DB
@@ -121,7 +127,6 @@ export function RaffleProvider({ children }) {
 
         // On success, show success message
         setEventMessage("Entry added successfully!");
-        console.log("Entry added to DB successfully.");
       } catch (error) {
         // In case of error, show failure message
         console.error("Error adding entry:", error.message);
@@ -230,25 +235,30 @@ export function RaffleProvider({ children }) {
   const getEntriesByEntrant = (entrant) => {
     return entries.filter((entry) => entry.participant === entrant);
   };
+  // NOTE: Functions like addRaffle, addEntry etc are stable and don't need to be included in the dependency array
+  // as they only depend on raffles, entries and eventMessage
+  const contextValue = useMemo(
+    () => ({
+      raffles,
+      entries,
+      addRaffle,
+      addEntry,
+      updateRaffle,
+      updateEntry,
+      getRafflesByPhase,
+      getRafflesByCreator,
+      getRaffleById,
+      getEntriesByRaffleId,
+      getEntriesByEntrant,
+      eventMessage,
+      clearMessage,
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [raffles, entries, eventMessage]
+  );
 
   return (
-    <RaffleContext.Provider
-      value={{
-        raffles,
-        entries,
-        addRaffle,
-        addEntry,
-        updateRaffle,
-        updateEntry,
-        getRafflesByPhase,
-        getRafflesByCreator,
-        getRaffleById,
-        getEntriesByRaffleId,
-        getEntriesByEntrant,
-        eventMessage,
-        clearMessage,
-      }}
-    >
+    <RaffleContext.Provider value={contextValue}>
       {children}
     </RaffleContext.Provider>
   );

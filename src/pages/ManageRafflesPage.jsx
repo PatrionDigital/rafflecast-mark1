@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useProfile } from "@farcaster/auth-kit";
 import { useRaffle } from "../context/useRaffle";
 import { settleRaffle } from "../utils/raffleUtils";
@@ -18,6 +18,7 @@ const ManageRafflesPage = () => {
   const [selectedRaffle, setSelectedRaffle] = useState(null);
   const [fetchingEntries, setFetchingEntries] = useState(false);
   const { fid = "" } = profile || {};
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Reset the RaffleContext eventMessage when loading new component/page
@@ -70,6 +71,13 @@ const ManageRafflesPage = () => {
 
       if (result.success) {
         console.log(`Raffle ${raffleId} has been settled.`);
+        const winnerAddresses = result.winners.map(
+          (winner) => winner.prizeWallet
+        );
+        // Redirect to CreateDistributionPage with raffle ID and winners
+        navigate(`/creator/distribute-rewards/${raffleId}`, {
+          state: { winners: winnerAddresses },
+        });
       } else {
         console.error("Error settling raffle:", result.error);
       }
