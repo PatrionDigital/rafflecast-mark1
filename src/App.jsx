@@ -8,6 +8,7 @@ import EntrantDashboardLayout from "./pages/layouts/EntrantDashboardLayout";
 // Pages
 import LandingPage from "./pages/LandingPage";
 import CreateRafflePage from "./pages/CreateRafflePage";
+import CreateDistributionPage from "./pages/CreateDistributionPage";
 import ManageRafflesPage from "./pages/ManageRafflesPage";
 import BrowseRafflesPage from "./pages/BrowseRafflesPage";
 
@@ -56,7 +57,15 @@ const router = createBrowserRouter([
         },
         children: [
           { path: "raffles/new", element: <CreateRafflePage /> },
+          {
+            path: "raffles/new/distribution",
+            element: <CreateDistributionPage />,
+          },
           { path: "raffles/manage", element: <ManageRafflesPage /> },
+          {
+            path: "distribute-rewards/:raffleId",
+            element: <CreateDistributionPage />,
+          },
         ],
       },
     ],
