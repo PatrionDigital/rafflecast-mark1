@@ -1,6 +1,8 @@
 import { Outlet, useMatches } from "react-router-dom";
 import Header from "../Header";
 
+const currentYear = new Date().getFullYear();
+
 const ParentLayout = () => {
   const matches = useMatches();
   //console.log(matches); // Debug log to see the matches
@@ -15,7 +17,9 @@ const ParentLayout = () => {
       <main className="main-content">
         <Outlet />
       </main>
-      <footer className="app-footer">© 2024 Rafflecast</footer>
+      <footer className="app-footer">
+        © <span>{currentYear}</span> Rafflecast
+      </footer>
     </div>
   );
 };
