@@ -8,6 +8,7 @@ import { generateMerkleTree } from "../utils/merkleUtils";
 import { createDistribution } from "../utils/contractUtils";
 import { ethers, BrowserProvider } from "ethers";
 import { PinataSDK } from "pinata-web3";
+import { useAddMessage } from "../hooks/useMessageContext";
 
 const CreateDistributionPage = () => {
   const { raffleId } = useParams();
@@ -22,6 +23,7 @@ const CreateDistributionPage = () => {
   const [claimEnd, setClaimEnd] = useState("");
   const [merkleRoot, setMerkleRoot] = useState("");
   const [error, setError] = useState("");
+  const { addMessage } = useAddMessage();
 
   /*
   const pinataBaseUrl = "https://api.pinata.cloud/v3/farcaster";
@@ -124,109 +126,112 @@ const CreateDistributionPage = () => {
         await tx.wait();
 
         setError("");
-        alert("Rewards distribution created successfully");
+        addMessage("Rewards distribution created successfully", "success");
       } else {
         throw new Error("No connector found for the connected wallet.");
       }
     } catch (error) {
       console.error("Error creating rewards distribution:", error);
       setError("Failed to create rewards distribution.");
+      addMessage(error.message || "Failed to create distribution", "error");
     }
   };
 
   return (
-    <div className="create-distribution-page">
-      <h2>Create Rewards Distribution</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="wallet-selection">
-          <label htmlFor="wallet-address">Select Signing Wallet:</label>
-          <select
-            id="wallet-address"
-            value={selectedAddress}
-            onChange={handleAddressSelect}
-          >
-            <option value="">Choose an address</option>
-            {walletAddresses.map((address, index) => (
-              <option key={index} value={address}>
-                {address}
-              </option>
-            ))}
-          </select>
-          <ConnectKitButton />
-        </div>
-        <div>
-          <div className="token-info">
-            <label>
-              Token Address:
-              <input
-                type="text"
-                value={tokenAddress}
-                onChange={(e) => setTokenAddress(e.target.value)}
-                placeholder="Enter token address"
-                required
-              />
-            </label>
-            <label>
-              ERC20?:
-              <input
-                type="checkbox"
-                checked={isERC20}
-                onChange={(e) => setIsERC20(e.target.checked)}
-              />
-            </label>
+    <div className="page-container">
+      <div className="form-section">
+        <h2>Create Rewards Distribution</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="wallet-selection">
+            <label htmlFor="wallet-address">Select Signing Wallet:</label>
+            <select
+              id="wallet-address"
+              value={selectedAddress}
+              onChange={handleAddressSelect}
+            >
+              <option value="">Choose an address</option>
+              {walletAddresses.map((address, index) => (
+                <option key={index} value={address}>
+                  {address}
+                </option>
+              ))}
+            </select>
+            <ConnectKitButton />
           </div>
-          <div className="claim-info">
-            <div>
+          <div>
+            <div className="token-info">
               <label>
-                Reward Amount:
+                Token Address:
                 <input
-                  type="number"
-                  value={rewardAmount}
-                  onChange={(e) => setRewardAmount(Number(e.target.value))}
-                  placeholder="Enter reward amount"
+                  type="text"
+                  value={tokenAddress}
+                  onChange={(e) => setTokenAddress(e.target.value)}
+                  placeholder="Enter token address"
                   required
                 />
               </label>
+              <label>
+                ERC20?:
+                <input
+                  type="checkbox"
+                  checked={isERC20}
+                  onChange={(e) => setIsERC20(e.target.checked)}
+                />
+              </label>
             </div>
-            <div>
+            <div className="claim-info">
               <div>
                 <label>
-                  Merkle Root:
+                  Reward Amount:
                   <input
-                    type="text"
-                    value={merkleRoot}
-                    readOnly
-                    style={{ width: "100%", marginTop: "8px" }}
+                    type="number"
+                    value={rewardAmount}
+                    onChange={(e) => setRewardAmount(Number(e.target.value))}
+                    placeholder="Enter reward amount"
+                    required
+                  />
+                </label>
+              </div>
+              <div>
+                <div>
+                  <label>
+                    Merkle Root:
+                    <input
+                      type="text"
+                      value={merkleRoot}
+                      readOnly
+                      style={{ width: "100%", marginTop: "8px" }}
+                    />
+                  </label>
+                </div>
+              </div>
+              <div>
+                <label>
+                  Claim Period Start:
+                  <input
+                    type="datetime-local"
+                    value={claimStart}
+                    onChange={(e) => setClaimStart(e.target.value)}
+                    required
+                  />
+                </label>
+                <label>
+                  Claim Period End:
+                  <input
+                    type="datetime-local"
+                    value={claimEnd}
+                    onChange={(e) => setClaimEnd(e.target.value)}
+                    required
                   />
                 </label>
               </div>
             </div>
-            <div>
-              <label>
-                Claim Period Start:
-                <input
-                  type="datetime-local"
-                  value={claimStart}
-                  onChange={(e) => setClaimStart(e.target.value)}
-                  required
-                />
-              </label>
-              <label>
-                Claim Period End:
-                <input
-                  type="datetime-local"
-                  value={claimEnd}
-                  onChange={(e) => setClaimEnd(e.target.value)}
-                  required
-                />
-              </label>
-            </div>
-          </div>
-          {error && <p style={{ color: "red" }}>{error}</p>}
+            {error && <p style={{ color: "red" }}>{error}</p>}
 
-          <button type="submit">Create Distribution</button>
-        </div>
-      </form>
+            <button type="submit">Create Distribution</button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

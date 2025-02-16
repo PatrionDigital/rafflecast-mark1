@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { RaffleContext } from "./RaffleContext";
+import { RaffleContext } from "../context/RaffleContext";
 export const useRaffle = () => {
   const context = useContext(RaffleContext);
 

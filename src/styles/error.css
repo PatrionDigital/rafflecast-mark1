@@ -1,0 +1,28 @@
+.error-container {
+  padding: 2rem;
+  max-width: 800px;
+  margin: 2rem auto;
+  text-align: center;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.error-container h2 {
+  color: #e53e3e;
+  margin-bottom: 1rem;
+}
+
+.error-container p {
+  color: #4a5568;
+  margin-bottom: 1rem;
+}
+
+.error-stack {
+  text-align: left;
+  background-color: #f7fafc;
+  padding: 1rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  overflow-x: auto;
+} 

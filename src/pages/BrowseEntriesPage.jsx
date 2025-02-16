@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useRaffle } from "../context/useRaffle";
+import { useRaffle } from "../hooks/useRaffle";
 import { useProfile } from "@farcaster/auth-kit";
 
 const BrowseEntriesPage = () => {
