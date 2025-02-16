@@ -77,15 +77,16 @@
 }
 
 .active-link {
-  color: #fff;
-  background-color: #007bff;
-  border-radius: 5px;
+  color: var(--text-color);
+  background-color: var(--color-highlight);
+  border-radius: 5px 5px 0 0;
   text-decoration: none;
 }
 
 .link:hover {
-  color: #007bff;
+  color: var(--link-hover-color);
 }
+
 /* Navigation Links */
 .nav-links {
   display: flex;

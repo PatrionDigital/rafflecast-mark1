@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { useRaffle } from "../context/useRaffle";
+import { useRaffle } from "../hooks/useRaffle";
 import { v4 as uuidv4 } from "uuid";
 import { useProfile } from "@farcaster/auth-kit";
 import {
   checkLikeCondition,
   //checkRecastCondition,
 } from "../utils/farcasterUtils";
+import { useMessages } from "../hooks/useMessageContext";
 
 const BrowseRafflesPage = () => {
   const {
@@ -21,6 +22,7 @@ const BrowseRafflesPage = () => {
   const [activeRaffles, setActiveRaffles] = useState([]);
   const [eligibilityStatus, setEligibilityStatus] = useState({});
   const [casterData, setCasterData] = useState({});
+  const { addMessage } = useMessages();
 
   useEffect(() => {
     // Reset the RaffleContext eventMessage when loading new component/page
@@ -116,7 +118,7 @@ const BrowseRafflesPage = () => {
 
   const handleJoinRaffle = async (raffleId) => {
     if (!selectedAddress) {
-      console.error("Please select an Ethereum address.");
+      addMessage("Please select an Ethereum address.", "error");
       return;
     }
     const participant = profile.fid;
@@ -132,55 +134,58 @@ const BrowseRafflesPage = () => {
     try {
       await addEntry(entryData);
     } catch (error) {
-      console.error("Error joining raffle:", error);
+      addMessage(error.message || "Error joining raffle", "error");
     }
   };
 
   return (
-    <div>
-      <h2>Browse Raffles</h2>
-      {!isAuthenticated && (
-        <p style={{ color: "red", fontWeight: "bold" }}>
-          Please log in with Warpcast to join raffles.
-        </p>
-      )}
-      {/** Message banner */}
-      {eventMessage && (
-        <div
-          style={{
-            background: "#f0f8ff",
-            color: "#333",
-            padding: "10px",
-            borderRadius: "5px",
-            marginBottom: "10px",
-          }}
-        >
-          {eventMessage}
-        </div>
-      )}
-      <ul>
-        {activeRaffles.length > 0 ? (
-          activeRaffles.map((raffle) => (
-            <RaffleItem
-              key={raffle.id}
-              raffle={raffle}
-              isAuthenticated={isAuthenticated}
-              eligibilityStatus={eligibilityStatus[raffle.id]}
-              onCheckEligibility={handleCheckEligibility}
-              onJoinRaffle={handleJoinRaffle}
-              onFetchUser={handleFetchUserFromCast}
-              casterData={casterData}
-              selectedAddress={selectedAddress}
-              setSelectedAddress={setSelectedAddress}
-              profile={profile}
-            />
-          ))
-        ) : (
-          <p>
-            No raffles available. Why not <a href="/creator">create one?</a>
+    <div className="page-container">
+      <div className="section">
+        <h2>Browse Raffles</h2>
+        {!isAuthenticated && (
+          <p className="auth-message">
+            Please log in with Warpcast to join raffles.
           </p>
         )}
-      </ul>
+        {/** Message banner */}
+        {eventMessage && (
+          <div
+            style={{
+              background: "#f0f8ff",
+              color: "#333",
+              padding: "10px",
+              borderRadius: "5px",
+              marginBottom: "10px",
+            }}
+          >
+            {eventMessage}
+          </div>
+        )}
+        <ul className="raffle-list">
+          {activeRaffles.length > 0 ? (
+            activeRaffles.map((raffle) => (
+              <li key={raffle.id} className="raffle-item">
+                <RaffleItem
+                  raffle={raffle}
+                  isAuthenticated={isAuthenticated}
+                  eligibilityStatus={eligibilityStatus[raffle.id]}
+                  onCheckEligibility={handleCheckEligibility}
+                  onJoinRaffle={handleJoinRaffle}
+                  onFetchUser={handleFetchUserFromCast}
+                  casterData={casterData}
+                  selectedAddress={selectedAddress}
+                  setSelectedAddress={setSelectedAddress}
+                  profile={profile}
+                />
+              </li>
+            ))
+          ) : (
+            <p>
+              No raffles available. Why not <a href="/creator">create one?</a>
+            </p>
+          )}
+        </ul>
+      </div>
     </div>
   );
 };
@@ -213,7 +218,7 @@ const RaffleItem = ({
     !isAuthenticated || !eligibilityStatus || eligibilityStatus !== "Eligible";
 
   return (
-    <li>
+    <div className="raffle-item">
       <strong>{raffle.title}</strong>
       <br />
       Creator: {raffle.creator} -
@@ -272,7 +277,7 @@ const RaffleItem = ({
           {eligibilityStatus}
         </p>
       )}
-    </li>
+    </div>
   );
 };
 RaffleItem.propTypes = {

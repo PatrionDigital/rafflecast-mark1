@@ -1,17 +1,14 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useProfile } from "@farcaster/auth-kit";
-import { useRaffle } from "../context/useRaffle";
+import { useRaffle } from "../hooks/useRaffle";
 import { settleRaffle } from "../utils/raffleUtils";
+import { useMessages } from "../hooks/useMessageContext";
 
 const ManageRafflesPage = () => {
   const { isAuthenticated, profile } = useProfile();
-  const {
-    getRafflesByCreator,
-    getEntriesByRaffleId,
-    eventMessage,
-    clearMessage,
-  } = useRaffle();
+  const { getRafflesByCreator, getEntriesByRaffleId, clearMessage } =
+    useRaffle();
   const [raffles, setRaffles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [entries, setEntries] = useState([]);
@@ -19,6 +16,7 @@ const ManageRafflesPage = () => {
   const [fetchingEntries, setFetchingEntries] = useState(false);
   const { fid = "" } = profile || {};
   const navigate = useNavigate();
+  const { addMessage } = useMessages();
 
   useEffect(() => {
     // Reset the RaffleContext eventMessage when loading new component/page
@@ -58,31 +56,27 @@ const ManageRafflesPage = () => {
 
   const handleSettleRaffle = async (raffleId) => {
     if (!raffles || raffles.length === 0) {
-      console.error("No raffles available to settle.");
+      addMessage("No raffles available to settle.", "error");
       return;
     }
 
     try {
       const raffle = raffles.find((r) => r.id === raffleId);
-
       const entriesForRaffle = await getEntriesByRaffleId(raffleId);
-
       const result = await settleRaffle(raffle, entriesForRaffle);
 
       if (result.success) {
-        console.log(`Raffle ${raffleId} has been settled.`);
-        const winnerAddresses = result.winners.map(
-          (winner) => winner.prizeWallet
-        );
-        // Redirect to CreateDistributionPage with raffle ID and winners
+        addMessage(`Raffle ${raffleId} has been settled.`, "success");
         navigate(`/creator/distribute-rewards/${raffleId}`, {
-          state: { winners: winnerAddresses },
+          state: {
+            winners: result.winners.map((winner) => winner.prizeWallet),
+          },
         });
       } else {
-        console.error("Error settling raffle:", result.error);
+        addMessage(result.error || "Error settling raffle", "error");
       }
     } catch (error) {
-      console.error("Error settle raffle:", error);
+      addMessage(error.message || "Error settling raffle", "error");
     }
   };
 
@@ -112,80 +106,68 @@ const ManageRafflesPage = () => {
     );
 
   return (
-    <div>
-      <h3>Manage Raffles</h3>
-      {/** Message banner */}
-      {eventMessage && (
-        <div
-          style={{
-            background: "#f0f8ff",
-            color: "#333",
-            padding: "10px",
-            borderRadius: "5px",
-            marginBottom: "10px",
-          }}
-        >
-          {eventMessage}
-        </div>
-      )}
-      <ul>
-        {raffles.map((raffle) => {
-          const isClosingPassed = new Date(raffle.closingDate) < new Date();
-          const isInActivePhase = raffle.phase === "Active";
+    <div className="page-container">
+      <div className="section">
+        <h3>Manage Raffles</h3>
+        <ul>
+          {raffles.map((raffle) => {
+            const isClosingPassed = new Date(raffle.closingDate) < new Date();
+            const isInActivePhase = raffle.phase === "Active";
 
-          return (
-            <li key={raffle.id}>
-              <h4>{raffle.name}</h4>
-              <p>
-                Closing Date: {new Date(raffle.closingDate).toLocaleString()}
-              </p>
-              <button
-                onClick={() => handleCheckEntries(raffle.id)}
-                disabled={fetchingEntries && selectedRaffle === raffle.id}
-              >
-                {fetchingEntries && selectedRaffle === raffle.id
-                  ? "Loading..."
-                  : "Check Entries"}
-              </button>
-              <button onClick={() => console.log(`Edit ${raffle.id}`)}>
-                Edit
-              </button>
-
-              {isClosingPassed && isInActivePhase && (
+            return (
+              <li key={raffle.id}>
+                <h4>{raffle.name}</h4>
+                <p>
+                  Closing Date: {new Date(raffle.closingDate).toLocaleString()}
+                </p>
                 <button
-                  onClick={() => handleSettleRaffle(raffle.id)}
-                  style={{ backgroundColor: "orange", color: "white" }}
+                  onClick={() => handleCheckEntries(raffle.id)}
+                  disabled={fetchingEntries && selectedRaffle === raffle.id}
                 >
-                  Settle Raffle
+                  {fetchingEntries && selectedRaffle === raffle.id
+                    ? "Loading..."
+                    : "Check Entries"}
                 </button>
-              )}
-            </li>
-          );
-        })}
-      </ul>
+                <button onClick={() => console.log(`Edit ${raffle.id}`)}>
+                  Edit
+                </button>
 
-      {/** Show entries for the selected raffle */}
-      {selectedRaffle && (
-        <div>
-          <h4>Entries for Raffle {selectedRaffle}</h4>
-          {fetchingEntries ? (
-            <p>Loading entries...</p>
-          ) : entries.length === 0 ? (
-            <p>No entries found for this raffle.</p>
-          ) : (
-            <ul>
-              {entries.map((entry) => (
-                <li key={entry.id}>
-                  <p>Participant: {entry.participant}</p>
-                  <p>
-                    Entered At: {new Date(entry.enteredAt).toLocaleString()}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      )}
+                {isClosingPassed && isInActivePhase && (
+                  <button
+                    onClick={() => handleSettleRaffle(raffle.id)}
+                    style={{ backgroundColor: "orange", color: "white" }}
+                  >
+                    Settle Raffle
+                  </button>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+
+        {/** Show entries for the selected raffle */}
+        {selectedRaffle && (
+          <div>
+            <h4>Entries for Raffle {selectedRaffle}</h4>
+            {fetchingEntries ? (
+              <p>Loading entries...</p>
+            ) : entries.length === 0 ? (
+              <p>No entries found for this raffle.</p>
+            ) : (
+              <ul>
+                {entries.map((entry) => (
+                  <li key={entry.id}>
+                    <p>Participant: {entry.participant}</p>
+                    <p>
+                      Entered At: {new Date(entry.enteredAt).toLocaleString()}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
