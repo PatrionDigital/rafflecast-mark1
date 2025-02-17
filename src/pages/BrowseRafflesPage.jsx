@@ -8,6 +8,7 @@ import {
   //checkRecastCondition,
 } from "../utils/farcasterUtils";
 import { useMessages } from "../hooks/useMessageContext";
+import "../styles/messages.css"; // Import messages.css
 
 const BrowseRafflesPage = () => {
   const {
@@ -139,7 +140,7 @@ const BrowseRafflesPage = () => {
   };
 
   return (
-    <div className="page-container">
+    <div className={`page-container ${isAuthenticated ? "logged-in" : ""}`}>
       <div className="section">
         <h2>Browse Raffles</h2>
         {!isAuthenticated && (
@@ -220,12 +221,8 @@ const RaffleItem = ({
   return (
     <div className="raffle-item">
       <strong>{raffle.title}</strong>
-      <br />
-      Creator: {raffle.creator} -
-      <em> Phase: {raffle?.phase || "Not Available"}</em>
-      <br />
+      Creator: {raffle.creator}
       <em>Eligibility Conditions: {raffle.criteria.type} this cast:</em>
-      <br />
       {caster ? (
         <a
           href={criteriaUrl}

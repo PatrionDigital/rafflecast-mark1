@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 import Header from "../components/Header";
 import { Footer } from "../components/Footer";
 import { Messages } from "../components/Messages";
+import "../styles/messages.css"; // Import messages.css
 
 export const ParentLayout = () => {
   return (

@@ -4,6 +4,7 @@ import { useProfile } from "@farcaster/auth-kit";
 import { useRaffle } from "../hooks/useRaffle";
 import { settleRaffle } from "../utils/raffleUtils";
 import { useMessages } from "../hooks/useMessageContext";
+import '../styles/messages.css'; // Import messages.css
 
 const ManageRafflesPage = () => {
   const { isAuthenticated, profile } = useProfile();

@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useRaffle } from "../hooks/useRaffle";
 import { useNavigate } from "react-router-dom";
 import { useMessages } from "../hooks/useMessageContext";
+import '../styles/messages.css'; // Import messages.css
 
 const CreateRafflePage = () => {
   const [raffleTitle, setRaffleTitle] = useState("");

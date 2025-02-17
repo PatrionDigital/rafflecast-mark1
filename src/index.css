@@ -30,6 +30,10 @@
   --header-height: 100px;
   --footer-height: 40px;
 
+  --auth-message-background: #fff5f5; /* Background color */
+  --auth-message-border: #fc8181; /* Border color */
+  --auth-message-text: #e53e3e; /* Text color */
+
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;

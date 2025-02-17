@@ -70,3 +70,14 @@
     opacity: 1;
   }
 }
+
+.auth-message {
+  color: var(--auth-message-text);
+  font-weight: 600;
+  padding: 12px;
+  margin: 8px 0;
+  background-color: var(--auth-message-background);
+  border: 1px solid var(--auth-message-border);
+  border-radius: 4px;
+}
+
