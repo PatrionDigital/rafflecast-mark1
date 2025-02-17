@@ -10,6 +10,10 @@ import {
 import { useMessages } from "../hooks/useMessageContext";
 import "../styles/messages.css"; // Import messages.css
 
+const capitalizeFirstLetter = (string) => {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+};
+
 const BrowseRafflesPage = () => {
   const {
     getRafflesByPhase,
@@ -222,20 +226,16 @@ const RaffleItem = ({
     <div className="raffle-item">
       <strong>{raffle.title}</strong>
       Creator: {raffle.creator}
-      <em>Eligibility Conditions: {raffle.criteria.type} this cast:</em>
-      {caster ? (
-        <a
-          href={criteriaUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ color: "blue", textDecoration: "underline" }}
-        >
-          {criteriaUrl}
-        </a>
-      ) : (
-        <p>Loading cast information...</p>
-      )}
-      <br />
+      <div>
+        <label>Eligibility Conditions:</label>
+        {caster ? (
+          <button onClick={() => window.open(criteriaUrl, "_blank")}>
+            {capitalizeFirstLetter(raffle.criteria.type)} this cast
+          </button>
+        ) : (
+          <p>Loading cast information...</p>
+        )}
+      </div>
       {isAuthenticated && (
         <div>
           <select
