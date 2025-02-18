@@ -1,11 +1,9 @@
 // components/Header.jsx
 import { NavLink } from "react-router-dom";
 import PropTypes from "prop-types";
-import { SignInButton, useProfile } from "@farcaster/auth-kit";
+import { SignInButton } from "@farcaster/auth-kit";
 
 const Header = ({ title, navLinks }) => {
-  const { isAuthenticated, profile } = useProfile();
-
   return (
     <header className="header">
       <div className="header-container">
@@ -33,11 +31,6 @@ const Header = ({ title, navLinks }) => {
 
         <div className="header-right">
           <div className="user-menu">
-            {isAuthenticated && profile ? (
-              <p>Welcome, {profile.displayName}</p>
-            ) : (
-              <p>Please sign in</p>
-            )}
             <SignInButton />
           </div>
         </div>
