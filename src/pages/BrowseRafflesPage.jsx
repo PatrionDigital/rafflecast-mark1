@@ -219,8 +219,6 @@ const RaffleItem = ({
   const criteriaUrl = caster
     ? `https://warpcast.com/${caster.username}/${caster.hashPrefix}`
     : "#";
-  const shouldDisableJoin =
-    !isAuthenticated || !eligibilityStatus || eligibilityStatus !== "Eligible";
 
   return (
     <div className="raffle-item">
@@ -252,18 +250,20 @@ const RaffleItem = ({
           </select>
         </div>
       )}
-      <button
-        onClick={() => onJoinRaffle(raffle.id)}
-        disabled={shouldDisableJoin}
-      >
-        Join
-      </button>
-      <button
-        onClick={() => onCheckEligibility(raffle.id)}
-        disabled={!isAuthenticated}
-      >
-        Check Eligibility
-      </button>
+      {isAuthenticated ? (
+        eligibilityStatus === "Eligible" ? (
+          <button onClick={() => onJoinRaffle(raffle.id)}>Join</button>
+        ) : (
+          <button
+            onClick={() => onCheckEligibility(raffle.id)}
+            disabled={!isAuthenticated}
+          >
+            Check Eligibility
+          </button>
+        )
+      ) : (
+        <button disabled>Check Eligibility</button>
+      )}
       {eligibilityStatus && (
         <p
           style={{
