@@ -16,6 +16,7 @@ const RaffleContext = createContext();
 export function RaffleProvider({ children }) {
   const [raffles, setRaffles] = useState([]);
   const [entries, setEntries] = useState([]);
+  const [eligibilityStatus, setEligibilityStatus] = useState([]);
   const [eventMessage, setEventMessage] = useState(null);
 
   useEffect(() => {
@@ -25,6 +26,12 @@ export function RaffleProvider({ children }) {
 
       setRaffles(fetchedRaffles);
       setEntries(fetchedEntries);
+
+      const intitialELigibilityStatus = fetchedRaffles.map((raffle) => ({
+        raffleId: raffle.id,
+        status: "Ineligible",
+      }));
+      setEligibilityStatus(intitialELigibilityStatus);
     };
     loadData();
   }, []);
@@ -235,8 +242,23 @@ export function RaffleProvider({ children }) {
   const getEntriesByEntrant = (entrant) => {
     return entries.filter((entry) => entry.participant === entrant);
   };
+
+  const updateEligibilityStatus = (raffleId, status) => {
+    console.log(
+      "Updating eligibility status for raffle:",
+      raffleId,
+      "to",
+      status
+    );
+    setEligibilityStatus((prev) =>
+      prev.map((item) =>
+        item.raffleId === raffleId ? { ...item, status } : item
+      )
+    );
+  };
+
   // NOTE: Functions like addRaffle, addEntry etc are stable and don't need to be included in the dependency array
-  // as they only depend on raffles, entries and eventMessage
+  // as they only depend on raffles, entries, eligibilityStatus and eventMessage
   const contextValue = useMemo(
     () => ({
       raffles,
@@ -245,16 +267,18 @@ export function RaffleProvider({ children }) {
       addEntry,
       updateRaffle,
       updateEntry,
+      eligibilityStatus,
       getRafflesByPhase,
       getRafflesByCreator,
       getRaffleById,
       getEntriesByRaffleId,
       getEntriesByEntrant,
+      updateEligibilityStatus,
       eventMessage,
       clearMessage,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [raffles, entries, eventMessage]
+    [raffles, entries, eventMessage, eligibilityStatus]
   );
 
   return (

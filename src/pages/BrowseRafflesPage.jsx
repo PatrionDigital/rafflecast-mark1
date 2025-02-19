@@ -21,11 +21,12 @@ const BrowseRafflesPage = () => {
     addEntry,
     eventMessage,
     clearMessage,
+    eligibilityStatus,
+    updateEligibilityStatus,
   } = useRaffle();
   const { isAuthenticated, profile } = useProfile();
   const [selectedAddress, setSelectedAddress] = useState("");
   const [activeRaffles, setActiveRaffles] = useState([]);
-  const [eligibilityStatus, setEligibilityStatus] = useState({});
   const [casterData, setCasterData] = useState({});
   const { addMessage } = useMessages();
 
@@ -55,10 +56,7 @@ const BrowseRafflesPage = () => {
       console.log("Raffle:", raffle);
 
       if (!raffle.criteria?.linkedCast) {
-        setEligibilityStatus((prev) => ({
-          ...prev,
-          [raffleId]: "No linked Cast",
-        }));
+        updateEligibilityStatus(raffleId, "No linked Cast");
         console.log("Raffle does not have a specified cast.");
         return;
       }
@@ -68,21 +66,15 @@ const BrowseRafflesPage = () => {
         raffle.criteria.linkedCast
       );
       if (hasLiked) {
-        setEligibilityStatus((prev) => ({ ...prev, [raffleId]: "Eligible" }));
+        updateEligibilityStatus(raffleId, "Eligible");
         console.log("User has met Like condition.");
       } else {
-        setEligibilityStatus((prev) => ({
-          ...prev,
-          [raffleId]: "Not Eligible",
-        }));
+        updateEligibilityStatus(raffleId, "Ineligible");
         console.log("User must Like the linked Cast to join this raffle.");
       }
     } catch (error) {
       console.error("Error checking eligibility:", error);
-      setEligibilityStatus((prev) => ({
-        ...prev,
-        [raffleId]: "Error checking eligibility",
-      }));
+      updateEligibilityStatus(raffleId, "Error checking eligibility");
     }
   };
 
