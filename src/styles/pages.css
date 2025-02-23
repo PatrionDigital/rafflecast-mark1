@@ -67,12 +67,76 @@
   margin-top: 2px; /* Adjust this value to prevent the top border from being cut off */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
+/* styles.css or relevant CSS file */
+.raffle-card {
+  padding: 20px;
+  border: 1px solid var(--border-color); /* Use global border color */
+  border-radius: 8px; /* Rounded corners */
+  background-color: var(--background-color); /* Use global background color */
+  transition: box-shadow 0.3s; /* Smooth transition for hover effect */
+  cursor: pointer; /* Change cursor to pointer on hover */
+}
 
+.raffle-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect on hover */
+}
+
+/* styles.css or relevant CSS file */
+.raffle-details-panel {
+  position: relative;
+  background-color: var(--header-background-color);
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 20px;
+  padding: 15px;
+  justify-content: center;
+  z-index: 1000;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+}
+
+.raffle-details-left {
+  background: var(--background-color);
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  border-radius: 8px;
+  width: 100%;
+  border: 1px solid var(--border-color);
+  margin-right: 5px;
+  position: relative;
+}
 .raffle-title {
   font-size: calc(var(--font-size-xlarge) + 10px);
   font-weight: 600;
   color: var(--text-color);
   margin-bottom: 4px;
+}
+.raffle-details-creator {
+  font-size: calc(var(--font-size-small) + 4px);
+  font-style: underline;
+}
+.raffle-details-dates {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: calc(var(--font-size-small) + 2px);
+}
+.raffle-details-description {
+  font-style: italic;
+}
+.raffle-details-right {
+  display: flex;
+  flex-direction: column;
+  margin-left: 5px;
+}
+.raffle-details-criteria {
+  font-size: calc(var(--font-size-small) + 2px);
+  background: var(--background-color);
+  padding: 10px;
+  border-radius: 8px;
+  width: 90%%;
+  border: 1px solid var(--border-color);
 }
 
 .raffle-info {
@@ -247,4 +311,39 @@
   margin-left: auto;
   margin-right: auto;
   overflow: hidden; /* Prevent scrollbars */
+}
+/* styles.css or relevant CSS file */
+.hidden {
+  display: none; /* Hide the element */
+}
+
+.close-button {
+  position: absolute; /* Position the button absolutely within the panel */
+  top: 2px; /* Adjust as needed */
+  left: 2px; /* Adjust as needed */
+  background-color: var(--header-background-color);
+  border: 1px solid var(--border-color); /* Remove default button border */
+  border-radius: 8px; /* Make it circular */
+  width: 30px; /* Set width */
+  height: 30px; /* Set height */
+  color: white; /* Text color */
+  cursor: pointer; /* Change cursor to pointer */
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
+  overflow: hidden;
+}
+.close-icon {
+  display: block; /* Make the span a block element */
+  text-align: center; /* Center the "X" */
+  line-height: 8px; /* Center vertically within the button */
+  font-size: 16px; /* Adjust font size for better visibility */
+  color: var(--link-color); /* Text color */
+  margin-left: -4px;
+}
+.raffle-details-panel-left .close-button:hover {
+  background-color: var(--border-color);
+  color: white;
+}
+
+.close-button:focus {
+  outline: none; /* Remove focus outline */
 }

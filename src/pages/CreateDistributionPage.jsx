@@ -8,7 +8,6 @@ import { generateMerkleTree } from "../utils/merkleUtils";
 import { createDistribution } from "../utils/contractUtils";
 import { ethers, BrowserProvider } from "ethers";
 import { PinataSDK } from "pinata-web3";
-import { useAddMessage } from "../hooks/useMessageContext";
 
 const CreateDistributionPage = () => {
   const { raffleId } = useParams();
@@ -23,7 +22,6 @@ const CreateDistributionPage = () => {
   const [claimEnd, setClaimEnd] = useState("");
   const [merkleRoot, setMerkleRoot] = useState("");
   const [error, setError] = useState("");
-  const { addMessage } = useAddMessage();
 
   /*
   const pinataBaseUrl = "https://api.pinata.cloud/v3/farcaster";
@@ -126,14 +124,14 @@ const CreateDistributionPage = () => {
         await tx.wait();
 
         setError("");
-        addMessage("Rewards distribution created successfully", "success");
+        console.log("Rewards distribution created successfully");
       } else {
         throw new Error("No connector found for the connected wallet.");
       }
     } catch (error) {
       console.error("Error creating rewards distribution:", error);
       setError("Failed to create rewards distribution.");
-      addMessage(error.message || "Failed to create distribution", "error");
+      console.log(error.message || "Failed to create distribution");
     }
   };
 
