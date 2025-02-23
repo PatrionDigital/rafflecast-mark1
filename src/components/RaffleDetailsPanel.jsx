@@ -126,6 +126,14 @@ const RaffleDetailsPanel = ({ raffle, onClose }) => {
     ? `https://warpcast.com/${criteriaCastData[linkedCast].username}`
     : "#";
 
+  // Add this helper function to get the status for the current raffle
+  const getCurrentEligibilityStatus = () => {
+    const statusObj = eligibilityStatus.find(
+      (item) => item.raffleId === raffle.id
+    );
+    return statusObj ? statusObj.status : "Ineligible";
+  };
+
   return (
     <div className="raffle-details-panel">
       <div className="raffle-details-left">
@@ -162,14 +170,16 @@ const RaffleDetailsPanel = ({ raffle, onClose }) => {
           ) : (
             <p>Loading cast information...</p>
           )}
-          {isAuthenticated && (
+          {isAuthenticated && getCurrentEligibilityStatus() === "Eligible" && (
             <div className="address-selector">
               <select
                 value={selectedAddress}
                 onChange={(e) => setSelectedAddress(e.target.value)}
                 disabled={!profile}
               >
-                <option value="">Select Ethereum Address</option>
+                <option value="">
+                  Select Ethereum Address to send rewards to
+                </option>
                 {profile?.verifications?.map((address, index) => (
                   <option key={index} value={address}>
                     {address}
@@ -185,14 +195,16 @@ const RaffleDetailsPanel = ({ raffle, onClose }) => {
             disabled={!isAuthenticated || !profile}
             style={{
               backgroundColor:
-                eligibilityStatus === "Eligible" ? "green" : "red",
+                getCurrentEligibilityStatus() === "Eligible" ? "green" : "red",
             }}
           >
-            Check Eligibility
+            {getCurrentEligibilityStatus() === "Eligible"
+              ? "Eligible"
+              : "Check Eligibility"}
           </button>
           <button
             onClick={() => handleJoinRaffle(raffle.id)}
-            disabled={eligibilityStatus !== "Eligible"}
+            disabled={getCurrentEligibilityStatus() !== "Eligible"}
           >
             Join Raffle
           </button>
