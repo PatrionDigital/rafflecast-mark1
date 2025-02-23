@@ -67,18 +67,59 @@
   margin-top: 2px; /* Adjust this value to prevent the top border from being cut off */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
-/* styles.css or relevant CSS file */
+
+/* Update the raffle grid styles */
+.raffle-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 12px;
+}
+
+.raffle-grid.hidden {
+  display: none;
+}
+
 .raffle-card {
-  padding: 20px;
-  border: 1px solid var(--border-color); /* Use global border color */
-  border-radius: 8px; /* Rounded corners */
-  background-color: var(--background-color); /* Use global background color */
-  transition: box-shadow 0.3s; /* Smooth transition for hover effect */
-  cursor: pointer; /* Change cursor to pointer on hover */
+  background-color: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .raffle-card:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect on hover */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.raffle-card h3 {
+  font-size: 1rem;
+  margin: 0 0 4px 0;
+}
+
+.raffle-card p {
+  font-size: 0.875rem;
+  margin: 0;
+  line-height: 1.2;
+}
+
+/* Add media queries for responsive behavior */
+@media (max-width: 1024px) {
+  .raffle-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .raffle-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* styles.css or relevant CSS file */

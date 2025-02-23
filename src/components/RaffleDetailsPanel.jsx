@@ -16,6 +16,7 @@ const RaffleDetailsPanel = ({ raffle, onClose }) => {
     addEntry,
     getRaffleById,
     checkLikeCondition,
+    getEntriesByEntrant,
   } = useRaffle();
 
   // Component state
@@ -23,6 +24,16 @@ const RaffleDetailsPanel = ({ raffle, onClose }) => {
   const { isAuthenticated, profile } = useProfile();
   const [criteriaCastData, setCriteriaCastData] = useState({});
   const [selectedAddress, setSelectedAddress] = useState("");
+  const [hasEntered, setHasEntered] = useState(false);
+
+  // Check if the user has already entered the raffle
+  useEffect(() => {
+    const userEntries = getEntriesByEntrant(profile.fid);
+    const hasEnteredThisRaffle = userEntries.some(
+      (entry) => entry.raffleId === raffle.id
+    );
+    setHasEntered(hasEnteredThisRaffle);
+  }, [getEntriesByEntrant, raffle.id, profile?.fid]);
 
   const handleCheckEligibility = async (raffleId) => {
     if (!isAuthenticated || !profile) {
@@ -204,9 +215,11 @@ const RaffleDetailsPanel = ({ raffle, onClose }) => {
           </button>
           <button
             onClick={() => handleJoinRaffle(raffle.id)}
-            disabled={getCurrentEligibilityStatus() !== "Eligible"}
+            disabled={
+              getCurrentEligibilityStatus() !== "Eligible" || hasEntered
+            }
           >
-            Join Raffle
+            {hasEntered ? "Already Entered" : "Join Raffle"}
           </button>
         </div>
       </div>

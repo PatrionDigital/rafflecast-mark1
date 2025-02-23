@@ -1,11 +1,21 @@
 import PropTypes from "prop-types";
 const RaffleCard = ({ raffle, onClick }) => {
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
   return (
     <div className="raffle-card" onClick={onClick}>
       <h3>{raffle.title}</h3>
       <p>Creator FID: {raffle.creator}</p>
-      <p>Start Date: {new Date(raffle.startDate).toLocaleDateString()}</p>
-      <p>End Date: {new Date(raffle.closingDate).toLocaleDateString()}</p>
+      <p>Closes: {formatDate(raffle.closingDate)}</p>
     </div>
   );
 };
