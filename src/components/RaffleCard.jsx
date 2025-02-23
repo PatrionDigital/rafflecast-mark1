@@ -1,5 +1,12 @@
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import { getCreatorUsername } from "../utils/farcasterUtils";
+
 const RaffleCard = ({ raffle, onClick }) => {
+  const [creatorUsername, setCreatorUsername] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
@@ -11,10 +18,45 @@ const RaffleCard = ({ raffle, onClick }) => {
     });
   };
 
+  useEffect(() => {
+    const fetchCreator = async () => {
+      try {
+        const username = await getCreatorUsername(raffle.creator);
+        if (username) {
+          setCreatorUsername(username);
+        } else {
+          setError("Creator not found");
+        }
+      } catch (err) {
+        console.error("Error fetching creator:", err);
+        setError("Error loading creator info");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCreator();
+  }, [raffle.creator]);
+
   return (
     <div className="raffle-card" onClick={onClick}>
       <h3>{raffle.title}</h3>
-      <p>Creator FID: {raffle.creator}</p>
+      <p>
+        Created by:{" "}
+        {loading ? (
+          "Loading..."
+        ) : error ? (
+          "Unknown"
+        ) : (
+          <a
+            href={`https://warpcast.com/${creatorUsername}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            @{creatorUsername}
+          </a>
+        )}
+      </p>
       <p>Closes: {formatDate(raffle.closingDate)}</p>
     </div>
   );

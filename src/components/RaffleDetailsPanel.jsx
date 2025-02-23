@@ -8,6 +8,7 @@ import { useProfile } from "@farcaster/auth-kit";
 
 // Custom hooks
 import { useRaffle } from "../hooks/useRaffle";
+import { getCreatorUsername } from "../utils/farcasterUtils";
 
 const RaffleDetailsPanel = ({ raffle, onClose }) => {
   const {
@@ -25,6 +26,9 @@ const RaffleDetailsPanel = ({ raffle, onClose }) => {
   const [criteriaCastData, setCriteriaCastData] = useState({});
   const [selectedAddress, setSelectedAddress] = useState("");
   const [hasEntered, setHasEntered] = useState(false);
+  const [creatorUsername, setCreatorUsername] = useState(null);
+  const [creatorLoading, setCreatorLoading] = useState(true);
+  const [creatorError, setCreatorError] = useState(null);
 
   // Check if the user has already entered the raffle
   useEffect(() => {
@@ -34,6 +38,27 @@ const RaffleDetailsPanel = ({ raffle, onClose }) => {
     );
     setHasEntered(hasEnteredThisRaffle);
   }, [getEntriesByEntrant, raffle.id, profile?.fid]);
+
+  // Add this useEffect to fetch creator username
+  useEffect(() => {
+    const fetchCreator = async () => {
+      try {
+        const username = await getCreatorUsername(raffle.creator);
+        if (username) {
+          setCreatorUsername(username);
+        } else {
+          setCreatorError("Creator not found");
+        }
+      } catch (err) {
+        console.error("Error fetching creator:", err);
+        setCreatorError("Error loading creator info");
+      } finally {
+        setCreatorLoading(false);
+      }
+    };
+
+    fetchCreator();
+  }, [raffle.creator]);
 
   const handleCheckEligibility = async (raffleId) => {
     if (!isAuthenticated || !profile) {
@@ -132,9 +157,9 @@ const RaffleDetailsPanel = ({ raffle, onClose }) => {
     ? `https://warpcast.com/${criteriaCastData[linkedCast].username}/${criteriaCastData[linkedCast].hashPrefix}`
     : "#";
 
-  // TODO: fix this to get the creator's profile name from the creator's fid
-  const creatorProfileLink = criteriaCastData[linkedCast]
-    ? `https://warpcast.com/${criteriaCastData[linkedCast].username}`
+  // Update the creator display section
+  const creatorProfileLink = creatorUsername
+    ? `https://warpcast.com/${creatorUsername}`
     : "#";
 
   // Add this helper function to get the status for the current raffle
@@ -155,13 +180,19 @@ const RaffleDetailsPanel = ({ raffle, onClose }) => {
         <div className="raffle-details-creator">
           <span>
             Created by{" "}
-            <a
-              href={creatorProfileLink}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {raffle.creator}
-            </a>
+            {creatorLoading ? (
+              "Loading..."
+            ) : creatorError ? (
+              "Unknown"
+            ) : (
+              <a
+                href={creatorProfileLink}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                @{creatorUsername}
+              </a>
+            )}
           </span>
         </div>
         <div className="raffle-details-dates">

@@ -1,43 +1,34 @@
-import axios from "axios";
-
 const FARCASTER_HTTP_API_ENDPOINT = "https://hoyt.farcaster.xyz:2281";
+const PINATA_FARCASTER_API = "https://api.pinata.cloud/v3/farcaster";
 
 /**
  * Generic function to check user reactions (Like or Recast) on a specific Cast.
  * @param {number} fid - Farcaster ID of the user.
  * @param {number} reactionType - 1 for Like, 2 for Recast.
  * @param {string} targetHash - Hash of the Cast to check reactions for.
- * @param {number} targetFid - Farcaster ID of the Cast's creator.
  * @returns {boolean} - True if the user has reacted, otherwise False.
  */
-const checkUserReaction = async (
-  fid,
-  reactionType,
-  targetHash /*, targetFid*/
-) => {
+const checkUserReaction = async (fid, reactionType, targetHash) => {
   try {
-    const url = `${FARCASTER_HTTP_API_ENDPOINT}/v1/reactionsByFid`;
+    const response = await fetch(
+      `${FARCASTER_HTTP_API_ENDPOINT}/v1/reactionsByFid?fid=${fid}&reaction_type=${reactionType}`
+    );
 
-    const response = await axios.get(url, {
-      params: {
-        fid,
-        reaction_type: reactionType,
-      },
-    });
+    if (!response.ok) {
+      throw new Error("Failed to fetch reactions");
+    }
 
-    // Check if the reaction list contains any results
-    const reactions = response.data?.messages || [];
-    // Search if the reactions list contains the target hash:
+    const data = await response.json();
+    const reactions = data?.messages || [];
+
+    // Check if the reaction list contains the target hash
     const foundReaction = reactions.find(
       (message) => message.data.reactionBody.targetCastId.hash === targetHash
     );
-    console.log("Found:", foundReaction);
-    return foundReaction ? true : false;
+
+    return !!foundReaction;
   } catch (error) {
-    console.error(
-      "Error checking user reaction:",
-      error.response?.data || error.message
-    );
+    console.error("Error checking user reaction:", error);
     return false;
   }
 };
@@ -46,36 +37,46 @@ const checkUserReaction = async (
  * Check if a user has liked a specific Cast.
  * @param {number} fid - Farcaster ID of the user.
  * @param {string} targetHash - Hash of the Cast to check.
- * @param {number} targetFid - Farcaster ID of the Cast's creator.
  * @returns {boolean} - True if the user has liked the Cast, otherwise False.
  */
-const checkLikeCondition = async (fid, targetHash, targetFid) => {
-  const hasLiked = await checkUserReaction(fid, 1, targetHash, targetFid); // reaction_type = 1: LIKE
-  if (!hasLiked) {
-    console.log("User has not liked the linked Cast.");
-    return false;
-  }
-
-  console.log("User has successfully liked the linked Cast.");
-  return true;
+const checkLikeCondition = async (fid, targetHash) => {
+  return await checkUserReaction(fid, 1, targetHash);
 };
 
 /**
  * Check if a user has recast a specific Cast.
  * @param {number} fid - Farcaster ID of the user.
  * @param {string} targetHash - Hash of the Cast to check.
- * @param {number} targetFid - Farcaster ID of the Cast's creator.
  * @returns {boolean} - True if the user has recast the Cast, otherwise False.
  */
-const checkRecastCondition = async (fid, targetHash, targetFid) => {
-  const hasRecast = await checkUserReaction(fid, 2, targetHash, targetFid); // reaction_type = 2: RECAST
-  if (!hasRecast) {
-    console.log("User has not recast the linked Cast.");
-    return false;
-  }
-
-  console.log("User has successfully recast the linked Cast.");
-  return true;
+const checkRecastCondition = async (fid, targetHash) => {
+  return await checkUserReaction(fid, 2, targetHash);
 };
 
-export { checkLikeCondition, checkRecastCondition };
+/**
+ * Get the username of a creator based on their FID.
+ * @param {number} fid - Farcaster ID of the creator.
+ * @returns {string} - Username of the creator.
+ */
+const getCreatorUsername = async (fid) => {
+  try {
+    const response = await fetch(`${PINATA_FARCASTER_API}/users/${fid}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${import.meta.env.VITE_PINATA_JWT}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch creator data");
+    }
+
+    const data = await response.json();
+    return data.user.username;
+  } catch (err) {
+    console.error("Error fetching creator:", err);
+    return null;
+  }
+};
+
+export { checkLikeCondition, checkRecastCondition, getCreatorUsername };
