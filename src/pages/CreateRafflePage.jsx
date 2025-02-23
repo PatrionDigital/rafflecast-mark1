@@ -1,9 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useProfile } from "@farcaster/auth-kit";
 import { v4 as uuidv4 } from "uuid";
 import { useRaffle } from "../hooks/useRaffle";
 import { useNavigate } from "react-router-dom";
-import { useMessages } from "../hooks/useMessageContext";
 
 const CreateRafflePage = () => {
   const [raffleTitle, setRaffleTitle] = useState("");
@@ -28,14 +27,8 @@ const CreateRafflePage = () => {
 
   const { isAuthenticated, profile } = useProfile();
   const { fid = "", custody = "" } = profile || {};
-  const { addRaffle, clearMessage } = useRaffle();
+  const { addRaffle } = useRaffle();
   const navigate = useNavigate();
-  const { addMessage } = useMessages();
-
-  useEffect(() => {
-    // Reset the RaffleContext eventMessage when loading new component/page
-    clearMessage();
-  }, [clearMessage]);
 
   const validateDates = ({ startDate, closingDate, challengePeriod }) => {
     const now = new Date();
@@ -44,18 +37,15 @@ const CreateRafflePage = () => {
     const challengeEnd = new Date(challengePeriod);
 
     if (start < now) {
-      addMessage("Start date cannot be in the past.", "error");
+      console.log("Start date cannot be in the past.");
       return false;
     }
     if (close <= start) {
-      addMessage("Closing date must be after the start date.", "error");
+      console.log("Closing date must be after the start date.");
       return false;
     }
     if (challengeEnd <= close) {
-      addMessage(
-        "Challenge period must be on or after the closing date.",
-        "error"
-      );
+      console.log("Challenge period must be on or after the closing date.");
       return false;
     }
     return true;
@@ -125,10 +115,10 @@ const CreateRafflePage = () => {
       };
       try {
         await addRaffle(newRaffle);
-        addMessage("Raffle created successfully!", "success");
+        console.log("Raffle created successfully!");
         navigate("/creator/raffles/manage");
       } catch (error) {
-        addMessage(error.message || "Failed to create raffle", "error");
+        console.log(error.message || "Failed to create raffle");
       } finally {
         setIsSubmitting(false);
       }

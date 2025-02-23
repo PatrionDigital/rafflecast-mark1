@@ -1,5 +1,4 @@
-import React from 'react';
-import { useRouteError } from 'react-router-dom';
+import { useRouteError } from "react-router-dom";
 
 const ErrorBoundary = () => {
   const error = useRouteError();
@@ -7,12 +6,12 @@ const ErrorBoundary = () => {
   return (
     <div className="error-container">
       <h2>Oops! Something went wrong</h2>
-      <p>{error?.message || 'An unexpected error occurred'}</p>
-      {error?.stack && process.env.NODE_ENV === 'development' && (
+      <p>{error?.message || "An unexpected error occurred"}</p>
+      {error?.stack && process.env.NODE_ENV === "development" && (
         <pre className="error-stack">{error.stack}</pre>
       )}
     </div>
   );
 };
 
-export default ErrorBoundary; 
+export default ErrorBoundary;

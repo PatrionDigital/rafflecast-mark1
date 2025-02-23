@@ -3,12 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { useProfile } from "@farcaster/auth-kit";
 import { useRaffle } from "../hooks/useRaffle";
 import { settleRaffle } from "../utils/raffleUtils";
-import { useMessages } from "../hooks/useMessageContext";
 
 const ManageRafflesPage = () => {
   const { isAuthenticated, profile } = useProfile();
-  const { getRafflesByCreator, getEntriesByRaffleId, clearMessage } =
-    useRaffle();
+  const { getRafflesByCreator, getEntriesByRaffleId } = useRaffle();
   const [raffles, setRaffles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [entries, setEntries] = useState([]);
@@ -16,12 +14,6 @@ const ManageRafflesPage = () => {
   const [fetchingEntries, setFetchingEntries] = useState(false);
   const { fid = "" } = profile || {};
   const navigate = useNavigate();
-  const { addMessage } = useMessages();
-
-  useEffect(() => {
-    // Reset the RaffleContext eventMessage when loading new component/page
-    clearMessage();
-  }, [clearMessage]);
 
   useEffect(() => {
     if (fid) {
@@ -42,7 +34,6 @@ const ManageRafflesPage = () => {
   const handleCheckEntries = async (raffleId) => {
     console.log("RaffleId to check:", raffleId);
     setFetchingEntries(true);
-    //clearMessage();
     setSelectedRaffle(raffleId);
     try {
       const fetchedEntries = await getEntriesByRaffleId(raffleId);
@@ -56,7 +47,7 @@ const ManageRafflesPage = () => {
 
   const handleSettleRaffle = async (raffleId) => {
     if (!raffles || raffles.length === 0) {
-      addMessage("No raffles available to settle.", "error");
+      console.log("No raffles available to settle.");
       return;
     }
 
@@ -66,17 +57,17 @@ const ManageRafflesPage = () => {
       const result = await settleRaffle(raffle, entriesForRaffle);
 
       if (result.success) {
-        addMessage(`Raffle ${raffleId} has been settled.`, "success");
+        console.log(`Raffle ${raffleId} has been settled.`);
         navigate(`/creator/distribute-rewards/${raffleId}`, {
           state: {
             winners: result.winners.map((winner) => winner.prizeWallet),
           },
         });
       } else {
-        addMessage(result.error || "Error settling raffle", "error");
+        console.log(result.error || "Error settling raffle");
       }
     } catch (error) {
-      addMessage(error.message || "Error settling raffle", "error");
+      console.log(error.message || "Error settling raffle");
     }
   };
 

@@ -1,20 +1,33 @@
 .page-container {
-  padding: 20px;
+  padding: 5px;
+  overflow: hidden;
+  min-height: 50vh;
+  scrollbar-width: none;
+}
+/* Hide scrollbar for Webkit browsers */
+.page-container::-webkit-scrollbar {
+  display: none;
 }
 
 .section {
-  margin: 20px 0;
+  margin: 0;
+}
+
+.section h2 {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .table-container {
   margin-top: 20px;
   overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .action-buttons {
   display: flex;
   gap: 10px;
-  margin: 10px 0;
+  margin: 5px 0;
 }
 
 .form-section {
@@ -22,29 +35,174 @@
   margin: 0 auto;
 }
 
-/* Add these new styles */
-.auth-message {
-  color: #e53e3e;
-  font-weight: 600;
-  padding: 12px;
-  margin: 12px 0;
-  background-color: #fff5f5;
-  border: 1px solid #fc8181;
-  border-radius: 4px;
-}
-
 .raffle-list {
   list-style: none;
   padding: 0;
   margin: 16px 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.logged-in .raffle-list {
+  margin-top: 12px; /* Adjust this value to match the height of .auth-message for when user is logged in */
 }
 
 .raffle-item {
-  padding: 16px;
-  margin: 8px 0;
-  border: 1px solid #e2e8f0;
-  border-radius: 4px;
+  padding: 20px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background-color: var(--background-color);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.raffle-item:hover {
+  transform: translateY(-2px);
+  margin-top: 2px; /* Adjust this value to prevent the top border from being cut off */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Update the raffle grid styles */
+.raffle-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 12px;
+}
+
+.raffle-grid.hidden {
+  display: none;
+}
+
+.raffle-card {
   background-color: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.raffle-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.raffle-card h3 {
+  font-size: 1rem;
+  margin: 0 0 4px 0;
+}
+
+.raffle-card p {
+  font-size: 0.875rem;
+  margin: 0;
+  line-height: 1.2;
+}
+
+/* Add media queries for responsive behavior */
+@media (max-width: 1024px) {
+  .raffle-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .raffle-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* styles.css or relevant CSS file */
+.raffle-details-panel {
+  position: relative;
+  background-color: var(--header-background-color);
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 20px;
+  padding: 15px;
+  justify-content: center;
+  z-index: 1000;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+}
+
+.raffle-details-left {
+  background: var(--background-color);
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  border-radius: 8px;
+  width: 100%;
+  border: 1px solid var(--border-color);
+  margin-right: 5px;
+  position: relative;
+}
+.raffle-title {
+  font-size: calc(var(--font-size-xlarge) + 10px);
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 4px;
+}
+.raffle-details-creator {
+  font-size: calc(var(--font-size-small) + 4px);
+  font-style: underline;
+}
+.raffle-details-dates {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: calc(var(--font-size-small) + 2px);
+}
+.raffle-details-description {
+  font-style: italic;
+}
+.raffle-details-right {
+  display: flex;
+  flex-direction: column;
+  margin-left: 5px;
+}
+.raffle-details-criteria {
+  font-size: calc(var(--font-size-small) + 2px);
+  background: var(--background-color);
+  padding: 10px;
+  border-radius: 8px;
+  width: 90%%;
+  border: 1px solid var(--border-color);
+}
+
+.raffle-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.raffle-date {
+  color: var(--text-color-secondary);
+  font-size: var(--font-size-small);
+}
+
+.raffle-conditions {
+  background-color: var(--background-color-secondary);
+  padding: 12px;
+  border-radius: 4px;
+  font-size: var(--font-size-small);
+}
+
+.raffle-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: auto;
 }
 
 /* Layout components */
@@ -119,7 +277,7 @@
 }
 
 .nav-list .active-link::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 0;
@@ -187,9 +345,46 @@
 .main-content {
   margin-top: var(--header-height);
   margin-bottom: var(--footer-height);
-  min-height: calc(100vh - var(--header-height) - var(--footer-height));
-  padding: 20px;
+  min-height: calc(80vh - var(--header-height) - var(--footer-height));
+  max-height: calc(80vh - var(--header-height) - var(--footer-height));
+  padding: 0px;
   max-width: 1280px;
   margin-left: auto;
   margin-right: auto;
+  overflow: hidden; /* Prevent scrollbars */
+}
+/* styles.css or relevant CSS file */
+.hidden {
+  display: none; /* Hide the element */
+}
+
+.close-button {
+  position: absolute; /* Position the button absolutely within the panel */
+  top: 2px; /* Adjust as needed */
+  left: 2px; /* Adjust as needed */
+  background-color: var(--header-background-color);
+  border: 1px solid var(--border-color); /* Remove default button border */
+  border-radius: 8px; /* Make it circular */
+  width: 30px; /* Set width */
+  height: 30px; /* Set height */
+  color: white; /* Text color */
+  cursor: pointer; /* Change cursor to pointer */
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
+  overflow: hidden;
+}
+.close-icon {
+  display: block; /* Make the span a block element */
+  text-align: center; /* Center the "X" */
+  line-height: 8px; /* Center vertically within the button */
+  font-size: 16px; /* Adjust font size for better visibility */
+  color: var(--link-color); /* Text color */
+  margin-left: -4px;
+}
+.raffle-details-panel-left .close-button:hover {
+  background-color: var(--border-color);
+  color: white;
+}
+
+.close-button:focus {
+  outline: none; /* Remove focus outline */
 }

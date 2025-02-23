@@ -2,8 +2,6 @@ import { Outlet, useMatches, useRouteError } from "react-router-dom";
 import Header from "../../components/Header";
 import { Footer } from "../../components/Footer";
 import ErrorBoundary from "../../components/ErrorBoundary";
-import MessageDisplay from "../../components/MessageDisplay";
-import { MessageProvider } from "../../context/MessageContext";
 
 const ParentLayout = () => {
   const matches = useMatches();
@@ -18,16 +16,13 @@ const ParentLayout = () => {
   const navLinks = matches[0]?.handle?.navLinks || [];
 
   return (
-    <MessageProvider>
-      <div className="flex flex-col min-h-screen">
-        <Header title="Rafflecast" navLinks={navLinks} />
-        <MessageDisplay />
-        <main className="main-content">
-          <Outlet />
-        </main>
-        <Footer />
-      </div>
-    </MessageProvider>
+    <div className="flex flex-col min-h-screen">
+      <Header title="Rafflecast" navLinks={navLinks} />
+      <main className="main-content">
+        <Outlet />
+      </main>
+      <Footer />
+    </div>
   );
 };
 

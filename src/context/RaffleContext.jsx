@@ -10,13 +10,14 @@ import {
   onRaffleEntry,
   onRafflePhaseUpdated,
 } from "../utils/tursoUtils";
+import { checkLikeCondition } from "../utils/farcasterUtils";
 
 const RaffleContext = createContext();
 
 export function RaffleProvider({ children }) {
   const [raffles, setRaffles] = useState([]);
   const [entries, setEntries] = useState([]);
-  const [eventMessage, setEventMessage] = useState(null);
+  const [eligibilityStatus, setEligibilityStatus] = useState([]);
 
   useEffect(() => {
     const loadData = async () => {
@@ -25,13 +26,15 @@ export function RaffleProvider({ children }) {
 
       setRaffles(fetchedRaffles);
       setEntries(fetchedEntries);
+
+      const intitialELigibilityStatus = fetchedRaffles.map((raffle) => ({
+        raffleId: raffle.id,
+        status: "Ineligible",
+      }));
+      setEligibilityStatus(intitialELigibilityStatus);
     };
     loadData();
   }, []);
-
-  const clearMessage = () => {
-    setEventMessage("");
-  };
 
   useEffect(() => {
     const cleanupListeners = [
@@ -45,9 +48,9 @@ export function RaffleProvider({ children }) {
             }
             return [...prev, data.newRaffle];
           });
-          setEventMessage("Raffle created successfully!");
+          console.log("Raffle created successfully!");
         } else {
-          setEventMessage(`Error creating raffle: ${data.error}`);
+          console.log(`Error creating raffle: ${data.error}`);
         }
       }),
       onRaffleEntry((data) => {
@@ -60,9 +63,9 @@ export function RaffleProvider({ children }) {
             }
             return [...(prevEntries || []), data.newEntry];
           });
-          setEventMessage("Entry added successfully!");
+          console.log("Entry added successfully!");
         } else {
-          setEventMessage(`Error adding entry: ${data.error}`);
+          console.log(`Error adding entry: ${data.error}`);
         }
       }),
       onRafflePhaseUpdated((data) => {
@@ -74,11 +77,11 @@ export function RaffleProvider({ children }) {
                 : raffle
             )
           );
-          setEventMessage(
+          console.log(
             `Raffle ${data.raffleId} updated to phase ${data.newPhase}`
           );
         } else {
-          setEventMessage(`Error updating raffle phase: ${data.error}`);
+          console.log(`Error updating raffle phase: ${data.error}`);
         }
       }),
     ];
@@ -95,10 +98,10 @@ export function RaffleProvider({ children }) {
     setRaffles((prev) => [...prev, raffleData]);
     try {
       await addRaffleToDB(raffleData);
-      setEventMessage("Raffle created successfully!");
+      console.log("Raffle created successfully!");
     } catch (error) {
       console.error("Error adding raffle:", error.message);
-      setEventMessage("An error occurred while creating the raffle.");
+      console.log("An error occurred while creating the raffle.");
 
       // Revert the state update if the database write fails
       setRaffles((prev) =>
@@ -126,18 +129,18 @@ export function RaffleProvider({ children }) {
         await addEntryToDB(entryData);
 
         // On success, show success message
-        setEventMessage("Entry added successfully!");
+        console.log("Entry added successfully!");
       } catch (error) {
         // In case of error, show failure message
         console.error("Error adding entry:", error.message);
-        setEventMessage("An error occurred while joining the raffle.");
+        console.log("An error occurred while joining the raffle.");
 
         // Revert the state update if the database write fails
         setEntries((prev) => prev.filter((entry) => entry.id !== entryData.id));
       }
     } else {
       // If the user has already entered, show a message
-      setEventMessage("You have already joined this raffle!");
+      console.log("You have already joined this raffle!");
       return;
     }
   };
@@ -235,26 +238,42 @@ export function RaffleProvider({ children }) {
   const getEntriesByEntrant = (entrant) => {
     return entries.filter((entry) => entry.participant === entrant);
   };
+
+  const updateEligibilityStatus = (raffleId, status) => {
+    console.log(
+      "Updating eligibility status for raffle:",
+      raffleId,
+      "to",
+      status
+    );
+    setEligibilityStatus((prev) =>
+      prev.map((item) =>
+        item.raffleId === raffleId ? { ...item, status } : item
+      )
+    );
+  };
+
   // NOTE: Functions like addRaffle, addEntry etc are stable and don't need to be included in the dependency array
-  // as they only depend on raffles, entries and eventMessage
+  // as they only depend on raffles, entries, eligibilityStatus and eventMessage
   const contextValue = useMemo(
     () => ({
       raffles,
       entries,
+      eligibilityStatus,
+      getRafflesByPhase,
       addRaffle,
       addEntry,
       updateRaffle,
       updateEntry,
-      getRafflesByPhase,
       getRafflesByCreator,
       getRaffleById,
       getEntriesByRaffleId,
       getEntriesByEntrant,
-      eventMessage,
-      clearMessage,
+      updateEligibilityStatus,
+      checkLikeCondition,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [raffles, entries, eventMessage]
+    [raffles, entries, eligibilityStatus]
   );
 
   return (
