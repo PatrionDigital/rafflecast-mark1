@@ -1,0 +1,123 @@
+/* RaffleSummary Component Fixes */
+
+/* Main summary container */
+.raffle-summary {
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.summary-title {
+  font-size: 20px;
+  color: var(--color-primary);
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+/* Summary section styling */
+.summary-section {
+  background-color: white;
+  border-radius: 8px;
+  padding: 15px 20px;
+  margin-bottom: 15px;
+  border: 1px solid var(--border-color);
+  position: relative;
+}
+
+/* Header with edit button */
+.summary-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.summary-header h5 {
+  margin: 0;
+  color: var(--color-primary);
+  font-size: 16px;
+}
+
+.edit-button {
+  background-color: white;
+  color: var(--color-accent);
+  border: 1px solid var(--color-accent);
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.edit-button:hover {
+  background-color: var(--color-accent);
+  color: white;
+}
+
+/* Field styling */
+.summary-field {
+  margin-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.field-label {
+  font-weight: 500;
+  color: var(--color-primary);
+  font-size: 14px;
+  margin-bottom: 3px;
+}
+
+.field-value {
+  margin-bottom: 3px;
+}
+
+/* Special field types */
+.description-value {
+  font-style: italic;
+  padding: 5px 0;
+}
+
+.hash-value {
+  font-family: monospace;
+  font-size: 12px;
+  word-break: break-all;
+  background-color: rgba(114, 155, 121, 0.1);
+  padding: 5px;
+  border-radius: 3px;
+}
+
+/* Cast preview in summary */
+.cast-preview.small {
+  background-color: rgba(114, 155, 121, 0.1);
+  border-radius: 6px;
+  padding: 12px;
+  margin-top: 8px;
+}
+
+/* Button positioning */
+.form-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Make sure buttons have proper contrast */
+.secondary-button {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.primary-button {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+/* Fix edit button styling */
+.edit-button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  margin: 0;
+}

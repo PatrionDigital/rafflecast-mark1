@@ -1,0 +1,239 @@
+/* RaffleCast Form Styles */
+
+/* Creator info section */
+.creator-info-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 12px;
+  margin-bottom: 16px;
+  background-color: rgba(114, 155, 121, 0.1);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 200px;
+}
+
+.info-label {
+  font-size: var(--font-size-small);
+  color: var(--text-color);
+  opacity: 0.8;
+}
+
+.info-value {
+  font-size: var(--font-size-medium);
+  font-weight: 500;
+}
+
+.truncated-address {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Form Progress Indicator */
+.form-progress-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 24px 0;
+  position: relative;
+}
+
+.progress-step {
+  flex: 0 0 auto;
+  width: 110px;
+  text-align: center;
+  padding: 8px 0;
+  border-radius: 16px;
+  background-color: var(--background-color);
+  border: 1px solid var(--border-color);
+  font-size: var(--font-size-small);
+  font-weight: 500;
+  position: relative;
+  z-index: 1;
+}
+
+.progress-step.active {
+  background-color: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+}
+
+.progress-line {
+  flex: 1;
+  height: 2px;
+  background-color: var(--border-color);
+  margin: 0 -4px;
+}
+
+/* Form Content */
+.form-content {
+  background-color: var(--background-color);
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid var(--border-color);
+}
+
+.step-title {
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: var(--font-size-large);
+  color: var(--color-primary);
+}
+
+/* Form Group Styling */
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: var(--font-size-medium);
+  background-color: white;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px rgba(120, 153, 212, 0.2);
+}
+
+.error-input {
+  border-color: var(--color-highlight) !important;
+  background-color: rgba(255, 71, 218, 0.05);
+}
+
+.error-message {
+  color: var(--color-highlight);
+  font-size: var(--font-size-small);
+  margin-top: 4px;
+}
+
+.input-help {
+  font-size: var(--font-size-small);
+  color: var(--text-color);
+  opacity: 0.7;
+  margin-top: 4px;
+}
+
+.description-input {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* Date Group */
+.date-group {
+  display: flex;
+  gap: 12px;
+}
+
+.date-input {
+  flex: 2;
+}
+
+.time-input {
+  flex: 1;
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 24px;
+}
+
+.primary-button {
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+
+.primary-button:hover:not(:disabled) {
+  background-color: var(--color-highlight);
+}
+
+.primary-button:disabled {
+  background-color: var(--color-disabled);
+  cursor: not-allowed;
+}
+
+.secondary-button {
+  background-color: transparent;
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.secondary-button:hover {
+  background-color: rgba(130, 11, 138, 0.1);
+}
+
+/* Error Banner */
+.error-banner {
+  background-color: rgba(255, 71, 218, 0.1);
+  border: 1px solid var(--color-highlight);
+  color: var(--color-primary);
+  padding: 12px;
+  border-radius: 4px;
+  margin-top: 16px;
+  text-align: center;
+  font-weight: 500;
+}
+
+/* Auth Notice */
+.auth-notice {
+  background-color: var(--auth-message-background);
+  border: 1px solid var(--auth-message-border);
+  color: var(--auth-message-text);
+  padding: 16px;
+  border-radius: 4px;
+  text-align: center;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .date-group {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .secondary-button {
+    order: 2;
+  }
+
+  .primary-button {
+    order: 1;
+  }
+}

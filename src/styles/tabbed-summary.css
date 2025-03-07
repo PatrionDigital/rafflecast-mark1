@@ -1,0 +1,142 @@
+/* Tabbed RaffleSummary Component Styles */
+
+/* Main container */
+.raffle-summary {
+  width: 95%;
+  max-width: 570px;
+  margin: 0 auto;
+}
+
+/* Tab buttons container */
+.summary-tabs {
+  display: flex;
+  margin-bottom: 15px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* Tab button styling */
+.tab-button {
+  background: none;
+  border: none;
+  padding: 10px 15px;
+  color: var(--text-color);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  opacity: 0.7;
+  position: relative;
+  margin: 0;
+}
+
+.tab-button.active {
+  color: var(--color-primary);
+  opacity: 1;
+  font-weight: 600;
+}
+
+.tab-button.active::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--color-primary);
+}
+
+.tab-button:hover:not(.active) {
+  opacity: 0.9;
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+/* Summary content */
+.summary-content {
+  margin-bottom: 20px;
+}
+
+/* Section styling */
+.summary-section {
+  background-color: white;
+  border-radius: 8px;
+  padding: 15px 20px;
+  border: 1px solid var(--border-color);
+  position: relative;
+}
+
+/* Edit button */
+.edit-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: white;
+  color: var(--color-accent);
+  border: 1px solid var(--color-accent);
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.edit-button:hover {
+  background-color: var(--color-accent);
+  color: white;
+}
+
+/* Field styling - more compact */
+.summary-field {
+  margin-bottom: 10px;
+}
+
+.field-label {
+  display: inline-block;
+  font-weight: 500;
+  color: var(--color-primary);
+  font-size: 14px;
+  margin-right: 5px;
+}
+
+.field-value {
+  display: inline-block;
+}
+
+/* Description styling - italics */
+.description-field {
+  margin: 0 0 10px 0;
+  font-style: italic;
+}
+
+.description-value {
+  font-style: italic;
+  color: #555;
+}
+
+/* Cast preview styling */
+.cast-preview.small {
+  background-color: rgba(114, 155, 121, 0.1);
+  border-radius: 6px;
+  padding: 12px;
+  margin-top: 5px;
+  position: relative;
+}
+
+.cast-author {
+  font-weight: 600;
+  color: var(--color-primary);
+  margin-bottom: 5px;
+}
+
+.cast-text {
+  font-size: 14px;
+  line-height: 1.4;
+  margin-bottom: 10px;
+}
+
+.cast-hash {
+  font-family: monospace;
+  font-size: 10px;
+  color: #666;
+  word-break: break-all;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  padding-top: 5px;
+}

@@ -1,0 +1,40 @@
+/* Fix for cast preview container spacing and border */
+.cast-preview {
+  background-color: rgba(114, 155, 121, 0.1);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 12px;
+  margin: 8px 0 16px 0; /* Add more bottom margin */
+  width: 95%;
+  max-width: 95%;
+}
+
+/* Fix spacing after 'participants will need to like' text */
+.input-help,
+.form-content p {
+  margin-bottom: 20px;
+}
+
+/* Add more space at the bottom of the form content */
+.form-content {
+  padding-bottom: 25px;
+}
+
+/* Ensure proper button positioning */
+.form-actions {
+  margin-top: 20px;
+  padding-bottom: 10px;
+  width: 95%;
+}
+
+/* Create better visual separation for different sections */
+.form-group {
+  margin-bottom: 15px;
+  padding-bottom: 5px;
+}
+
+/* Add subtle divider between form sections */
+.form-group:not(:last-child) {
+  border-bottom: 1px solid rgba(114, 155, 121, 0.1);
+  padding-bottom: 15px;
+}
