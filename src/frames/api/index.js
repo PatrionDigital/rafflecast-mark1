@@ -20,11 +20,12 @@ if (typeof window !== "undefined") {
 /**
  * Signals to Farcaster client that the frame is ready to display
  * This hides the splash screen
+ * @returns {Promise<void>}
  */
 export const signalReady = () => {
-  if (!FrameSDK) {
-    console.warn("Frame SDK not available");
-    return Promise.reject(new Error("Frame SDK not available"));
+  if (!FrameSDK || !FrameSDK.actions || !FrameSDK.actions.ready) {
+    console.warn("Frame SDK ready action not available");
+    return Promise.reject(new Error("Frame SDK ready action not available"));
   }
 
   return FrameSDK.actions.ready();
@@ -33,11 +34,12 @@ export const signalReady = () => {
 /**
  * Opens an external URL from within the frame
  * @param {string} url - URL to open
+ * @returns {Promise<void>}
  */
 export const openUrl = (url) => {
-  if (!FrameSDK) {
-    console.warn("Frame SDK not available");
-    return Promise.reject(new Error("Frame SDK not available"));
+  if (!FrameSDK || !FrameSDK.actions || !FrameSDK.actions.openUrl) {
+    console.warn("Frame SDK openUrl action not available");
+    return Promise.reject(new Error("Frame SDK openUrl action not available"));
   }
 
   return FrameSDK.actions.openUrl(url);
@@ -45,11 +47,12 @@ export const openUrl = (url) => {
 
 /**
  * Closes the current frame
+ * @returns {Promise<void>}
  */
 export const closeFrame = () => {
-  if (!FrameSDK) {
-    console.warn("Frame SDK not available");
-    return Promise.reject(new Error("Frame SDK not available"));
+  if (!FrameSDK || !FrameSDK.actions || !FrameSDK.actions.close) {
+    console.warn("Frame SDK close action not available");
+    return Promise.reject(new Error("Frame SDK close action not available"));
   }
 
   return FrameSDK.actions.close();
@@ -60,9 +63,9 @@ export const closeFrame = () => {
  * @returns {Promise<Object>} Frame context
  */
 export const getFrameContext = async () => {
-  if (!FrameSDK) {
-    console.warn("Frame SDK not available");
-    return Promise.reject(new Error("Frame SDK not available"));
+  if (!FrameSDK || !FrameSDK.context) {
+    console.warn("Frame SDK context not available");
+    return Promise.reject(new Error("Frame SDK context not available"));
   }
 
   try {
@@ -75,7 +78,7 @@ export const getFrameContext = async () => {
 
 /**
  * Checks if the current environment is a Farcaster frame
- * @returns {boolean} True if running in a frame
+ * @returns {Promise<boolean>} True if running in a frame
  */
 export const isInFrame = async () => {
   if (!FrameSDK) return false;
@@ -106,6 +109,7 @@ export const getUserInfo = async () => {
       username: context.user.username,
       displayName: context.user.displayName,
       pfp: context.user.pfp,
+      custody: context.user.custody,
     };
   } catch (error) {
     console.error("Error getting user info:", error);

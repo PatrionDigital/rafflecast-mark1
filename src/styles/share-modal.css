@@ -1,0 +1,122 @@
+/* Modal styles are imported from the existing modal classes */
+
+/* Share Modal specific styles */
+.share-modal {
+  width: 90%;
+  max-width: 550px;
+}
+
+.share-section {
+  margin-bottom: 20px;
+}
+
+.share-section h3 {
+  font-size: 18px;
+  margin-bottom: 8px;
+  color: var(--color-primary, #820b8a);
+}
+
+.share-description {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.share-link-container {
+  display: flex;
+  margin-bottom: 12px;
+}
+
+.share-link-input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px 0 0 4px;
+  font-size: 14px;
+  background-color: #f9f9f9;
+}
+
+.copy-button {
+  border-radius: 0 4px 4px 0;
+  margin: 0;
+  border: 1px solid var(--color-primary, #820b8a);
+  background-color: var(--color-primary, #820b8a);
+  color: white;
+  width: auto;
+  padding: 0 15px;
+}
+
+.copy-button:hover {
+  background-color: var(--color-highlight, #ff47da);
+}
+
+.share-options {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.share-button {
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin: 0 8px;
+  background-color: var(--color-accent, #7899d4);
+  color: white;
+}
+
+.share-button:hover {
+  background-color: var(--color-highlight, #ff47da);
+}
+
+.warpcast-button {
+  background-color: #a45eff;
+  color: white;
+  border: none;
+}
+
+.warpcast-button:hover {
+  background-color: #8a42e3;
+}
+
+/* In raffle details panel */
+.raffle-actions .share-button {
+  background-color: var(--color-accent, #7899d4);
+  color: white;
+}
+
+.raffle-actions .share-button:hover {
+  background-color: var(--color-highlight, #ff47da);
+}
+
+/* Toast notification for copy confirmation */
+.copy-toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 14px;
+  z-index: 2000;
+  animation: fadeInOut 2s ease-in-out;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}

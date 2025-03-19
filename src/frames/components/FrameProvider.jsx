@@ -36,16 +36,22 @@ const FrameProvider = ({ children, autoConnect = true }) => {
         if (autoConnect && context?.client?.clientFid) {
           // If using wagmi, can connect to the user's wallet
           if (window.wagmiConfig && window.farcasterFrame) {
-            const { connect } = await import("wagmi/actions");
-            connect(window.wagmiConfig, {
-              connector: window.farcasterFrame(),
-            });
+            try {
+              const { connect } = await import("wagmi/actions");
+              connect(window.wagmiConfig, {
+                connector: window.farcasterFrame(),
+              });
+            } catch (err) {
+              console.warn("Error connecting with wagmi:", err);
+            }
           }
         }
 
         // Add small delay to allow UI to render before hiding splash screen
         setTimeout(() => {
-          FrameSDK.actions.ready();
+          if (FrameSDK?.actions?.ready) {
+            FrameSDK.actions.ready();
+          }
         }, 500);
       } catch (error) {
         console.error("Error initializing Farcaster Frame:", error);
