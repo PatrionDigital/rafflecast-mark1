@@ -13,6 +13,7 @@ import CreateDistributionPage from "./pages/CreateDistributionPage";
 import ManageRafflesPage from "./pages/ManageRafflesPage";
 import EntriesManagementPage from "./pages/EntriesManagementPage";
 import FrameRafflePage from "./pages/FrameRafflePage";
+import FrameDebugPage from "./pages/FrameDebugPage";
 
 export const router = createBrowserRouter([
   {
@@ -68,6 +69,10 @@ export const router = createBrowserRouter([
   {
     path: "/frame/raffle/:raffleId",
     element: <FrameRafflePage />,
+  },
+  {
+    path: "/debug/frames",
+    element: <FrameDebugPage />,
   },
 ]);
 

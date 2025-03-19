@@ -10,6 +10,9 @@ import { useProfile } from "@farcaster/auth-kit";
 import { useRaffle } from "../hooks/useRaffle";
 import { getCreatorUsername } from "../utils/farcasterUtils";
 
+// Components
+import ShareModal from "./ShareModal";
+
 const RaffleDetailsPanel = ({ raffle, onClose }) => {
   const {
     eligibilityStatus,
@@ -29,10 +32,11 @@ const RaffleDetailsPanel = ({ raffle, onClose }) => {
   const [creatorUsername, setCreatorUsername] = useState(null);
   const [creatorLoading, setCreatorLoading] = useState(true);
   const [creatorError, setCreatorError] = useState(null);
+  const [showShareModal, setShowShareModal] = useState(false);
 
   // Check if the user has already entered the raffle
   useEffect(() => {
-    const userEntries = getEntriesByEntrant(profile.fid);
+    const userEntries = getEntriesByEntrant(profile?.fid);
     const hasEnteredThisRaffle = userEntries.some(
       (entry) => entry.raffleId === raffle.id
     );
@@ -252,8 +256,19 @@ const RaffleDetailsPanel = ({ raffle, onClose }) => {
           >
             {hasEntered ? "Already Entered" : "Join Raffle"}
           </button>
+
+          <button
+            className="share-button"
+            onClick={() => setShowShareModal(true)}
+          >
+            Share Raffle
+          </button>
         </div>
       </div>
+
+      {showShareModal && (
+        <ShareModal raffle={raffle} onClose={() => setShowShareModal(false)} />
+      )}
     </div>
   );
 };

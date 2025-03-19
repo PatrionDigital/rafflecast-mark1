@@ -1,5 +1,4 @@
 // src/pages/FrameRafflePage.jsx
-// src/pages/FrameRafflePage.jsx
 import { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
@@ -13,7 +12,7 @@ import {
   openUrl,
   closeFrame,
 } from "../frames/api";
-import { handleFrameRaffleEntry } from "../frames/api/frameHandlers";
+import { generateBase64FrameImage } from "../frames/utils/base64FrameImage";
 
 // Styles
 import "../styles/frame.css";
@@ -144,33 +143,46 @@ const FrameRafflePage = () => {
     if (!frameContext?.user?.fid || !raffle) return;
 
     try {
-      const result = await handleFrameRaffleEntry({
+      // First check eligibility
+      if (!raffle.criteria?.linkedCast) {
+        setJoinStatus({
+          success: false,
+          message: "This raffle doesn't have an entry condition",
+        });
+        return;
+      }
+
+      const hasLiked = await checkLikeCondition(
+        frameContext.user.fid,
+        raffle.criteria.linkedCast
+      );
+
+      if (!hasLiked) {
+        setJoinStatus({
+          success: false,
+          message: "You must like the cast to enter this raffle",
+        });
+        return;
+      }
+
+      // Create the entry with the user's custody address
+      const entryData = {
+        id: uuidv4(),
         raffleId,
-        addEntry,
-        checkEligibility: async () => {
-          // Pre-check eligibility
-          if (!raffle.criteria?.linkedCast) return "No linked Cast";
+        participant: frameContext.user.fid,
+        enteredAt: new Date().toISOString(),
+        prizeWallet: frameContext.user.custody || selectedAddress,
+      };
 
-          const hasLiked = await checkLikeCondition(
-            frameContext.user.fid,
-            raffle.criteria.linkedCast
-          );
-
-          return hasLiked ? "Eligible" : "Ineligible";
-        },
-      });
+      await addEntry(entryData);
 
       setJoinStatus({
-        success: result.success,
-        message: result.success
-          ? "Successfully joined the raffle!"
-          : result.error || "Failed to join raffle",
+        success: true,
+        message: "Successfully joined the raffle!",
       });
 
-      if (result.success) {
-        // Close frame after successful entry with a delay to show success message
-        setTimeout(() => closeFrame(), 2000);
-      }
+      // Close frame after successful entry with a delay to show success message
+      setTimeout(() => closeFrame(), 2000);
     } catch (error) {
       console.error("Error in frame entry:", error);
       setJoinStatus({
@@ -178,7 +190,14 @@ const FrameRafflePage = () => {
         message: error.message || "Error processing raffle entry",
       });
     }
-  }, [frameContext, raffle, raffleId, addEntry, checkLikeCondition]);
+  }, [
+    frameContext,
+    raffle,
+    raffleId,
+    addEntry,
+    checkLikeCondition,
+    selectedAddress,
+  ]);
 
   // Initial data loading
   useEffect(() => {
@@ -249,9 +268,8 @@ const FrameRafflePage = () => {
     return <div className="error">Raffle not found</div>;
   }
 
-  // Generate a simple static image URL for frame meta tag
-  const imageUrl = `${window.location.origin}/api/image/raffle/${raffleId}`;
-  // If you implement an actual image API later, replace this with a real endpoint
+  // Generate a base64 data URL for the frame image
+  const imageUrl = generateBase64FrameImage(raffle);
 
   return (
     <FrameProvider>
