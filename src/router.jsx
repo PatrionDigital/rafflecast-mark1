@@ -12,6 +12,7 @@ import CreateRafflePage from "./pages/CreateRafflePage";
 import CreateDistributionPage from "./pages/CreateDistributionPage";
 import ManageRafflesPage from "./pages/ManageRafflesPage";
 import EntriesManagementPage from "./pages/EntriesManagementPage";
+import FrameRafflePage from "./pages/FrameRafflePage";
 
 export const router = createBrowserRouter([
   {
@@ -62,6 +63,11 @@ export const router = createBrowserRouter([
         ],
       },
     ],
+  },
+  // Frame routes - these don't use the regular layout
+  {
+    path: "/frame/raffle/:raffleId",
+    element: <FrameRafflePage />,
   },
 ]);
 

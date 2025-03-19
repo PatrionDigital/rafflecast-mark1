@@ -1,0 +1,8 @@
+{
+  "name": "Rafflecast",
+  "description": "Create and join raffles for the Farcaster community",
+  "icon": "https://rafflecast.xyz/favicon.ico",
+  "domains": [
+    "rafflecast.xyz"
+  ]
+}
