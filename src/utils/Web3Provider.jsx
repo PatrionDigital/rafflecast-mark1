@@ -1,33 +1,49 @@
-// wagmiConfig.js
+// src/utils/Web3Provider.jsx
 import PropTypes from "prop-types";
 import { WagmiProvider, http, createConfig } from "wagmi";
 import { base } from "wagmi/chains";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConnectKitProvider, getDefaultConfig } from "connectkit";
+import { farcasterFrameConnector } from "../frames/utils/frameConnector";
 
 // Create the Wagmi config
+const configOptions = getDefaultConfig({
+  // Your dApps chains
+  chains: [base],
+  transports: {
+    // RPC URL for each chain
+    [base.id]: http("https://mainnet.base.org"),
+  },
 
-const config = createConfig(
-  getDefaultConfig({
-    // Your dApps chains
-    chains: [base],
-    transports: {
-      // RPC URL for each chain
-      [base.id]: http("https://mainnet.base.org"),
-    },
+  // Required API Keys
+  walletConnectProjectId: "f527dbe96a45f7e9b5d3f52b476b2d55",
 
-    // Required API Keys
-    walletConnectProjectId: "f527dbe96a45f7e9b5d3f52b476b2d55",
+  // Required App Info
+  appName: "Rafflecast",
 
-    // Required App Info
-    appName: "Rafflecast",
+  // Optional App Info
+  appDescription: "Raffles for Farcaster",
+  appUrl: "https://rafflecast.xyz",
+  appIcon: "https://family.co/logo.png", // your app's icon, no bigger than 1024x1024px (max. 1MB)
+});
 
-    // Optional App Info
-    appDescription: "Raffles for Farcaster",
-    appUrl: "https://rafflecast.xyz",
-    appIcon: "https://family.co/logo.png", // your app's icon, no bigger than 1024x1024px (max. 1MB)
-  })
-);
+/// Add the Farcaster frame connector conditionally
+if (
+  typeof window !== "undefined" &&
+  window.location.pathname.includes("/frame/")
+) {
+  configOptions.connectors = [
+    farcasterFrameConnector(),
+    ...(configOptions.connectors || []), // Keep existing connectors
+  ];
+}
+
+const config = createConfig(configOptions);
+
+// Make wagmi config available globally for the frame provider
+if (typeof window !== "undefined") {
+  window.wagmiConfig = config;
+}
 
 const queryClient = new QueryClient();
 
