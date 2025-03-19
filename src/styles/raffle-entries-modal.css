@@ -1,0 +1,273 @@
+/* src/styles/raffle-entries-modal.css */
+
+/* Modal Overlay - creates the darkened background */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(3px);
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Main modal container */
+.modal-content {
+  background-color: white;
+  border-radius: 12px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh; /* Increased from 85vh */
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  animation: modalFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Prevent overall scrolling, will scroll only entries area */
+}
+
+.entries-modal {
+  padding-bottom: 1.5rem;
+  max-height: 90vh; /* Explicit height for entries modal */
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Close button */
+.close-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.75rem;
+  cursor: pointer;
+  color: #888;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s;
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+}
+
+.close-button:hover {
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+/* Modal header */
+.modal-content h2 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  color: var(--color-primary, #820b8a);
+  font-size: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #eee;
+}
+
+/* Entries list header */
+.entries-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.entry-count {
+  font-weight: 500;
+  color: #666;
+}
+
+/* Loading and empty states */
+.modal-loading,
+.modal-empty-state {
+  padding: 2rem;
+  text-align: center;
+  color: #666;
+}
+
+.modal-empty-state p {
+  margin: 0.5rem 0;
+}
+
+/* Entries list container - make only this area scrollable */
+.entries-list {
+  max-height: 70vh; /* Increased from 50vh to make taller */
+  overflow: hidden; /* Hide overflow to prevent entire modal scrolling */
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* Allow it to take available space */
+}
+
+/* Entries table container - enable scrolling */
+.entries-table {
+  width: 100%;
+  border-radius: 8px;
+  overflow-y: auto; /* Enable vertical scrolling */
+  border: 1px solid #eee;
+  max-height: calc(70vh - 80px); /* Increased from 50vh to show more entries */
+  flex-grow: 1; /* Allow it to expand */
+}
+
+/* Table styling */
+.raffle-entries-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.raffle-entries-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: #f8f9fa;
+}
+
+.raffle-entries-table th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: #495057;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.raffle-entries-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #eee;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.raffle-entries-table tr:last-child td {
+  border-bottom: none;
+}
+
+.entry-cell.participant {
+  font-weight: 500;
+}
+
+.truncated-wallet {
+  font-family: monospace;
+  background: #f8f9fa;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+/* Action buttons area */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+
+.modal-actions .btn {
+  min-width: 100px;
+}
+
+/* Cell-specific styling */
+.raffle-entries-table td.participant {
+  font-weight: 500;
+}
+
+.raffle-entries-table td.wallet .truncated-wallet {
+  font-family: monospace;
+  background: #f8f9fa;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .modal-content {
+    width: 95%;
+    padding: 1.5rem;
+    max-height: 95vh; /* Almost full height on mobile */
+  }
+
+  .entries-table {
+    max-height: calc(75vh - 80px); /* More space on mobile */
+  }
+
+  /* Hide the wallet column on medium screens */
+  .raffle-entries-table th:nth-child(3),
+  .raffle-entries-table td:nth-child(3) {
+    display: none;
+  }
+}
+
+@media (max-width: 576px) {
+  .entries-table {
+    max-height: calc(80vh - 80px); /* Even more space on small screens */
+  }
+
+  /* Convert to vertical layout for small screens */
+  .raffle-entries-table {
+    display: block;
+  }
+
+  .raffle-entries-table thead {
+    display: none;
+  }
+
+  .raffle-entries-table tbody,
+  .raffle-entries-table tr {
+    display: block;
+    width: 100%;
+  }
+
+  .raffle-entries-table tr {
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #e9ecef;
+    padding: 0.5rem 0;
+  }
+
+  .raffle-entries-table td {
+    display: flex;
+    padding: 0.25rem 1rem;
+    border-bottom: none;
+    align-items: center;
+  }
+
+  .raffle-entries-table td:before {
+    content: attr(data-label);
+    font-weight: 600;
+    width: 100px;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+
+  /* Show wallet column again, but in vertical layout */
+  .raffle-entries-table td:nth-child(3) {
+    display: flex;
+  }
+}
