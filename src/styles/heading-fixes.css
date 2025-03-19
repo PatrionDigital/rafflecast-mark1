@@ -1,0 +1,67 @@
+/* src/styles/heading-fixes.css */
+
+/* Standardize page headings across the application */
+
+/* Page title (h1 or h2) at the top of each page */
+.page-title,
+.page-header h2,
+.profile-header h1,
+.entries-management h2,
+.form-title {
+  font-size: 1.75rem !important;
+  font-weight: 600;
+  color: var(--color-primary, #820b8a);
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+/* Section titles within pages */
+.section-title,
+.summary-title,
+.step-title {
+  font-size: 1.5rem !important;
+  font-weight: 600;
+  color: var(--color-primary, #820b8a);
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* Card or panel titles */
+.card-title,
+.panel-title,
+.raffle-title {
+  font-size: 1.25rem !important;
+  font-weight: 600;
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+}
+
+/* Modal titles */
+.modal-content h2 {
+  font-size: 1.5rem !important;
+  font-weight: 600;
+  color: var(--color-primary, #820b8a);
+  margin-top: 0;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #eee;
+}
+
+/* Empty state headings */
+.empty-state h3 {
+  font-size: 1.5rem !important;
+  font-weight: 600;
+  color: var(--color-primary, #820b8a);
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+/* Ensure all headings have proper spacing */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: 1.3;
+}

@@ -1,0 +1,94 @@
+/* src/styles/profile-spacing-fixes.css */
+
+/* Fix the top margin for Your Profile heading */
+.profile-dashboard-layout {
+  margin-top: 0; /* Completely removed top margin */
+}
+
+.profile-header {
+  margin-bottom: 0.75rem; /* Further reduced from 1.25rem */
+}
+
+.profile-header h1 {
+  margin-bottom: 0.5rem; /* Further reduced from 0.75rem */
+  margin-top: 0.5rem; /* Added to reduce space at the top */
+}
+
+/* Tighter spacing between "Manage Your Raffles" and cards */
+.page-header {
+  margin-bottom: 0.5rem !important; /* Further reduced from 1rem */
+}
+
+/* Reduce space after "Manage Your Raffles" text */
+.page-container h2 {
+  margin-bottom: 0.5rem !important;
+  margin-top: 0.75rem !important;
+}
+
+/* Add spacing between cards and pagination */
+.raffles-list {
+  margin-bottom: 0.5rem;
+}
+
+/* Fix pagination positioning to avoid footer overlap */
+.pagination-controls {
+  margin-top: 0.5rem; /* Further reduced from 0.75rem */
+  margin-bottom: 2.5rem; /* Reduced from 3rem but still preventing footer overlap */
+  padding-bottom: 0; /* Ensure no extra padding */
+}
+
+/* Adjust spacing in the raffle cards */
+.raffle-card {
+  margin-bottom: 0.25rem; /* Further reduced from 0.5rem */
+}
+
+.raffle-card-header {
+  padding: 0.65rem 1rem; /* Further reduced from 0.75rem */
+}
+
+.raffle-card-body {
+  padding: 0.65rem 1rem; /* Further reduced from 0.75rem */
+}
+
+/* Make info in cards more compact */
+.raffle-info {
+  gap: 0.35rem !important; /* Reduced from 0.5rem */
+}
+
+.info-item {
+  margin-bottom: 0 !important; /* Remove any bottom margin */
+}
+
+/* Adjust page container spacing */
+.page-container {
+  padding-bottom: 2.5rem; /* Reduced from 3.5rem but still preventing footer overlap */
+  padding-top: 0.5rem !important; /* Reduced top padding */
+  margin-top: 0 !important; /* Remove any top margin */
+}
+
+/* Reduce space after tabs */
+.profile-nav-list {
+  margin-bottom: 0.75rem; /* Reduced from default */
+}
+
+/* Fix footer positioning */
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 10;
+  height: 2rem !important; /* Explicitly set footer height */
+}
+
+/* Additional spacing fixes */
+.main-content {
+  padding-top: 65px !important; /* Reduced from 75px */
+}
+
+/* Make pagination buttons more compact */
+.pagination-button {
+  margin: 0 2px;
+  padding: 0;
+  width: 2rem !important;
+  height: 2rem !important;
+}

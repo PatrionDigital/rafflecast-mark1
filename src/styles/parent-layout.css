@@ -1,0 +1,105 @@
+/* src/styles/parent-layout.css */
+
+/* Main container */
+.app-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+}
+
+/* Main content area */
+.main-content {
+  flex: 1;
+  padding: 0;
+  margin: 0;
+  /* Fixed 48px header height with no extra space */
+  padding-top: 48px;
+  /* Ensure space for footer */
+  padding-bottom: 30px;
+}
+
+/* Header */
+header,
+.header,
+.app-header {
+  height: 48px;
+  min-height: 48px;
+  max-height: 48px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+}
+
+/* Footer */
+footer,
+.footer {
+  height: 30px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+/* Profile area specific spacing */
+.profile-dashboard-layout {
+  margin: 0;
+  padding: 0;
+}
+
+.profile-header {
+  margin: 0 0 0.5rem 0;
+  padding: 0;
+}
+
+.profile-header h1 {
+  margin: 0 0 0.25rem 0;
+  padding: 0;
+  line-height: 1.2;
+}
+
+.profile-content {
+  margin: 0;
+  padding: 0;
+}
+
+/* Navigation tabs */
+.profile-nav-list {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0.5rem 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+/* Page sections */
+.page-container {
+  margin: 0;
+  padding: 0;
+}
+
+.page-header {
+  margin: 0 0 0.5rem 0;
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.page-header h2 {
+  margin: 0.5rem 0;
+  padding: 0;
+}
+
+/* Pagination */
+.pagination-controls {
+  margin: 0.5rem 0 2rem 0;
+  padding: 0;
+}

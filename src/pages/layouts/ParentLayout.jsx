@@ -1,7 +1,10 @@
+// src/pages/layouts/ParentLayout.jsx
+
 import { Outlet, useMatches, useRouteError } from "react-router-dom";
 import Header from "../../components/Header";
 import { Footer } from "../../components/Footer";
 import ErrorBoundary from "../../components/ErrorBoundary";
+import "../../styles/parent-layout.css";
 
 const ParentLayout = () => {
   const matches = useMatches();
@@ -16,7 +19,7 @@ const ParentLayout = () => {
   const navLinks = matches[0]?.handle?.navLinks || [];
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="app-wrapper">
       <Header title="Rafflecast" navLinks={navLinks} />
       <main className="main-content">
         <Outlet />

@@ -1,14 +1,17 @@
+// src/router.jsx
 import { createBrowserRouter } from "react-router-dom";
 import ParentLayout from "./pages/layouts/ParentLayout";
 import ErrorBoundary from "./components/ErrorBoundary";
 import LandingPage from "./pages/LandingPage";
 import EntrantDashboardLayout from "./pages/layouts/EntrantDashboardLayout";
 import CreatorDashboardLayout from "./pages/layouts/CreatorDashboardLayout";
+import ProfileDashboardLayout from "./pages/layouts/ProfileDashboardLayout";
 import BrowseRafflesPage from "./pages/BrowseRafflesPage";
 import BrowseEntriesPage from "./pages/BrowseEntriesPage";
 import CreateRafflePage from "./pages/CreateRafflePage";
 import CreateDistributionPage from "./pages/CreateDistributionPage";
 import ManageRafflesPage from "./pages/ManageRafflesPage";
+import EntriesManagementPage from "./pages/EntriesManagementPage";
 
 export const router = createBrowserRouter([
   {
@@ -19,6 +22,7 @@ export const router = createBrowserRouter([
       navLinks: [
         { path: "/creator/raffles/new", label: "Create New Raffle" },
         { path: "/entrant/raffles/browse", label: "Browse Raffles" },
+        { path: "/profile", label: "Profile" },
       ],
     },
     children: [
@@ -47,6 +51,18 @@ export const router = createBrowserRouter([
           },
         ],
       },
+      {
+        path: "profile/*",
+        element: <ProfileDashboardLayout />,
+        children: [
+          { path: "raffles", element: <ManageRafflesPage /> },
+          { path: "entries", element: <EntriesManagementPage /> },
+          // Default route
+          { index: true, element: <ManageRafflesPage /> },
+        ],
+      },
     ],
   },
 ]);
+
+export default router;
