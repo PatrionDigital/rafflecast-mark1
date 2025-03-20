@@ -2,35 +2,49 @@
 import { useEffect } from "react";
 import PropTypes from "prop-types";
 
-// Using dynamic import for the SDK to work with ES modules
-let FrameSDK = null;
-// Only initialize on client side
-if (typeof window !== "undefined") {
-  // Dynamic import
-  import("@farcaster/frame-sdk")
-    .then((module) => {
-      FrameSDK = module.default;
-    })
-    .catch((error) => {
-      console.warn("Failed to load Frame SDK:", error);
-    });
-}
-
 /**
  * Provider component that initializes Farcaster Frame SDK
  * and makes it available to children components
  */
 const FrameProvider = ({ children, autoConnect = true }) => {
   useEffect(() => {
-    const initFrame = async () => {
-      if (!FrameSDK) {
-        console.warn("Frame SDK not available");
-        return;
+    let FrameSDK = null;
+    let isMounted = true;
+
+    const loadFrameSDK = async () => {
+      try {
+        // Only initialize on client side and if not already loaded
+        if (typeof window !== "undefined") {
+          // Dynamic import
+          const module = await import("@farcaster/frame-sdk").catch((err) => {
+            console.warn("Failed to load Frame SDK:", err);
+            return null;
+          });
+
+          if (module && isMounted) {
+            FrameSDK = module.default;
+
+            // Only try to initialize if successfully loaded
+            initFrame(FrameSDK);
+          }
+        }
+      } catch (err) {
+        console.warn("Error loading Frame SDK:", err);
       }
+    };
+
+    const initFrame = async (sdk) => {
+      if (!sdk) return;
 
       try {
-        // Get context data from Farcaster client
-        const context = await FrameSDK.context;
+        // Safely attempt to get context data
+        let context = null;
+        try {
+          context = await sdk.context;
+        } catch (err) {
+          console.log("Not in a Farcaster Frame context", err);
+          return;
+        }
 
         // Auto-connect if running in a frame and we have a user FID
         if (autoConnect && context?.client?.clientFid) {
@@ -40,25 +54,40 @@ const FrameProvider = ({ children, autoConnect = true }) => {
               const { connect } = await import("wagmi/actions");
               connect(window.wagmiConfig, {
                 connector: window.farcasterFrame(),
+              }).catch((err) => {
+                console.warn("Failed to connect with frame connector:", err);
               });
             } catch (err) {
-              console.warn("Error connecting with wagmi:", err);
+              console.warn("Error importing wagmi/actions:", err);
             }
           }
         }
 
-        // Add small delay to allow UI to render before hiding splash screen
-        setTimeout(() => {
-          if (FrameSDK?.actions?.ready) {
-            FrameSDK.actions.ready();
-          }
-        }, 500);
+        // Signal ready if possible
+        if (sdk?.actions?.ready) {
+          // Small delay to allow UI to render
+          setTimeout(() => {
+            try {
+              sdk.actions.ready().catch((err) => {
+                console.warn("Error signaling ready:", err);
+              });
+            } catch (err) {
+              console.warn("Error calling ready action:", err);
+            }
+          }, 500);
+        }
       } catch (error) {
-        console.error("Error initializing Farcaster Frame:", error);
+        console.warn("Error initializing Farcaster Frame:", error);
       }
     };
 
-    initFrame();
+    // Attempt to load the SDK
+    loadFrameSDK();
+
+    // Cleanup
+    return () => {
+      isMounted = false;
+    };
   }, [autoConnect]);
 
   return <>{children}</>;

@@ -29,7 +29,7 @@ const FrameDebugPage = () => {
     const imageUrlValue = generateBase64FrameImage(raffle);
     setImageUrl(imageUrlValue);
 
-    // Full meta content for copying
+    // Generate full meta content for copying
     const fullFrameContent = {
       version: "vNext",
       image: imageUrlValue,
@@ -129,6 +129,14 @@ const FrameDebugPage = () => {
                 className="action-button warpcast"
               >
                 Share to Warpcast
+              </button>
+              <button
+                onClick={() =>
+                  window.open(`/validate/frame/${selectedRaffleId}`, "_blank")
+                }
+                className="action-button validator"
+              >
+                Test Validator
               </button>
             </div>
           </div>

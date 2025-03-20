@@ -211,3 +211,14 @@
     width: 100%;
   }
 }
+.action-button.warpcast:hover {
+  background-color: #8a42e3;
+}
+
+.action-button.validator {
+  background-color: #2e7d32;
+}
+
+.action-button.validator:hover {
+  background-color: #388e3c;
+}

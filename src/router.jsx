@@ -14,6 +14,7 @@ import ManageRafflesPage from "./pages/ManageRafflesPage";
 import EntriesManagementPage from "./pages/EntriesManagementPage";
 import FrameRafflePage from "./pages/FrameRafflePage";
 import FrameDebugPage from "./pages/FrameDebugPage";
+import FrameValidatorPage from "./pages/FrameValidatorPage";
 
 export const router = createBrowserRouter([
   {
@@ -59,7 +60,6 @@ export const router = createBrowserRouter([
         children: [
           { path: "raffles", element: <ManageRafflesPage /> },
           { path: "entries", element: <EntriesManagementPage /> },
-          // Default route
           { index: true, element: <ManageRafflesPage /> },
         ],
       },
@@ -73,6 +73,10 @@ export const router = createBrowserRouter([
   {
     path: "/debug/frames",
     element: <FrameDebugPage />,
+  },
+  {
+    path: "/validate/frame/:raffleId",
+    element: <FrameValidatorPage />,
   },
 ]);
 

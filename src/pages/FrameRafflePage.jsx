@@ -147,7 +147,7 @@ const FrameRafflePage = () => {
       if (!raffle.criteria?.linkedCast) {
         setJoinStatus({
           success: false,
-          message: "This raffle doesn't have an entry condition",
+          message: "This raffle doesn&apos;t have an entry condition",
         });
         return;
       }
@@ -278,7 +278,6 @@ const FrameRafflePage = () => {
         title={`Join "${raffle.title}" Raffle`}
         frameUrl={`${window.location.origin}/frame/raffle/${raffleId}`}
         appName="Rafflecast"
-        splashImage={`${window.location.origin}/favicon.ico`}
       />
 
       <div className="frame-raffle-container">
