@@ -1,34 +1,65 @@
 // src/frames/api/index.js
 /**
  * Core API functions for interacting with Farcaster Frames
+ * With improved error handling
  */
 
-// Using dynamic import for the SDK to work with ES modules
-let FrameSDK = null;
-// Only initialize on client side
-if (typeof window !== "undefined") {
-  // Dynamic import
-  import("@farcaster/frame-sdk")
-    .then((module) => {
-      FrameSDK = module.default;
-    })
-    .catch((error) => {
-      console.warn("Failed to load Frame SDK:", error);
-    });
-}
+// Flag to track SDK loading state
+let isLoadingSDK = false;
+let loadPromise = null;
+
+/**
+ * Safely loads the Frame SDK
+ * @returns {Promise<Object|null>} The Frame SDK or null if unavailable
+ */
+const loadFrameSDK = () => {
+  // Return existing promise if already loading
+  if (isLoadingSDK && loadPromise) {
+    return loadPromise;
+  }
+
+  // Create new loading promise without using async in the executor
+  isLoadingSDK = true;
+  loadPromise = new Promise((resolve) => {
+    // Only initialize on client side
+    if (typeof window !== "undefined") {
+      import("@farcaster/frame-sdk")
+        .then((module) => {
+          resolve(module?.default || null);
+        })
+        .catch((error) => {
+          console.warn("Failed to load Frame SDK:", error);
+          resolve(null);
+        })
+        .finally(() => {
+          isLoadingSDK = false;
+        });
+    } else {
+      isLoadingSDK = false;
+      resolve(null);
+    }
+  });
+
+  return loadPromise;
+};
 
 /**
  * Signals to Farcaster client that the frame is ready to display
  * This hides the splash screen
  * @returns {Promise<void>}
  */
-export const signalReady = () => {
-  if (!FrameSDK || !FrameSDK.actions || !FrameSDK.actions.ready) {
-    console.warn("Frame SDK ready action not available");
-    return Promise.reject(new Error("Frame SDK ready action not available"));
-  }
+export const signalReady = async () => {
+  try {
+    const FrameSDK = await loadFrameSDK();
+    if (!FrameSDK || !FrameSDK.actions || !FrameSDK.actions.ready) {
+      return Promise.resolve(); // Silently resolve if not in a frame
+    }
 
-  return FrameSDK.actions.ready();
+    return FrameSDK.actions.ready();
+  } catch (error) {
+    console.warn("Error signaling ready:", error);
+    return Promise.resolve(); // Still resolve to prevent disrupting the app
+  }
 };
 
 /**
@@ -36,43 +67,57 @@ export const signalReady = () => {
  * @param {string} url - URL to open
  * @returns {Promise<void>}
  */
-export const openUrl = (url) => {
-  if (!FrameSDK || !FrameSDK.actions || !FrameSDK.actions.openUrl) {
-    console.warn("Frame SDK openUrl action not available");
-    return Promise.reject(new Error("Frame SDK openUrl action not available"));
-  }
+export const openUrl = async (url) => {
+  try {
+    const FrameSDK = await loadFrameSDK();
+    if (!FrameSDK || !FrameSDK.actions || !FrameSDK.actions.openUrl) {
+      // Fallback for non-frame environments
+      window.open(url, "_blank");
+      return Promise.resolve();
+    }
 
-  return FrameSDK.actions.openUrl(url);
+    return FrameSDK.actions.openUrl(url);
+  } catch (error) {
+    console.warn("Error opening URL:", error);
+    // Fallback
+    window.open(url, "_blank");
+    return Promise.resolve();
+  }
 };
 
 /**
  * Closes the current frame
  * @returns {Promise<void>}
  */
-export const closeFrame = () => {
-  if (!FrameSDK || !FrameSDK.actions || !FrameSDK.actions.close) {
-    console.warn("Frame SDK close action not available");
-    return Promise.reject(new Error("Frame SDK close action not available"));
-  }
+export const closeFrame = async () => {
+  try {
+    const FrameSDK = await loadFrameSDK();
+    if (!FrameSDK || !FrameSDK.actions || !FrameSDK.actions.close) {
+      return Promise.resolve(); // Silently resolve if not in a frame
+    }
 
-  return FrameSDK.actions.close();
+    return FrameSDK.actions.close();
+  } catch (error) {
+    console.warn("Error closing frame:", error);
+    return Promise.resolve(); // Still resolve to prevent disrupting the app
+  }
 };
 
 /**
  * Gets the current frame context (user info, etc.)
- * @returns {Promise<Object>} Frame context
+ * @returns {Promise<Object|null>} Frame context or null if not in a frame
  */
 export const getFrameContext = async () => {
-  if (!FrameSDK || !FrameSDK.context) {
-    console.warn("Frame SDK context not available");
-    return Promise.reject(new Error("Frame SDK context not available"));
-  }
-
   try {
+    const FrameSDK = await loadFrameSDK();
+    if (!FrameSDK || !FrameSDK.context) {
+      return null;
+    }
+
     return await FrameSDK.context;
   } catch (error) {
-    console.error("Error getting frame context:", error);
-    throw error;
+    console.warn("Error getting frame context:", error);
+    return null;
   }
 };
 
@@ -81,13 +126,11 @@ export const getFrameContext = async () => {
  * @returns {Promise<boolean>} True if running in a frame
  */
 export const isInFrame = async () => {
-  if (!FrameSDK) return false;
-
   try {
     const context = await getFrameContext();
     return !!context?.client?.clientFid;
   } catch (error) {
-    console.error("Error checking if in frame:", error);
+    console.warn("Error checking if in frame:", error);
     return false;
   }
 };
@@ -112,7 +155,7 @@ export const getUserInfo = async () => {
       custody: context.user.custody,
     };
   } catch (error) {
-    console.error("Error getting user info:", error);
+    console.warn("Error getting user info:", error);
     return null;
   }
 };
