@@ -1,4 +1,3 @@
-// src/frames/components/FrameMeta.jsx
 import { useEffect } from "react";
 import PropTypes from "prop-types";
 
@@ -6,12 +5,7 @@ import PropTypes from "prop-types";
  * Component that adds Farcaster Frame meta tags to the document head
  * Following the vNext (v2) Frame spec
  */
-const FrameMeta = ({
-  imageUrl,
-  title = "Join Raffle",
-  frameUrl,
-  appName = "Rafflecast",
-}) => {
+const FrameMeta = ({ imageUrl, title = "Join Raffle", frameUrl }) => {
   useEffect(() => {
     // Clear existing frame tags
     document
@@ -41,7 +35,7 @@ const FrameMeta = ({
     return () => {
       // No cleanup needed - tags should remain for page visibility
     };
-  }, [imageUrl, title, frameUrl, appName]);
+  }, [imageUrl, title, frameUrl]);
 
   return null;
 };
@@ -50,7 +44,6 @@ FrameMeta.propTypes = {
   imageUrl: PropTypes.string.isRequired,
   title: PropTypes.string,
   frameUrl: PropTypes.string.isRequired,
-  appName: PropTypes.string,
 };
 
 export default FrameMeta;

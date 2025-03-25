@@ -1,0 +1,32 @@
+/* Minimal Frame Container Styles */
+.frame-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0;
+  background-color: white;
+}
+
+.loading-container,
+.error-container {
+  padding: 20px;
+  text-align: center;
+  margin: 20px auto;
+  max-width: 600px;
+}
+
+.error-container {
+  color: #e53e3e;
+  border: 1px solid #f8d7da;
+  background-color: #fff5f5;
+  border-radius: 8px;
+}
+
+.frame-debug {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border: 1px solid #eee;
+  font-size: 12px;
+  color: #666;
+}
