@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useRaffle } from "../hooks/useRaffle";
-import { generateBase64FrameImage } from "../frames/utils/base64FrameImage";
 import "../styles/frame-debug.css";
 
 const FrameDebugPage = () => {
@@ -11,6 +10,10 @@ const FrameDebugPage = () => {
   const [metaContent, setMetaContent] = useState("");
   const [copied, setCopied] = useState({ url: false, meta: false });
   const [selectedRaffle, setSelectedRaffle] = useState(null);
+
+  // Use a placeholder image URL
+  const placeholderImage =
+    "https://placehold.co/600x400/820b8a/FFFFFF/png?text=RaffleCast";
 
   useEffect(() => {
     if (!selectedRaffleId || !raffles || raffles.length === 0) return;
@@ -25,14 +28,13 @@ const FrameDebugPage = () => {
     const frameUrlValue = `${baseUrl}/frame/raffle/${selectedRaffleId}`;
     setFrameUrl(frameUrlValue);
 
-    // Generate image URL
-    const imageUrlValue = generateBase64FrameImage(raffle);
-    setImageUrl(imageUrlValue);
+    // Use placeholder image
+    setImageUrl(placeholderImage);
 
     // Generate full meta content for copying
     const fullFrameContent = {
       version: "vNext",
-      image: imageUrlValue,
+      image: placeholderImage,
       buttons: [
         {
           label: `Join "${raffle.title}" Raffle`,
@@ -43,7 +45,7 @@ const FrameDebugPage = () => {
     };
 
     setMetaContent(JSON.stringify(fullFrameContent, null, 2));
-  }, [selectedRaffleId, raffles]);
+  }, [selectedRaffleId, raffles, placeholderImage]);
 
   const handleRaffleChange = (e) => {
     setSelectedRaffleId(e.target.value);

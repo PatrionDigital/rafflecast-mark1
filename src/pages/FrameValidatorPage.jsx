@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useRaffle } from "../hooks/useRaffle";
-import { generateBase64FrameImage } from "../frames/utils/base64FrameImage";
 import FrameMeta from "../frames/components/FrameMeta";
 
 /**
@@ -13,7 +12,6 @@ const FrameValidatorPage = () => {
   const { getRaffleById } = useRaffle();
   const [raffle, setRaffle] = useState(null);
   const [error, setError] = useState(null);
-  const [imageUrl, setImageUrl] = useState("");
   const [frameUrl, setFrameUrl] = useState("");
 
   useEffect(() => {
@@ -26,9 +24,6 @@ const FrameValidatorPage = () => {
           // Generate frame URL
           const baseUrl = window.location.origin;
           setFrameUrl(`${baseUrl}/frame/raffle/${raffleId}`);
-
-          // Generate image URL
-          setImageUrl(generateBase64FrameImage(raffleData));
         } else {
           setError("Raffle not found");
         }
@@ -39,15 +34,19 @@ const FrameValidatorPage = () => {
     }
   }, [raffleId, getRaffleById]);
 
+  // Use a placeholder image URL
+  const placeholderImage =
+    "https://placehold.co/600x400/820b8a/FFFFFF/png?text=RaffleCast";
+
   return (
     <div
       className="frame-validator"
       style={{ padding: "20px", maxWidth: "800px", margin: "0 auto" }}
     >
       {/* Only render FrameMeta if we have the necessary data */}
-      {raffle && imageUrl && frameUrl && (
+      {raffle && frameUrl && (
         <FrameMeta
-          imageUrl={imageUrl}
+          imageUrl={placeholderImage}
           title={`Join "${raffle.title}" Raffle`}
           frameUrl={frameUrl}
         />
@@ -70,7 +69,7 @@ const FrameValidatorPage = () => {
           >
             <h2 style={{ color: "#820b8a", fontSize: "18px" }}>Frame Image</h2>
             <img
-              src={imageUrl}
+              src={placeholderImage}
               alt="Frame Preview"
               style={{
                 maxWidth: "100%",
@@ -100,7 +99,7 @@ const FrameValidatorPage = () => {
               }}
             >
               {`<meta name="fc:frame" content="vNext" />
-<meta name="fc:frame:image" content="${imageUrl.substring(0, 50)}..." />
+<meta name="fc:frame:image" content="${placeholderImage}" />
 <meta name="fc:frame:button:1" content="Join "${raffle.title}" Raffle" />
 <meta name="fc:frame:button:1:action" content="post" />
 <meta name="fc:frame:post_url" content="${frameUrl}" />`}
