@@ -13,7 +13,7 @@ import { getCreatorUsername } from "../utils/farcasterUtils";
 // Components
 import ShareModal from "./ShareModal";
 
-const RaffleDetailsPanel = ({ raffle, onClose }) => {
+const RaffleDetailsPanel = ({ raffle, onClose, isInFrame = false }) => {
   const {
     eligibilityStatus,
     updateEligibilityStatus,
@@ -177,9 +177,11 @@ const RaffleDetailsPanel = ({ raffle, onClose }) => {
   return (
     <div className="raffle-details-panel">
       <div className="raffle-details-left">
-        <button className="close-button" onClick={onClose}>
-          <span className="close-icon">&times;</span>
-        </button>
+        {!isInFrame && (
+          <button className="close-button" onClick={onClose}>
+            <span className="close-icon">&times;</span>
+          </button>
+        )}
         <h2 className="raffle-title">{raffle.title}</h2>
         <div className="raffle-details-creator">
           <span>
@@ -288,4 +290,5 @@ RaffleDetailsPanel.propTypes = {
     }),
   }).isRequired,
   onClose: PropTypes.func.isRequired,
+  isInFrame: PropTypes.bool.isRequired,
 };

@@ -128,6 +128,34 @@ export const fetchRaffles = async () => {
   }
 };
 
+export const fetchRaffleById = async (raffleId) => {
+  try {
+    const result = await client.execute("SELECT * FROM raffles WHERE id = ?;", [
+      raffleId,
+    ]);
+
+    if (result.rows.length === 0) {
+      return null;
+    }
+
+    const raffle = result.rows[0];
+
+    // Parse criteria if it's a string
+    if (raffle && typeof raffle.criteria === "string") {
+      try {
+        raffle.criteria = JSON.parse(raffle.criteria);
+      } catch (error) {
+        console.error("Error parsing criteria:", error);
+      }
+    }
+
+    return raffle;
+  } catch (error) {
+    console.error("Error fetching raffle:", error);
+    return null;
+  }
+};
+
 export const fetchEntries = async () => {
   try {
     const result = await client.execute("SELECT * FROM entries;");
