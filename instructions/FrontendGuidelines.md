@@ -482,6 +482,37 @@ const Modal = ({ isOpen, onClose, title, children }) => {
 };
 ```
 
+## Testing
+
+### Testing Guidelines (To DO)
+
+1. Use Jest for unit and component testing
+2. Use React Testing Library for component testing
+3. Write tests for critical functionality
+4. Aim for good test coverage but prioritize quality over quantity
+
+### Testing Pattern
+
+```jsx
+// Component test example
+import { render, screen, fireEvent } from "@testing-library/react";
+import UserComponent from "./UserComponent";
+
+describe("UserComponent", () => {
+  test("renders user information correctly", () => {
+    render(<UserComponent name="John Doe" />);
+    expect(screen.getByText("John Doe")).toBeInTheDocument();
+  });
+
+  test("handles click event correctly", () => {
+    const mockFn = jest.fn();
+    render(<UserComponent onClick={mockFn} />);
+    fireEvent.click(screen.getByRole("button"));
+    expect(mockFn).toHaveBeenCalled();
+  });
+});
+```
+
 ## Farcaster Frame Integration
 
 ### Frame Integration Standards
