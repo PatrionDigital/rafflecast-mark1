@@ -7,9 +7,7 @@ import RaffleSummary from "../components/RaffleSummary";
 import "../styles/cast-lookup.css";
 import "../styles/status-message.css";
 import "../styles/progress-indicator.css";
-import "../styles/header-fix.css";
 import "../styles/auth-notice.css";
-import "../styles/direct-fixes.css";
 import "../styles/cast-popup.css";
 import "../styles/tabbed-summary.css";
 

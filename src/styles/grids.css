@@ -1,0 +1,288 @@
+/* src/styles/grids.css */
+/* Grid layouts and collections */
+
+@import "./variables.css";
+
+/* Basic Grid Container */
+.grid-container {
+  display: grid;
+  gap: var(--spacing-md);
+  width: 100%;
+}
+
+/* Card Grids */
+.card-grid,
+.raffle-grid,
+.entry-grid {
+  display: grid;
+  gap: var(--spacing-md);
+  width: 100%;
+  grid-template-columns: 1fr; /* Default: mobile - single column */
+}
+
+/* Raffle Grid - From pages.css */
+.raffle-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 12px;
+}
+
+.raffle-grid.hidden {
+  display: none;
+}
+
+/* Raffle List - From pages.css */
+.raffle-list {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.logged-in .raffle-list {
+  margin-top: 12px; /* Adjust this value to match the height of .auth-message for when user is logged in */
+}
+
+/* Responsive breakpoints for grids */
+@media (max-width: 1024px) {
+  .raffle-grid,
+  .raffle-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .raffle-grid,
+  .raffle-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Responsive grid breakpoints */
+@media (min-width: 576px) {
+  .card-grid,
+  .entry-grid {
+    grid-template-columns: repeat(2, 1fr); /* Tablet: two columns */
+  }
+}
+
+@media (min-width: 992px) {
+  .card-grid,
+  .entry-grid {
+    grid-template-columns: repeat(3, 1fr); /* Desktop: three columns */
+  }
+}
+
+@media (min-width: 1200px) {
+  .card-grid,
+  .entry-grid {
+    grid-template-columns: repeat(4, 1fr); /* Large desktop: four columns */
+  }
+}
+
+/* Hidden Grid */
+.card-grid.hidden,
+.entry-grid.hidden {
+  display: none;
+}
+
+/* Manage Raffles Grid */
+.manage-raffles-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+/* When entries are selected, show side by side on larger screens */
+@media (min-width: 992px) {
+  .manage-raffles-container.with-entries {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: var(--spacing-lg);
+  }
+}
+
+/* Raffles List */
+.raffles-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-md);
+  width: 100%;
+}
+
+@media (min-width: 576px) {
+  .raffles-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .raffles-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 992px) {
+  .raffles-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1200px) {
+  .raffles-list {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Entry List and Panels */
+.entries-panel {
+  background-color: var(--bg-light);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  overflow: hidden;
+  height: fit-content;
+}
+
+.entry-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.entry-list-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.entry-list-row {
+  display: grid;
+  grid-template-columns: 2fr 2fr 1fr;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.entry-list-row.header {
+  background-color: var(--bg-muted);
+  font-weight: 500;
+}
+
+.entry-cell {
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: var(--font-size-sm);
+}
+
+/* Form Grids and Layouts */
+.form-section {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: var(--spacing-md) 0;
+}
+
+.form-title {
+  margin-bottom: var(--spacing-md);
+  font-size: var(--font-size-xl);
+  color: var(--color-primary);
+}
+
+.form-grid {
+  display: grid;
+  gap: var(--spacing-md);
+}
+
+.form-row {
+  display: grid;
+  gap: var(--spacing-md);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 576px) {
+  .form-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.date-group {
+  display: flex;
+  gap: var(--spacing-md);
+}
+
+@media (max-width: 576px) {
+  .date-group {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+}
+
+/* Creator Dashboard */
+.dashboard-layout {
+  padding: var(--spacing-md);
+}
+
+.dashboard-content {
+  margin-bottom: var(--spacing-xl);
+}
+
+/* Profile Dashboard */
+.profile-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-md);
+}
+
+.profile-content {
+  margin-top: var(--spacing-md);
+}
+
+.profile-navigation {
+  display: flex;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: var(--spacing-md);
+}
+
+.profile-nav-item {
+  margin-right: var(--spacing-md);
+}
+
+/* States for grids */
+.loading,
+.auth-required {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+  text-align: center;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xl) var(--spacing-md);
+  text-align: center;
+  background-color: var(--bg-muted);
+  border-radius: var(--border-radius-md);
+  margin: var(--spacing-md) 0;
+}
+
+.empty-state-message {
+  max-width: 24rem;
+}
+
+.empty-state-message h3 {
+  margin-bottom: var(--spacing-sm);
+}
+
+.empty-state-message p {
+  margin-bottom: var(--spacing-md);
+  color: var(--text-color-secondary);
+}
