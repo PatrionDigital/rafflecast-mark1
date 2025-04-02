@@ -4,7 +4,6 @@ import { Outlet, useMatches, useRouteError } from "react-router-dom";
 import Header from "../../components/Header";
 import { Footer } from "../../components/Footer";
 import ErrorBoundary from "../../components/ErrorBoundary";
-import "../../styles/parent-layout.css";
 
 const ParentLayout = () => {
   const matches = useMatches();
