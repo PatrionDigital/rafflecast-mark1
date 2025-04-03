@@ -1,20 +1,19 @@
 // src/router.jsx
 import { createBrowserRouter } from "react-router-dom";
-import ParentLayout from "./pages/layouts/ParentLayout";
+
 import ErrorBoundary from "./components/ErrorBoundary";
-import LandingPage from "./pages/LandingPage";
-import EntrantDashboardLayout from "./pages/layouts/EntrantDashboardLayout";
-import CreatorDashboardLayout from "./pages/layouts/CreatorDashboardLayout";
-import ProfileDashboardLayout from "./pages/layouts/ProfileDashboardLayout";
-import BrowseRafflesPage from "./pages/BrowseRafflesPage";
 import BrowseEntriesPage from "./pages/BrowseEntriesPage";
-import CreateRafflePage from "./pages/CreateRafflePage";
+import BrowseRafflesPage from "./pages/BrowseRafflesPage";
 import CreateDistributionPage from "./pages/CreateDistributionPage";
-import ManageRafflesPage from "./pages/ManageRafflesPage";
+import CreateRafflePage from "./pages/CreateRafflePage";
 import EntriesManagementPage from "./pages/EntriesManagementPage";
 import FrameRafflePage from "./pages/FrameRafflePage";
-import FrameDebugPage from "./pages/FrameDebugPage";
-import FrameValidatorPage from "./pages/FrameValidatorPage";
+import LandingPage from "./pages/LandingPage";
+import CreatorDashboardLayout from "./pages/layouts/CreatorDashboardLayout";
+import EntrantDashboardLayout from "./pages/layouts/EntrantDashboardLayout";
+import ParentLayout from "./pages/layouts/ParentLayout";
+import ProfileDashboardLayout from "./pages/layouts/ProfileDashboardLayout";
+import ManageRafflesPage from "./pages/ManageRafflesPage";
 
 export const router = createBrowserRouter([
   {
@@ -69,14 +68,7 @@ export const router = createBrowserRouter([
   {
     path: "/frame/raffle/:raffleId",
     element: <FrameRafflePage />,
-  },
-  {
-    path: "/debug/frames",
-    element: <FrameDebugPage />,
-  },
-  {
-    path: "/validate/frame/:raffleId",
-    element: <FrameValidatorPage />,
+    handle: { skipLayout: true },
   },
 ]);
 

@@ -1,41 +1,27 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <!-- Farcaster Frame meta tags -->
+    <meta name="fc:frame" content='{
+      "version": "next",
+      "imageUrl": "https://heavily-just-skink.ngrok-free.app//images/Rafflecast_embedImage.png",
+      "button":{
+        "title": "🎟️Enter Raffle🎟️",
+        "action": {
+          "type": "launch_frame",
+          "name": "Rafflecast",
+          "url": "https://heavily-just-skink.ngrok-free.app/entrant/raffles/browse",
+          "splashImageUrl": "https://heavily-just-skink.ngrok-free.app/images/RafflecastLogo.png",
+          "splashBackgroundColor": "#131313"
+        }
+      }
+    }' data-rh="true">
 
-<!-- Farcaster Frame meta tags -->
-<meta name="fc:frame" content='{
-  "version": "next",
-  "imageUrl": "https://rafflecast.xyz/images/frame-home.png",
-  "button":{
-    "title": "Browse Raffles",
-    "action": {
-      "type": "launch_frame",
-      "name": "Rafflecast",
-      "url": "https://rafflecast.xyz/entrant/raffles/browse",
-      "splashImageUrl": "https://rafflecast.xyz/favicon.ico",
-      "splashBackgroundColor": "#131313"
-    }
-  }
-}' data-rh="true">
-
-<!-- Open Graph meta tags (these help with social sharing) -->
-<meta property="og:title" content="Rafflecast - Raffles for Farcaster" />
-<meta property="og:description" content="Create and join raffles for the Farcaster community" />
-<meta property="og:image" content="https://rafflecast.xyz/images/frame-home.png" />
-<meta property="og:url" content="https://rafflecast.xyz" />
-
-<!-- Twitter Card meta tags -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Rafflecast - Raffles for Farcaster">
-<meta name="twitter:description" content="Create and join raffles for the Farcaster community">
-<meta name="twitter:image" content="https://rafflecast.xyz/images/frame-home.png">
-    <!-- node // buffer -->
-     <script>window.global = window;</script>
-     <script type="module">
+    <script>window.global = window;</script>
+    <script type="module">
       import {Buffer} from "buffer/";
-
       window.Buffer = Buffer;
-     </script>
+    </script>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />

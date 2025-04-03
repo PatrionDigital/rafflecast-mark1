@@ -1,8 +1,8 @@
 // src/pages/layouts/ProfileDashboardLayout.jsx
-import { Outlet, NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useProfile } from "@farcaster/auth-kit";
 import PropTypes from "prop-types";
 import { useEffect } from "react";
+import { Outlet, NavLink, useNavigate, useLocation } from "react-router-dom";
 
 // SubNav component for the profile section
 const ProfileSubNav = ({ links }) => {
