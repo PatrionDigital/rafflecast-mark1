@@ -1,8 +1,0 @@
-{
-  "name": "Rafflecast",
-  "description": "Create and join raffles for the Farcaster community",
-  "icon": "https://heavily-just-skink.ngrok-free.app/images/RafflecastLogo.png",
-  "domains": [
-    "https://heavily-just-skink.ngrok-free.app/"
-  ]
-}
