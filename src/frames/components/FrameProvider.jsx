@@ -1,6 +1,6 @@
 // src/frames/components/FrameProvider.jsx
-import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
+import { useEffect, useState } from "react";
 
 /**
  * Provider component that initializes Farcaster Frame SDK

@@ -2,18 +2,14 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 // Styles
-import "../styles/minimal-frame.css";
+import "@/styles/minimal-frame.css";
 
 // Frame components
-import FrameProvider from "../frames/components/FrameProvider";
-import FrameMeta from "../frames/components/FrameMeta";
-import { getFrameContext, signalReady } from "../frames/api";
-
-// Raffle components
-import RaffleDetailsPanel from "../components/RaffleDetailsPanel";
-
-// Utils
-import { fetchRaffleById } from "../utils/tursoUtils";
+import RaffleDetailsPanel from "@/components/RaffleDetailsPanel";
+import { getFrameContext, signalReady } from "@/frames/api";
+import FrameMeta from "@/frames/components/FrameMeta";
+import FrameProvider from "@/frames/components/FrameProvider";
+import { fetchRaffleById } from "@/utils/tursoUtils";
 
 const FrameRafflePage = () => {
   const { raffleId } = useParams();

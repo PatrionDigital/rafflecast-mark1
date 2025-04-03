@@ -1,14 +1,13 @@
+import { AuthKitProvider } from "@farcaster/auth-kit";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
-import { AuthKitProvider } from "@farcaster/auth-kit";
-import Web3Provider from "./utils/Web3Provider.jsx";
+import App from "./App.jsx";
 import { RaffleProvider } from "./context/RaffleContext.jsx";
+import Web3Provider from "./utils/Web3Provider.jsx";
 
 import "@farcaster/auth-kit/styles.css";
 import "./index.css";
-
-import App from "./App.jsx";
 
 const authConfig = {
   rpcUrl: "https://mainnet.optimism.io",
