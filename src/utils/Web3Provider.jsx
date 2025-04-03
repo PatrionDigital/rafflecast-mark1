@@ -1,10 +1,9 @@
 // src/utils/Web3Provider.jsx
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ConnectKitProvider, getDefaultConfig } from "connectkit";
 import PropTypes from "prop-types";
 import { WagmiProvider, http, createConfig } from "wagmi";
 import { base } from "wagmi/chains";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ConnectKitProvider, getDefaultConfig } from "connectkit";
-import { farcasterFrameConnector } from "../frames/utils/frameConnector";
 
 // Create the Wagmi config
 const configOptions = getDefaultConfig({
@@ -26,17 +25,6 @@ const configOptions = getDefaultConfig({
   appUrl: "https://rafflecast.xyz",
   appIcon: "https://family.co/logo.png", // your app's icon, no bigger than 1024x1024px (max. 1MB)
 });
-
-/// Add the Farcaster frame connector conditionally
-if (
-  typeof window !== "undefined" &&
-  window.location.pathname.includes("/frame/")
-) {
-  configOptions.connectors = [
-    farcasterFrameConnector(),
-    ...(configOptions.connectors || []), // Keep existing connectors
-  ];
-}
 
 const config = createConfig(configOptions);
 
