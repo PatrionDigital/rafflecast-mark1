@@ -1,15 +1,16 @@
-import { useState } from "react";
 import { useProfile } from "@farcaster/auth-kit";
-import { v4 as uuidv4 } from "uuid";
-import { useRaffle } from "../hooks/useRaffle";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import RaffleSummary from "../components/RaffleSummary";
-import "../styles/cast-lookup.css";
-import "../styles/status-message.css";
-import "../styles/progress-indicator.css";
-import "../styles/auth-notice.css";
-import "../styles/cast-popup.css";
-import "../styles/tabbed-summary.css";
+import { v4 as uuidv4 } from "uuid";
+
+import RaffleSummary from "@/components/RaffleSummary";
+import { useRaffle } from "@/hooks/useRaffle";
+import "@/styles/cast-lookup.css";
+import "@/styles/status-message.css";
+import "@/styles/progress-indicator.css";
+import "@/styles/auth-notice.css";
+import "@/styles/cast-popup.css";
+import "@/styles/tabbed-summary.css";
 
 const CreateRafflePage = () => {
   // Form state

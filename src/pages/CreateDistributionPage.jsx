@@ -1,13 +1,14 @@
 // pages/CreateDistributionPage.jsx
-import { useEffect, useState, useMemo } from "react";
-import { useLocation, useParams } from "react-router-dom";
 import { useProfile } from "@farcaster/auth-kit";
 import { ConnectKitButton } from "connectkit";
-import { useAccount } from "wagmi";
-import { generateMerkleTree } from "../utils/merkleUtils";
-import { createDistribution } from "../utils/contractUtils";
 import { ethers, BrowserProvider } from "ethers";
 import { PinataSDK } from "pinata-web3";
+import { useEffect, useState, useMemo } from "react";
+import { useLocation, useParams } from "react-router-dom";
+import { useAccount } from "wagmi";
+
+import { createDistribution } from "../utils/contractUtils";
+import { generateMerkleTree } from "../utils/merkleUtils";
 
 const CreateDistributionPage = () => {
   const { raffleId } = useParams();
@@ -234,15 +235,4 @@ const CreateDistributionPage = () => {
   );
 };
 
-/*
-  token,
-  isERC20,
-  amountPerClaim,
-  walletCount,
-  startTime,
-  endTime,
-  merkleRoot,
-  title,
-  ipfsCID
-  */
 export default CreateDistributionPage;

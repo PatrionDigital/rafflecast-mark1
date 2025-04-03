@@ -1,13 +1,10 @@
 // React and Farcaster imports
-import { useEffect, useState, useCallback } from "react";
 import { useProfile } from "@farcaster/auth-kit";
+import { useEffect, useState, useCallback } from "react";
 
-// Custom hooks
-import { useRaffle } from "../hooks/useRaffle";
-
-// Components
-import RaffleCard from "../components/RaffleCard";
-import RaffleDetailsPanel from "../components/RaffleDetailsPanel";
+import RaffleCard from "@/components/RaffleCard";
+import RaffleDetailsPanel from "@/components/RaffleDetailsPanel";
+import { useRaffle } from "@/hooks/useRaffle";
 
 const BrowseRafflesPage = () => {
   // Component state

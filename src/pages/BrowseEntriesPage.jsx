@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
-import { useRaffle } from "../hooks/useRaffle";
 import { useProfile } from "@farcaster/auth-kit";
+import { useEffect, useMemo, useState } from "react";
+
+import { useRaffle } from "@/hooks/useRaffle";
 
 const BrowseEntriesPage = () => {
   const { entries, clearMessage } = useRaffle();
