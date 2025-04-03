@@ -6,6 +6,16 @@ RaffleCast is a web application for creating, managing, and participating in raf
 
 ## Core Technologies
 
+### Dev Environment
+
+- I use MacOS
+- IDE is VS Code with the following plugins:
+  - Git Source Control
+  - Git Pull Requests (also used for Issues)
+  - ESLint, Prettier
+  - IntelliCode and TabOut
+- I use `zsh` for my shell environment
+
 ### Frontend Framework
 
 - **React**: The application is built using React 18.3.1 for creating a component-based user interface
@@ -30,7 +40,7 @@ RaffleCast is a web application for creating, managing, and participating in raf
 
 - **MerkleDistributor Contract**: Smart contract used for distributing prizes
 - **merkletreejs**: For creating Merkle proofs for whitelist verification
-- **Pinata Web3**: IPFS integration for storing raffle data
+- **Pinata Web3**: IPFS integration for storing prize distribution address whitelist
 
 ### Styling & UI
 
