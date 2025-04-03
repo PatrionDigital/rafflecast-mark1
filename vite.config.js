@@ -4,6 +4,13 @@ import react from "@vitejs/plugin-react";
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  server: {
+    // Enable listneing on all local IPs
+    host: true,
+    proxy: {},
+    // Allow any ngrok subdomain
+    allowedHosts: [".ngrok-free.app", "localhost"],
+  },
   css: {
     // Optimize CSS for production
     devSourcemap: true,
