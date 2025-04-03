@@ -15,6 +15,7 @@ RaffleCast is a web application for creating, managing, and participating in raf
   - ESLint, Prettier
   - IntelliCode and TabOut
 - I use `zsh` for my shell environment
+- `ngrok` is installed for testing with the devserver
 
 ### Frontend Framework
 
