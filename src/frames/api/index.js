@@ -1,7 +1,7 @@
 // src/frames/api/index.js
 /**
- * Core API functions for interacting with Farcaster Frames
- * With improved error handling
+ * Core API functions for interacting with Farcaster Mini Apps (formerly Frames)
+ * With improved error handling and updated to latest specifications
  */
 
 // Flag to track SDK loading state
@@ -44,7 +44,7 @@ const loadFrameSDK = () => {
 };
 
 /**
- * Signals to Farcaster client that the frame is ready to display
+ * Signals to Farcaster client that the mini app is ready to display
  * This hides the splash screen
  * @returns {Promise<void>}
  */
@@ -52,10 +52,15 @@ export const signalReady = async () => {
   try {
     const FrameSDK = await loadFrameSDK();
     if (!FrameSDK || !FrameSDK.actions || !FrameSDK.actions.ready) {
+      console.log("Frame SDK ready function not available");
       return Promise.resolve(); // Silently resolve if not in a frame
     }
 
-    return FrameSDK.actions.ready();
+    console.log("Signaling ready to Frame SDK");
+    return FrameSDK.actions.ready().catch((err) => {
+      console.warn("Error in SDK ready call:", err);
+      return Promise.resolve(); // Still resolve to prevent disrupting the app
+    });
   } catch (error) {
     console.warn("Error signaling ready:", error);
     return Promise.resolve(); // Still resolve to prevent disrupting the app
@@ -63,7 +68,7 @@ export const signalReady = async () => {
 };
 
 /**
- * Opens an external URL from within the frame
+ * Opens an external URL from within the mini app
  * @param {string} url - URL to open
  * @returns {Promise<void>}
  */
@@ -86,7 +91,7 @@ export const openUrl = async (url) => {
 };
 
 /**
- * Closes the current frame
+ * Closes the current mini app
  * @returns {Promise<void>}
  */
 export const closeFrame = async () => {
@@ -104,7 +109,7 @@ export const closeFrame = async () => {
 };
 
 /**
- * Gets the current frame context (user info, etc.)
+ * Gets the current mini app context (user info, etc.)
  * @returns {Promise<Object|null>} Frame context or null if not in a frame
  */
 export const getFrameContext = async () => {
@@ -122,8 +127,8 @@ export const getFrameContext = async () => {
 };
 
 /**
- * Checks if the current environment is a Farcaster frame
- * @returns {Promise<boolean>} True if running in a frame
+ * Checks if the current environment is a Farcaster mini app
+ * @returns {Promise<boolean>} True if running in a mini app
  */
 export const isInFrame = async () => {
   try {
@@ -136,7 +141,7 @@ export const isInFrame = async () => {
 };
 
 /**
- * Gets Farcaster user information from the frame context
+ * Gets Farcaster user information from the mini app context
  * @returns {Promise<Object|null>} User information or null if not available
  */
 export const getUserInfo = async () => {
@@ -157,5 +162,20 @@ export const getUserInfo = async () => {
   } catch (error) {
     console.warn("Error getting user info:", error);
     return null;
+  }
+};
+
+/**
+ * Debug function to log the full frame context
+ * Only works in development mode
+ */
+export const debugFrameContext = async () => {
+  if (import.meta.env.MODE !== "development") return;
+
+  try {
+    const context = await getFrameContext();
+    console.log("Frame Context:", context);
+  } catch (error) {
+    console.warn("Error logging frame context:", error);
   }
 };
