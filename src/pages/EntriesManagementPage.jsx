@@ -1,15 +1,16 @@
 // src/pages/EntriesManagementPage.jsx
 // src/pages/EntriesManagementPage.jsx - Updated import section
-import { useEffect, useState } from "react";
-import PropTypes from "prop-types";
-import { useRaffle } from "../hooks/useRaffle";
 import { useProfile } from "@farcaster/auth-kit";
-import Pagination from "../components/Pagination";
+import PropTypes from "prop-types";
+import { useEffect, useState } from "react";
+
 import {
   EntryCardGrid,
   EntryDetailModal,
-} from "../components/EntriesManagement";
-import "../styles/entries-management.css";
+} from "@/components/EntriesManagement";
+import Pagination from "@/components/Pagination";
+import { useRaffle } from "@/hooks/useRaffle";
+import "@/styles/entries-management.css";
 
 const EntriesManagementPage = ({ itemsPerPage = 4 }) => {
   const { entries, clearMessage } = useRaffle();

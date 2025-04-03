@@ -1,10 +1,32 @@
-import { defineConfig } from "vite";
+import path from "path";
+import { fileURLToPath } from "url";
+
 import react from "@vitejs/plugin-react";
+import { defineConfig } from "vite";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
+  server: {
+    // Enable listneing on all local IPs
+    host: true,
+    proxy: {},
+    // Allow any ngrok subdomain
+    allowedHosts: [".ngrok-free.app", "localhost"],
+  },
   css: {
+    modules: {
+      localsConvention: "camelCase",
+      scopeBehaviour: "local",
+    },
     // Optimize CSS for production
     devSourcemap: true,
   },
@@ -24,7 +46,6 @@ export default defineConfig({
           vendor: ["react", "react-dom", "react-router-dom"],
           utils: ["uuid", "ethers"],
         },
-        // Simple static asset names without custom logic
         assetFileNames: "assets/[name]-[hash][extname]",
       },
     },

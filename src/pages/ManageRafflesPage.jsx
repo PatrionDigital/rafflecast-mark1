@@ -1,14 +1,16 @@
 // src/pages/ManageRafflesPage.jsx
+import { useProfile } from "@farcaster/auth-kit";
+import PropTypes from "prop-types";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useProfile } from "@farcaster/auth-kit";
-import { useRaffle } from "../hooks/useRaffle";
-import { settleRaffle } from "../utils/raffleUtils";
-import PropTypes from "prop-types";
-import Pagination from "../components/Pagination";
-import RaffleEntriesModal from "../components/RaffleManagement/RaffleEntriesModal";
-import "../styles/manage-raffles.css";
-import "../styles/raffle-entries-modal.css";
+
+import Pagination from "@/components/Pagination";
+import RaffleEntriesModal from "@/components/RaffleManagement/RaffleEntriesModal";
+import { useRaffle } from "@/hooks/useRaffle";
+import { settleRaffle } from "@/utils/raffleUtils";
+
+import "@/styles/manage-raffles.css";
+import "@/styles/raffle-entries-modal.css";
 
 // Raffle Card Component
 const RaffleCard = ({ raffle, onCheckEntries, onSettleRaffle }) => {

@@ -1,10 +1,12 @@
 // src/pages/ProfilePage.jsx
-import { useState } from "react";
 import { useProfile } from "@farcaster/auth-kit";
-import { Link, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import PropTypes from "prop-types";
+import { useState } from "react";
+import { Link, Routes, Route, useLocation, Navigate } from "react-router-dom";
+
+import { EntriesManagementPage } from "@/components/EntriesManagement";
+
 import ManageRafflesPage from "./ManageRafflesPage";
-import { EntriesManagementPage } from "../components/EntriesManagementSystem";
 
 // ProfileNavItem component for navigation tabs
 const ProfileNavItem = ({ to, label, active }) => {
