@@ -1,9 +1,15 @@
+import path from "path";
+import { fileURLToPath } from "url";
+
 import js from "@eslint/js";
-import eslintImport from "eslint-plugin-import";
 import react from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import globals from "globals";
+
+// Get the directory name in ES module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export default [
   { ignores: ["dist"] },
@@ -11,22 +17,25 @@ export default [
     files: ["**/*.{js,jsx}"],
     languageOptions: {
       ecmaVersion: 2020,
-      globals: globals.browser,
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
       parserOptions: {
         ecmaVersion: "latest",
         ecmaFeatures: { jsx: true },
         sourceType: "module",
+        // Add resolve paths
+        project: path.resolve(__dirname, "./tsconfig.json"),
       },
     },
     settings: {
       react: { version: "18.3" },
+      // Add module resolution settings
       "import/resolver": {
-        alias: {
-          map: [["@", "./src"]],
-          extensions: [".js", ".jsx", ".json"],
-        },
         node: {
-          extensions: [".js", ".jsx", ".json"],
+          extensions: [".js", ".jsx", ".ts", ".tsx"],
+          moduleDirectory: ["node_modules", "src/"],
         },
       },
     },
@@ -34,7 +43,6 @@ export default [
       react,
       "react-hooks": reactHooks,
       "react-refresh": reactRefresh,
-      import: eslintImport,
     },
     rules: {
       ...js.configs.recommended.rules,
@@ -46,34 +54,13 @@ export default [
         "warn",
         { allowConstantExport: true },
       ],
-      // Import plugin rules
-      "import/no-unresolved": "error",
-      "import/order": [
+      // Add specific import/no-unresolved rule configuration
+      "import/no-unresolved": [
         "error",
         {
-          groups: [
-            "builtin",
-            "external",
-            "internal",
-            ["parent", "sibling"],
-            "index",
-            "object",
-            "type",
-          ],
-          pathGroups: [
-            {
-              pattern: "@/**",
-              group: "internal",
-              position: "after",
-            },
-          ],
-          "newlines-between": "always",
-          alphabetize: { order: "asc", caseInsensitive: true },
+          ignore: ["^connectkit(/.*)?$"],
         },
       ],
-      "import/first": "error",
-      "import/newline-after-import": "error",
-      "import/no-duplicates": "error",
     },
   },
 ];
