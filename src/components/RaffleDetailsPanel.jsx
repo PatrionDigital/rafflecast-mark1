@@ -1,4 +1,4 @@
-// React and Package imports
+// src/components/RaffleDetailsPanel.jsx
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { v4 as uuidv4 } from "uuid";
@@ -12,6 +12,7 @@ import { getCreatorUsername } from "../utils/farcasterUtils";
 
 // Components
 import ShareModal from "./ShareModal";
+import FrameMeta from "./FrameMeta";
 
 const RaffleDetailsPanel = ({ raffle, onClose, isInFrame = false }) => {
   const {
@@ -174,8 +175,11 @@ const RaffleDetailsPanel = ({ raffle, onClose, isInFrame = false }) => {
     return statusObj ? statusObj.status : "Ineligible";
   };
 
+  // Return statement with just a single parent div
   return (
     <div className="raffle-details-panel">
+      <FrameMeta raffle={raffle} />
+
       <div className="raffle-details-left">
         {!isInFrame && (
           <button className="close-button" onClick={onClose}>
@@ -209,6 +213,7 @@ const RaffleDetailsPanel = ({ raffle, onClose, isInFrame = false }) => {
           <p>{raffle.description}</p>
         </div>
       </div>
+
       <div className="raffle-details-right">
         <div className="raffle-details-criteria">
           {criteriaCastData ? (
@@ -258,7 +263,6 @@ const RaffleDetailsPanel = ({ raffle, onClose, isInFrame = false }) => {
           >
             {hasEntered ? "Already Entered" : "Join Raffle"}
           </button>
-
           <button
             className="share-button"
             onClick={() => setShowShareModal(true)}
@@ -275,8 +279,6 @@ const RaffleDetailsPanel = ({ raffle, onClose, isInFrame = false }) => {
   );
 };
 
-export default RaffleDetailsPanel;
-
 RaffleDetailsPanel.propTypes = {
   raffle: PropTypes.shape({
     id: PropTypes.string.isRequired,
@@ -290,5 +292,7 @@ RaffleDetailsPanel.propTypes = {
     }),
   }).isRequired,
   onClose: PropTypes.func.isRequired,
-  isInFrame: PropTypes.bool.isRequired,
+  isInFrame: PropTypes.bool,
 };
+
+export default RaffleDetailsPanel;

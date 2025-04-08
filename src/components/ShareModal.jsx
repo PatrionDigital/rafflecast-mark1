@@ -1,3 +1,4 @@
+// src/components/ShareModal.jsx
 import { useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { createPortal } from "react-dom";
@@ -25,10 +26,28 @@ const ShareModal = ({ raffle, onClose }) => {
 
   // Handle share to Warpcast
   const shareToWarpcast = () => {
-    const encodedText = encodeURIComponent(
-      `Check out this raffle: "${raffle.title}" ✨\n\n${frameRaffleLink}`
+    // Create a more engaging message with details about the raffle
+    const message = [
+      `🎟️ Join my raffle: "${raffle.title}" ✨`,
+      "", // Empty line for spacing
+      raffle.description
+        ? `${raffle.description.substring(0, 100)}${
+            raffle.description.length > 100 ? "..." : ""
+          }`
+        : "",
+      "", // Empty line for spacing
+      "Tap below to enter! ⬇️",
+    ]
+      .filter(Boolean)
+      .join("\n");
+
+    const encodedText = encodeURIComponent(message);
+    window.open(
+      `https://warpcast.com/~/compose?text=${encodedText}&embeds[]=${encodeURIComponent(
+        frameRaffleLink
+      )}`,
+      "_blank"
     );
-    window.open(`https://warpcast.com/~/compose?text=${encodedText}`, "_blank");
   };
 
   // Close on escape key or outside click
