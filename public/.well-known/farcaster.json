@@ -3,5 +3,16 @@
     "header": "eyJmaWQiOjEzODM3LCJ0eXBlIjoiY3VzdG9keSIsImtleSI6IjB4ZTA3ZDcxMDBkYzIwOGY0NWJiN2UzMmQ0MWFmNTc3MGQxNzRlNmYwYiJ9",
     "payload": "eyJkb21haW4iOiJyYWZmbGVjYXN0LW1hcmsxLnZlcmNlbC5hcHAifQ",
     "signature": ""
+  },
+  "frame": {
+    "name": "Rafflecast",
+    "version": "1",
+    "iconUrl": "https://rafflecast-mark1.vercel.app/images/icon.png",
+    "homeUrl": "https://rafflecast-mark1.vercel.app",
+    "imageUrl": "https://rafflecast-mark1.vercel.app/images/image.png",
+    "buttonTitle": "Join Raffle",
+    "splashImageUrl": "https://rafflecast-mark1.vercel.app/images/splash.png",
+    "splashBackgroundColor": "#820b8a",
+    "webhookUrl": "https://rafflecast-mark1.vercel.app/api/webhook"
   }
 }
