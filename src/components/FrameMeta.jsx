@@ -10,70 +10,65 @@ import { useLocation } from "react-router-dom";
 const FrameMeta = ({ raffle }) => {
   const location = useLocation();
   const isSpecificRaffle = raffle && raffle.id;
-  const isInFramePath = location.pathname.startsWith("/frame/");
 
-  // Base and app URLs
+  // Base URL and app name
   const baseUrl = window.location.origin;
-  const baseAppUrl = `${baseUrl}`;
   const appName = "Rafflecast";
 
-  // Default frame metadata for the base app
-  const defaultFrameData = {
-    version: "next",
-    imageUrl: `${baseUrl}/api/og-image/rafflecast.png`,
-    button: {
-      title: "Browse Raffles",
-      action: {
-        type: "launch_frame",
-        name: appName,
-        url: `${baseAppUrl}/entrant/raffles/browse`,
-        splashImageUrl: `${baseUrl}/logo.png`,
-        splashBackgroundColor: "#820b8a",
-      },
-    },
-  };
+  useEffect(() => {
+    // Generate the meta tag content based on whether we're viewing a specific raffle
+    let frameContent;
 
-  // Specific raffle metadata
-  const raffleFrameData = isSpecificRaffle
-    ? {
+    if (isSpecificRaffle) {
+      // Specific raffle meta data
+      frameContent = {
         version: "next",
-        imageUrl: `${baseUrl}/api/og-image/raffle/${raffle.id}`,
+        imageUrl: "https://picsum.photos/1200/630", // Replace with your actual image URL
         button: {
           title: "Join Raffle",
           action: {
             type: "launch_frame",
             name: raffle.title || appName,
-            url: `${baseAppUrl}/entrant/raffles/browse?id=${raffle.id}`,
-            splashImageUrl: `${baseUrl}/logo.png`,
+            url: `${baseUrl}/entrant/raffles/browse?id=${raffle.id}`,
             splashBackgroundColor: "#820b8a",
           },
         },
-      }
-    : defaultFrameData;
+      };
+    } else {
+      // Default app meta data
+      frameContent = {
+        version: "next",
+        imageUrl: "https://picsum.photos/1200/630", // Replace with your actual image URL
+        button: {
+          title: "Browse Raffles",
+          action: {
+            type: "launch_frame",
+            name: appName,
+            url: `${baseUrl}/entrant/raffles/browse`,
+            splashBackgroundColor: "#820b8a",
+          },
+        },
+      };
+    }
 
-  // Choose which metadata to use based on the URL path
-  const frameData =
-    isInFramePath && isSpecificRaffle ? raffleFrameData : defaultFrameData;
+    // Convert to JSON string
+    const contentString = JSON.stringify(frameContent);
 
-  useEffect(() => {
-    // Clear existing frame tags
-    document
-      .querySelectorAll('meta[name^="fc:frame"]')
-      .forEach((tag) => tag.remove());
+    // Find existing fc:frame meta tag or create a new one
+    let metaTag = document.querySelector('meta[name="fc:frame"]');
 
-    // Set the new frame tags
-    const metaTag = document.createElement("meta");
-    metaTag.setAttribute("name", "fc:frame");
-    metaTag.setAttribute("content", JSON.stringify(frameData));
-    document.head.appendChild(metaTag);
+    if (!metaTag) {
+      // If tag doesn't exist, create it
+      metaTag = document.createElement("meta");
+      metaTag.setAttribute("name", "fc:frame");
+      document.head.appendChild(metaTag);
+    }
 
-    // Cleanup function for when component unmounts
-    return () => {
-      document
-        .querySelectorAll('meta[name^="fc:frame"]')
-        .forEach((tag) => tag.remove());
-    };
-  }, [frameData]);
+    // Update the content attribute
+    metaTag.setAttribute("content", contentString);
+
+    console.log("Updated Frame meta tag:", contentString);
+  }, [isSpecificRaffle, raffle, baseUrl, appName]);
 
   // This component doesn't render anything visible
   return null;
@@ -83,9 +78,6 @@ FrameMeta.propTypes = {
   raffle: PropTypes.shape({
     id: PropTypes.string,
     title: PropTypes.string,
-    description: PropTypes.string,
-    creator: PropTypes.number,
-    // Add other raffle properties as needed
   }),
 };
 
