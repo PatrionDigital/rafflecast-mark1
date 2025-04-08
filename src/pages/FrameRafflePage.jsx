@@ -1,11 +1,10 @@
-// FrameRafflePage.jsx - Warpcast-focused version
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useRaffle } from "@/hooks/useRaffle";
+import { fetchRaffleById } from "@/utils/tursoUtils";
+import FrameMeta from "@/components/FrameMeta";
 
 const FrameRafflePage = () => {
   const { raffleId } = useParams();
-  const { getRaffleById } = useRaffle();
   const [raffle, setRaffle] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -15,10 +14,25 @@ const FrameRafflePage = () => {
 
     const fetchRaffle = async () => {
       try {
-        const fetchedRaffle = await getRaffleById(raffleId);
+        console.log("Fetching Raffle Directly from Database:");
+        console.log("Raffle ID from params:", raffleId);
+
+        // Directly fetch from database
+        const fetchedRaffle = await fetchRaffleById(raffleId);
+
+        console.log("Directly Fetched Raffle:", fetchedRaffle);
 
         if (!fetchedRaffle) {
-          throw new Error("Raffle not found");
+          throw new Error("Raffle not found in database");
+        }
+
+        // Parse criteria if it's a string
+        if (fetchedRaffle && typeof fetchedRaffle.criteria === "string") {
+          try {
+            fetchedRaffle.criteria = JSON.parse(fetchedRaffle.criteria);
+          } catch (error) {
+            console.error("Error parsing criteria:", error);
+          }
         }
 
         setRaffle(fetchedRaffle);
@@ -31,92 +45,54 @@ const FrameRafflePage = () => {
     };
 
     fetchRaffle();
+  }, [raffleId]);
 
-    // Signal ready to Warpcast
-    const signalReady = async () => {
-      try {
-        const frameSDK = await import("@farcaster/frame-sdk")
-          .then((mod) => mod.default)
-          .catch(() => null);
-
-        if (frameSDK && frameSDK.actions && frameSDK.actions.ready) {
-          console.log("Signaling ready to Warpcast");
-          await frameSDK.actions.ready();
-        }
-      } catch (error) {
-        console.warn("Error signaling ready:", error);
-      }
-    };
-
-    // Delay slightly to ensure meta tags are processed
-    setTimeout(signalReady, 500);
-  }, [raffleId, getRaffleById]);
-
-  // Loading state
-  if (loading) {
-    return (
-      <div
-        style={{
-          width: "100vw",
-          height: "100vh",
-          backgroundColor: "#820b8a",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          color: "white",
-          textAlign: "center",
-        }}
-      >
-        <div>
-          <h1>Rafflecast</h1>
-          <p>Loading Raffle...</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Error state
-  if (error) {
-    return (
-      <div
-        style={{
-          width: "100vw",
-          height: "100vh",
-          backgroundColor: "#820b8a",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          color: "white",
-          textAlign: "center",
-        }}
-      >
-        <div>
-          <h1>Rafflecast</h1>
-          <p>Error: {error}</p>
-          <p>Raffle not found or could not be loaded.</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Successful load - display basic raffle info
+  // Rendering logic with improved scrollability
   return (
-    <div
-      style={{
-        width: "100vw",
-        height: "100vh",
-        backgroundColor: "#820b8a",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <div style={{ color: "white", textAlign: "center", padding: "20px" }}>
-        <h1>Rafflecast</h1>
-        <p>Raffle: {raffle.title}</p>
-        <p>Closes: {new Date(raffle.closingDate).toLocaleDateString()}</p>
+    <>
+      {/* Explicitly pass the raffle to FrameMeta */}
+      <FrameMeta raffle={raffle} />
+
+      <div
+        style={{
+          width: "100vw",
+          height: "100vh",
+          backgroundColor: "#820b8a",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          color: "white",
+          textAlign: "center",
+          padding: "20px",
+          boxSizing: "border-box",
+          overflow: "auto",
+        }}
+      >
+        {loading ? (
+          <div>
+            <h1>Rafflecast</h1>
+            <p>Loading Raffle...</p>
+          </div>
+        ) : error ? (
+          <div>
+            <h1>Rafflecast</h1>
+            <p>Error: {error}</p>
+          </div>
+        ) : raffle ? (
+          <div>
+            <h1>Rafflecast</h1>
+            <p>Raffle: {raffle.title}</p>
+            <p>Closes: {new Date(raffle.closingDate).toLocaleDateString()}</p>
+          </div>
+        ) : (
+          <div>
+            <h1>Rafflecast</h1>
+            <p>Unexpected state: No raffle found</p>
+          </div>
+        )}
       </div>
-    </div>
+    </>
   );
 };
 
