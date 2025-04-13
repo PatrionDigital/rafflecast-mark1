@@ -1,16 +1,80 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!DOCTYPE html>
+<html lang="en" class="bg-black text-white">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <title>SecondOrder.fun</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-6 font-mono tracking-wide bg-black">
 
-    <meta name="fc:frame" content='{"version":"next","imageUrl":"https://picsum.photos/1200/630","button":{"title":"Join Raffle","action":{"type":"launch_frame","name":"Rafflecast","url":"","splashBackgroundColor":"#820b8a"}}}'>
-    
-    <title>Rafflecast - Mark 1</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+  <!-- Header -->
+  <!-- Include Heroicons via CDN -->
+<script src="https://unpkg.com/heroicons@2.0.18/24/outline/heroicons.min.js"></script>
+
+<header class="w-full max-w-4xl flex justify-between items-center mb-8">
+  <!-- Logo + Title -->
+  <div class="flex items-center space-x-4">
+    <!-- Logo -->
+    <div class="flex items-center" style="height: 135px;">
+      <img src="/images/logo.png" alt="Logo" style="height: 100%; width: auto;" />
+    </div>
+
+    <!-- Title -->
+    <h1 class="text-4xl font-bold tracking-tight leading-tight">
+      <span class="text-white">Second</span><span class="text-red-600">Order</span><span class="text-zinc-500">.fun</span>
+    </h1>
+  </div>
+
+  <!-- Nav with Icons -->
+  <nav class="flex space-x-6 text-sm text-zinc-400 items-center">
+    <!-- Home -->
+    <a href="#" class="flex items-center space-x-1 hover:text-red-500 transition">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+              d="M3 9.75L12 4.5l9 5.25M4.5 10.5v8.25a.75.75 0 00.75.75H9V15a.75.75 0 01.75-.75h4.5A.75.75 0 0115 15v4.5h3.75a.75.75 0 00.75-.75V10.5" />
+      </svg>
+      <span>Home</span>
+    </a>
+
+    <!-- Info -->
+    <a href="#" class="flex items-center space-x-1 hover:text-red-500 transition">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+              d="M12 18.75v-6m0-4.5h.008M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <span>About</span>
+    </a>
+  </nav>
+</header>
+
+  <!-- Main Panel -->
+  <!-- Outer Panel with red border -->
+  <div class="bg-zinc-900/70 border border-red-600 border-[0.5px] rounded-md w-full max-w-3xl p-6 backdrop-blur-sm shadow-inner">
+
+    <!-- Tabs (optional border for structure, still gray) -->
+    <div class="flex space-x-2 mb-6 text-sm font-semibold">
+      <button class="px-4 py-2 rounded-md bg-red-800 text-white border border-red-600">Your Profiles</button>
+      <button class="px-4 py-2 rounded-md bg-transparent text-zinc-300 border border-zinc-600 hover:bg-zinc-800">Badges & Achievements</button>
+      <button class="px-4 py-2 rounded-md bg-transparent text-zinc-300 border border-zinc-600 hover:bg-zinc-800">Game Stats</button>
+    </div>
+
+    <!-- Inner content box WITHOUT border -->
+    <div class="bg-zinc-800/70 rounded-md p-6 text-center text-zinc-300">
+      <p class="text-lg font-semibold mb-2">No Active Games</p>
+      <p class="text-sm">There are currently no active games available to create profiles for.</p>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer class="mt-12 text-xs text-zinc-600 text-center">
+    <p>© 2025 SecondOrder.fun. All rights reserved.</p>
+  </footer>
+
+</body>
 </html>
