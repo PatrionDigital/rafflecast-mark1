@@ -8,6 +8,7 @@
   flex-direction: column;
   margin: 0;
   padding: 0;
+  position: relative;
 }
 
 /* Page Container */
@@ -51,7 +52,7 @@
   background-color: var(--color-primary);
   color: var(--bg-light);
   padding: 0;
-  position: fixed;
+  position: sticky;
   top: 0;
   left: 0;
   right: 0;
@@ -92,7 +93,7 @@
   background-color: var(--color-primary);
   color: var(--bg-light);
   padding: var(--spacing-sm) 0;
-  position: fixed;
+  position: sticky;
   bottom: 0;
   left: 0;
   right: 0;
@@ -112,15 +113,13 @@
 
 /* Main Content Area */
 .main-content {
-  margin-top: var(--header-height);
-  margin-bottom: var(--footer-height);
-  min-height: calc(80vh - var(--header-height) - var(--footer-height));
-  max-height: calc(80vh - var(--header-height) - var(--footer-height));
-  padding: 0;
+  flex: 1;
+  padding: var(--spacing-md);
   max-width: var(--max-content-width);
   margin-left: auto;
   margin-right: auto;
-  overflow: hidden;
+  overflow: auto;
+  width: 100%;
 }
 
 /* Profile Dashboard Layout */
