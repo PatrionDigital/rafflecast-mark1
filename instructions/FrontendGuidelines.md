@@ -44,8 +44,8 @@ SecondOrder.fun is a raffle platform built on Farcaster, allowing users to creat
 
 ### Styling
 
-- Custom CSS with CSS variables for theming
-- No CSS-in-JS or utility-first frameworks
+- Tailwindcss for base styling framework
+- Windmill React components for dashboard pages
 
 ### Data Management
 
