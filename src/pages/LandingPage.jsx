@@ -1,34 +1,25 @@
 // src/pages/LandingPage.jsx
-import { Link } from "react-router-dom";
 import { useEffect } from "react";
-import { sdk } from "@farcaster/frame-sdk";
+import { Link } from "react-router-dom";
+import FrameMeta from "@/components/FrameMeta";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import {
-  HomeIcon,
-  InformationCircleIcon,
-  EnvelopeIcon,
-  ChatBubbleLeftRightIcon,
-  ArrowUpRightIcon,
-} from "@heroicons/react/24/outline";
 
 const LandingPage = () => {
   useEffect(() => {
-    const initializePage = async () => {
-      try {
-        await sdk.actions.ready();
-        console.log("Mini App is ready!");
-      } catch (error) {
-        console.error("Error initializing Mini App:", error);
-      }
-    };
+    const script = document.createElement("script");
+    script.src = "https://sendfox.com/js/form.js";
+    script.async = true;
+    document.body.appendChild(script);
 
-    initializePage();
+    return () => {
+      document.body.removeChild(script);
+    };
   }, []);
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-6 font-mono tracking-wide bg-black">
-      {/* Add Farcaster font stylesheet */}
-      <link rel="stylesheet" href="/farcaster/style.css" />
+      {/* Add FrameMeta for default site sharing */}
+      <FrameMeta />
 
       {/* Header */}
       <Header />
@@ -48,63 +39,71 @@ const LandingPage = () => {
 
           {/* Newsletter Form */}
           <div className="mt-6 max-w-md mx-auto">
-            <style>
-              {`
-                .sendfox-form {
-                  display: flex;
-                  flex-direction: column;
-                  gap: 1rem;
-                }
-                .sendfox-form p {
-                  margin: 0;
-                }
-                .sendfox-form label {
-                  display: block;
-                  font-size: 0.875rem;
-                  font-weight: 500;
-                  color: #fecdd3;
-                  margin-bottom: 0.25rem;
-                }
-                .sendfox-form input {
-                  width: 100%;
-                  background-color: rgba(51, 65, 85, 0.8);
-                  border: 1px solid rgba(148, 163, 184, 0.8);
-                  color: white;
-                  padding: 0.5rem;
-                  border-radius: 0.375rem;
-                }
-                .sendfox-form input:focus {
-                  border-color: #c82a54;
-                  outline: none;
-                  box-shadow: 0 0 0 2px rgba(200, 42, 84, 0.2);
-                }
-                .sendfox-form button {
-                  width: 100%;
-                  background-color: #c82a54;
-                  color: white;
-                  font-weight: bold;
-                  padding: 0.5rem 1rem;
-                  border-radius: 0.375rem;
-                  transition: background-color 0.2s;
-                }
-                .sendfox-form button:hover {
-                  background-color: #b2004b;
-                }
-              `}
-            </style>
-            <div
-              dangerouslySetInnerHTML={{
-                __html: `
-                <form method="post" action="https://sendfox.com/form/1jdkoz/1ydl4e" class="sendfox-form" id="1ydl4e" data-async="true" data-recaptcha="true">
-                  <p><label for="sendfox_form_name">First Name: </label><input type="text" id="sendfox_form_name" placeholder="First Name" name="first_name" required /></p>
-                  <p><label for="sendfox_form_email">Email: </label><input type="email" id="sendfox_form_email" placeholder="Email" name="email" required /></p>
-                  <!-- no botz please -->
-                  <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="a_password" tabindex="-1" value="" autocomplete="off" /></div>
-                  <p><button type="submit">Enlist!</button></p>
-                </form>
-              `,
-              }}
-            />
+            <form
+              method="post"
+              action="https://sendfox.com/form/1jdkoz/1ydl4e"
+              className="sendfox-form"
+              data-async="true"
+              data-recaptcha="false"
+            >
+              <div className="space-y-4">
+                <div>
+                  <label
+                    htmlFor="sendfox_form_name"
+                    className="block text-sm font-medium text-cement mb-1"
+                  >
+                    First Name
+                  </label>
+                  <input
+                    type="text"
+                    id="sendfox_form_name"
+                    name="first_name"
+                    placeholder="Enter your first name"
+                    required
+                    className="w-full px-3 py-2 bg-asphalt text-cement border border-cement/20 rounded-md focus:outline-none focus:ring-2 focus:ring-cochineal-red"
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="sendfox_form_email"
+                    className="block text-sm font-medium text-cement mb-1"
+                  >
+                    Email Address
+                  </label>
+                  <input
+                    type="email"
+                    id="sendfox_form_email"
+                    name="email"
+                    placeholder="Enter your email"
+                    required
+                    className="w-full px-3 py-2 bg-asphalt text-cement border border-cement/20 rounded-md focus:outline-none focus:ring-2 focus:ring-cochineal-red"
+                  />
+                </div>
+
+                {/* Honeypot field */}
+                <div
+                  style={{ position: "absolute", left: "-5000px" }}
+                  aria-hidden="true"
+                >
+                  <input
+                    type="text"
+                    name="a_password"
+                    tabIndex="-1"
+                    value=""
+                    autoComplete="off"
+                  />
+                </div>
+
+                <div>
+                  <button
+                    type="submit"
+                    className="w-full bg-cochineal-red text-white py-2 rounded-md hover:bg-enamel-red transition-colors"
+                  >
+                    Enlist!
+                  </button>
+                </div>
+              </div>
+            </form>
           </div>
 
           {/* Privacy Message */}
