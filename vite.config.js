@@ -4,8 +4,6 @@ import { fileURLToPath } from "url";
 import react from "@vitejs/plugin-react";
 import { defineConfig, loadEnv } from "vite";
 
-import tailwindcss from "@tailwindcss/vite";
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -15,7 +13,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
 
   return {
-    plugins: [tailwindcss(), react()],
+    plugins: [react()],
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),
@@ -29,13 +27,6 @@ export default defineConfig(({ mode }) => {
       host: true,
       proxy: {},
       allowedHosts: [".ngrok-free.app", "localhost"],
-    },
-    css: {
-      modules: {
-        localsConvention: "camelCase",
-        scopeBehaviour: "local",
-      },
-      devSourcemap: true,
     },
     build: {
       outDir: "dist",

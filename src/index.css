@@ -1,7 +1,10 @@
 /* src/index.css */
 /* Main stylesheet that imports all modular CSS files */
-/*@import "tailwindcss";*/
-/* Import all stylesheets in proper order */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import all stylesheets in proper order /
 @import "./styles/variables.css";
 @import "./styles/base.css";
 @import "./styles/layout.css";
@@ -10,3 +13,4 @@
 @import "./styles/utilities.css";
 @import "./styles/frames.css";
 @import "./styles/share-modal.css";
+*/
