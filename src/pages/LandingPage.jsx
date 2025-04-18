@@ -1,11 +1,12 @@
 // src/pages/LandingPage.jsx
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { sdk } from "@farcaster/frame-sdk";
 import FrameMeta from "@/components/FrameMeta";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 
 const LandingPage = () => {
+  // Initialize SendFox
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://sendfox.com/js/form.js";
@@ -15,6 +16,19 @@ const LandingPage = () => {
     return () => {
       document.body.removeChild(script);
     };
+  }, []);
+  // Initialize Farcaster Frames
+  useEffect(() => {
+    const initializePage = async () => {
+      try {
+        await sdk.actions.ready();
+        console.log("Mini App is ready!");
+      } catch (error) {
+        console.error("Error initializing Mini App:", error);
+      }
+    };
+
+    initializePage();
   }, []);
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-6 font-mono tracking-wide bg-black">
