@@ -1,8 +1,8 @@
 import { Outlet, useMatches, useRouteError } from "react-router-dom";
 
 import ErrorBoundary from "@/components/ErrorBoundary";
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
+import Footer from "@/components/layout/Footer";
+import Header from "@/components/layout/Header";
 
 // Helper function to check if we should skip the layout
 const useSkipLayout = () => {

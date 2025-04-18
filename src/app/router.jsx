@@ -2,7 +2,7 @@
 import { createBrowserRouter } from "react-router-dom";
 
 import ErrorBoundary from "@/components/ErrorBoundary";
-import ParentLayout from "@/pages/layouts/ParentLayout";
+import ParentLayout from "@/layouts/ParentLayout";
 import LandingPage from "@/pages/LandingPage";
 import SignupSuccessPage from "@/pages/SignupSuccessPage";
 

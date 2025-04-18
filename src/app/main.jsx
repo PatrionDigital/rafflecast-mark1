@@ -4,8 +4,8 @@ import { createRoot } from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
 
 import { RaffleProvider } from "@/context/RaffleContext.jsx";
-import { MessageProvider } from "./context/MessageContext";
-import { router } from "@/router";
+import { MessageProvider } from "@/context/MessageContext";
+import { router } from "@/app/router";
 import Web3Provider from "@/utils/Web3Provider.jsx";
 
 import "@farcaster/auth-kit/styles.css";
