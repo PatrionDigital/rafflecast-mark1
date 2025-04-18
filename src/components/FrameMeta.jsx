@@ -27,7 +27,7 @@ const FrameMeta = ({ raffle }) => {
       if (isFrameRoute && effectiveRaffleId) {
         frameContent = {
           version: "next",
-          imageUrl: "https://picsum.photos/1200/630", // Replace with actual frame image
+          imageUrl: `${baseUrl}/images/image.png`, // Replace with actual frame image
           button: {
             title: "Join the Cause!",
             action: {
@@ -41,7 +41,7 @@ const FrameMeta = ({ raffle }) => {
       } else {
         frameContent = {
           version: "next",
-          imageUrl: "https://picsum.photos/1200/630", // Replace with site og image
+          imageUrl: `${baseUrl}/images/image.png`, // Replace with site og image
           button: {
             title: "Enlist!",
             action: {
