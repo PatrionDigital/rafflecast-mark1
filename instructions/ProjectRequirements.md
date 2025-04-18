@@ -1,8 +1,8 @@
-# Rafflecast Project Requirements Document (PRD)
+# SecondOrder.fun Project Requirements Document (PRD)
 
 ## Project Objectives
 
-The project aims to create a web application called "Rafflecast" that allows users to create and participate in raffles on the Farcaster social network. The platform will enable users to:
+The project aims to create a web application called "SecondOrder.fun" that allows users to create and participate in raffles on the Farcaster social network. The platform will enable users to:
 
 - Create raffles with specific entry criteria (such as liking a particular Farcaster cast)
 - Enter raffles if they meet the eligibility criteria

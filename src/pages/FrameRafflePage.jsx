@@ -10,7 +10,7 @@ const FrameRafflePage = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    document.title = "Rafflecast Mini App";
+    document.title = "SecondOrder.fun Mini App";
 
     const fetchRaffle = async () => {
       try {
@@ -71,23 +71,23 @@ const FrameRafflePage = () => {
       >
         {loading ? (
           <div>
-            <h1>Rafflecast</h1>
+            <h1>SecondOrder.fun</h1>
             <p>Loading Raffle...</p>
           </div>
         ) : error ? (
           <div>
-            <h1>Rafflecast</h1>
+            <h1>SecondOrder.fun</h1>
             <p>Error: {error}</p>
           </div>
         ) : raffle ? (
           <div>
-            <h1>Rafflecast</h1>
+            <h1>SecondOrder.fun</h1>
             <p>Raffle: {raffle.title}</p>
             <p>Closes: {new Date(raffle.closingDate).toLocaleDateString()}</p>
           </div>
         ) : (
           <div>
-            <h1>Rafflecast</h1>
+            <h1>SecondOrder.fun</h1>
             <p>Unexpected state: No raffle found</p>
           </div>
         )}

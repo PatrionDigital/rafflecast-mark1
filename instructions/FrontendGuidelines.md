@@ -1,4 +1,4 @@
-# Rafflecast Frontend Guidelines
+# SecondOrder.fun Frontend Guidelines
 
 ## Table of Contents
 
@@ -19,7 +19,7 @@
 
 ## Project Overview
 
-Rafflecast is a raffle platform built on Farcaster, allowing users to create and join raffles using Farcaster authentication. It supports web-based interaction as well as Farcaster Frames for native integration with Farcaster clients.
+SecondOrder.fun is a raffle platform built on Farcaster, allowing users to create and join raffles using Farcaster authentication. It supports web-based interaction as well as Farcaster Frames for native integration with Farcaster clients.
 
 ### Key Features
 

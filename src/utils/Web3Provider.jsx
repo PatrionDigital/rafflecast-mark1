@@ -18,12 +18,12 @@ const configOptions = getDefaultConfig({
   walletConnectProjectId: "f527dbe96a45f7e9b5d3f52b476b2d55",
 
   // Required App Info
-  appName: "Rafflecast",
+  appName: "SecondOrder.fun",
 
   // Optional App Info
   appDescription: "Raffles for Farcaster",
-  appUrl: "https://rafflecast.xyz",
-  appIcon: "https://family.co/logo.png", // your app's icon, no bigger than 1024x1024px (max. 1MB)
+  appUrl: "https://secondorder.fun",
+  appIcon: "https://secondorder.fun/images/logo.png", // your app's icon, no bigger than 1024x1024px (max. 1MB)
 });
 
 const config = createConfig(configOptions);

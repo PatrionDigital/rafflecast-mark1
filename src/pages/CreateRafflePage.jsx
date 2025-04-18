@@ -15,7 +15,9 @@ import "@/styles/tabbed-summary.css";
 const CreateRafflePage = () => {
   // Form state
   const [raffleTitle, setRaffleTitle] = useState("");
-  const [description, setDescription] = useState("A Rafflecast raffle");
+  const [description, setDescription] = useState(
+    "SecondOrder.fun - Memecoins without the hangover"
+  );
   const [criteriaType, setCriteriaType] = useState("like");
   const [linkedCast, setLinkedCast] = useState("");
   const [castLookupStatus, setCastLookupStatus] = useState({

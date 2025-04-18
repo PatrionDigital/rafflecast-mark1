@@ -1,6 +1,6 @@
 /* src/index.css */
 /* Main stylesheet that imports all modular CSS files */
-
+/*@import "tailwindcss";*/
 /* Import all stylesheets in proper order */
 @import "./styles/variables.css";
 @import "./styles/base.css";

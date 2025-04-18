@@ -1,4 +1,4 @@
-# Rafflecast Implementation Plan
+# SecondOrder.fun Implementation Plan
 
 ## 1. MVP with Web App Interface (Off-chain Database)
 

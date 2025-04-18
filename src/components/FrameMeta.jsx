@@ -16,7 +16,7 @@ const FrameMeta = ({ raffle }) => {
     const updateMetaTag = () => {
       // Base URL - use environment variable or fallback
       const baseUrl = import.meta.env.VITE_APP_URL || window.location.origin;
-      const appName = "Rafflecast";
+      const appName = "SecondOrder.fun";
 
       let frameContent;
 

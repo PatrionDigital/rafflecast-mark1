@@ -30,7 +30,7 @@ const ParentLayout = () => {
 
   return (
     <div className="app-wrapper">
-      <Header title="Rafflecast" navLinks={navLinks} />
+      <Header title="SecondOrder.fun" navLinks={navLinks} />
       <main className="main-content">
         <Outlet />
       </main>

@@ -1,10 +1,10 @@
-# Rafflecast Backend & Blockchain Migration Plan
+# SecondOrder.fun Backend & Blockchain Migration Plan
 
 ## Current Backend Structure
 
 ### Overview
 
-The current backend for Rafflecast primarily uses TursoDB for data persistence, with some blockchain functionality already integrated via the Merkle Distributor contract. This document outlines the current structure and the planned migration to a fully blockchain-based system.
+The current backend for SecondOrder.fun primarily uses TursoDB for data persistence, with some blockchain functionality already integrated via the Merkle Distributor contract. This document outlines the current structure and the planned migration to a fully blockchain-based system.
 
 ### TursoDB Client Implementation
 

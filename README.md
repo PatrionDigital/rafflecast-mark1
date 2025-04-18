@@ -1,4 +1,4 @@
-# Rafflecast Mark 1
+# secondorder-dot-fun
 
 ## Installation
 

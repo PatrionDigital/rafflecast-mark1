@@ -5,14 +5,14 @@
     "signature": ""
   },
   "frame": {
-    "name": "Rafflecast",
+    "name": "SecondOrder.fun",
     "version": "1",
-    "iconUrl": "https://rafflecast-mark1.vercel.app/images/icon.png",
-    "homeUrl": "https://rafflecast-mark1.vercel.app",
-    "imageUrl": "https://rafflecast-mark1.vercel.app/images/image.png",
-    "buttonTitle": "Join Raffle",
-    "splashImageUrl": "https://rafflecast-mark1.vercel.app/images/splash.png",
+    "iconUrl": "https://secondorder.fun/images/icon.png",
+    "homeUrl": "https://rsecondorder.fun",
+    "imageUrl": "https://secondorder.fun/images/image.png",
+    "buttonTitle": "Join the Cause",
+    "splashImageUrl": "https://secondorder.fun/images/splash.png",
     "splashBackgroundColor": "#820b8a",
-    "webhookUrl": "https://rafflecast-mark1.vercel.app/api/webhook"
+    "webhookUrl": "https://secondorder.fun/api/webhook"
   }
 }

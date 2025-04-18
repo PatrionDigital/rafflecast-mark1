@@ -8,7 +8,7 @@ export const Footer = ({ className = "" }) => {
     <footer className={`footer ${className}`}>
       <div className="footer-container">
         <div className="footer-left">
-          <p>© {currentYear} Rafflecast</p>
+          <p>© {currentYear} SecondOrder.fun</p>
         </div>
 
         <div className="footer-center">

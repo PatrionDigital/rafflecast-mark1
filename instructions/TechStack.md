@@ -1,8 +1,8 @@
-# RaffleCast Tech Stack Documentation
+# SecondOrder.fun Tech Stack Documentation
 
 ## Overview
 
-RaffleCast is a web application for creating, managing, and participating in raffles with Farcaster integration. The application allows users to authenticate with Farcaster credentials, create raffles, set eligibility criteria, and distribute rewards to winners. It features a responsive UI with support for mobile, tablet, and desktop views, and includes Farcaster Frame support for improved sharing on the Farcaster platform.
+SecondOrder.fun is a web application for creating, managing, and participating in raffles with Farcaster integration. The application allows users to authenticate with Farcaster credentials, create raffles, set eligibility criteria, and distribute rewards to winners. It features a responsive UI with support for mobile, tablet, and desktop views, and includes Farcaster Frame support for improved sharing on the Farcaster platform.
 
 ## Core Technologies
 

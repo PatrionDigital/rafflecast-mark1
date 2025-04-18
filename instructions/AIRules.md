@@ -1,8 +1,8 @@
-# Rafflecast AI Rules Document
+# SecondOrder.fun AI Rules Document
 
 ## Project Overview
 
-Rafflecast is a web application built with Vite and React in JavaScript that allows users to create and participate in raffles through the Farcaster social media platform. The application uses authentication with Login With Farcaster and integrates with blockchain technology.
+SecondOrder.fun is a web application built with Vite and React in JavaScript that allows users to create and participate in raffles through the Farcaster social media platform. The application uses authentication with Login With Farcaster and integrates with blockchain technology.
 
 ## Development Guidelines
 

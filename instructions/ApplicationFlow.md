@@ -1,8 +1,8 @@
-# Rafflecast Application Flow Document
+# SecondOrder.fun Application Flow Document
 
 ## Overview
 
-Rafflecast is a decentralized application that enables Farcaster users to create, manage, and participate in raffles. The platform leverages blockchain technology to ensure transparency and fairness in raffle execution, while integrating deeply with the Farcaster social network for user authentication and participation requirements.
+SecondOrder.fun is a decentralized application that enables Farcaster users to create, manage, and participate in raffles. The platform leverages blockchain technology to ensure transparency and fairness in raffle execution, while integrating deeply with the Farcaster social network for user authentication and participation requirements.
 
 ## Application Architecture
 
@@ -41,7 +41,7 @@ The application is organized into the following structure:
 
 #### 1.1 Raffle Creation
 
-Creators access Rafflecast to set up new raffles with specific criteria and rewards.
+Creators access SecondOrder.fun to set up new raffles with specific criteria and rewards.
 
 **Implementation Status**: ✅ Implemented
 
@@ -213,7 +213,7 @@ Entrants can discover raffles through multiple channels.
 **Implementation Status**: ✅ Implemented
 
 - **Channels**:
-  - Direct browsing on Rafflecast platform
+  - Direct browsing on SecondOrder.fun platform
   - Shared Farcaster Frames in users' feeds
   - Links shared on social media platforms
   - Warpcast channel posts
@@ -238,7 +238,7 @@ Authentication is required for raffle participation.
 **Authentication Features**:
 
 1. **Farcaster Integration**: Seamless login with Farcaster credentials
-2. **Profile Connection**: Links user's Farcaster profile with their Rafflecast account
+2. **Profile Connection**: Links user's Farcaster profile with their SecondOrder.fun account
 3. **Wallet Association**: Connects user's verified wallet addresses for prize delivery
 
 #### 3.3 Meeting Raffle Criteria
