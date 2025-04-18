@@ -1,9 +1,11 @@
 // src/pages/LandingPage.jsx
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import FrameMeta from "../components/FrameMeta";
 import { useEffect } from "react";
 
 const LandingPage = () => {
+  const navigate = useNavigate();
+
   // Add effect to load Farcaster icons and SendFox script
   useEffect(() => {
     // Load Heroicons script
@@ -20,12 +22,25 @@ const LandingPage = () => {
     sendfoxScript.charSet = "utf-8";
     document.body.appendChild(sendfoxScript);
 
+    // Add event listener for form submission
+    const handleFormSubmit = (e) => {
+      if (e.target.classList.contains("sendfox-form")) {
+        // Wait for SendFox to process the form
+        setTimeout(() => {
+          navigate("/signup/success");
+        }, 1000);
+      }
+    };
+
+    document.addEventListener("submit", handleFormSubmit);
+
     // Cleanup on unmount
     return () => {
       document.body.removeChild(heroiconsScript);
       document.body.removeChild(sendfoxScript);
+      document.removeEventListener("submit", handleFormSubmit);
     };
-  }, []);
+  }, [navigate]);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-6 font-mono tracking-wide bg-black">

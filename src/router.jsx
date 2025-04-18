@@ -4,6 +4,7 @@ import { createBrowserRouter } from "react-router-dom";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import ParentLayout from "@/pages/layouts/ParentLayout";
 import LandingPage from "@/pages/LandingPage";
+import SignupSuccessPage from "@/pages/SignupSuccessPage";
 
 export const router = createBrowserRouter([
   {
@@ -26,6 +27,12 @@ export const router = createBrowserRouter([
   {
     path: "/signup",
     element: <LandingPage />,
+    errorElement: <ErrorBoundary />,
+  },
+  // Signup Success
+  {
+    path: "/signup/success",
+    element: <SignupSuccessPage />,
     errorElement: <ErrorBoundary />,
   },
 ]);
