@@ -1,7 +1,7 @@
 import { Outlet, useMatches, useRouteError } from "react-router-dom";
 
 import ErrorBoundary from "@/components/ErrorBoundary";
-import { Footer } from "@/components/Footer";
+import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 
 // Helper function to check if we should skip the layout

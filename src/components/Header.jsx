@@ -1,52 +1,46 @@
 // components/Header.jsx
-import { NavLink } from "react-router-dom";
-import PropTypes from "prop-types";
-import { SignInButton } from "@farcaster/auth-kit";
+import { HomeIcon, InformationCircleIcon } from "@heroicons/react/24/outline";
 
-const Header = ({ title, navLinks }) => {
+const Header = () => {
   return (
-    <header className="header">
-      <div className="header-container">
-        <div className="header-left">
-          <h1>{title}</h1>
+    <header className="w-full max-w-4xl flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+      {/* Logo + Title */}
+      <div className="flex items-center space-x-4">
+        {/* Logo */}
+        <div className="flex items-center h-20 md:h-32">
+          <img src="/images/logo.png" alt="Logo" className="h-full w-auto" />
         </div>
 
-        <nav className="header-nav">
-          <ul className="nav-list">
-            {navLinks.map((link) => (
-              <li key={link.path} className="nav-item">
-                <NavLink
-                  to={link.path}
-                  className={({ isActive }) =>
-                    isActive ? "active-link" : "link"
-                  }
-                  end
-                >
-                  {link.label}
-                </NavLink>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        <div className="header-right">
-          <div className="user-menu">
-            <SignInButton />
-          </div>
-        </div>
+        {/* Title */}
+        <h1 className="text-3xl md:text-4xl font-bold tracking-tight leading-tight">
+          <span className="text-white">Second</span>
+          <span className="text-cochineal-red">Order</span>
+          <span className="text-cement">.fun</span>
+        </h1>
       </div>
+
+      {/* Nav with Icons */}
+      <nav className="flex space-x-6 text-sm text-cement items-center">
+        {/* Home */}
+        <a
+          href="#"
+          className="flex items-center space-x-1 hover:text-cochineal-red transition"
+        >
+          <HomeIcon className="w-5 h-5" />
+          <span>Home</span>
+        </a>
+
+        {/* Info */}
+        <a
+          href="#"
+          className="flex items-center space-x-1 hover:text-cochineal-red transition"
+        >
+          <InformationCircleIcon className="w-5 h-5" />
+          <span>About</span>
+        </a>
+      </nav>
     </header>
   );
-};
-
-Header.propTypes = {
-  title: PropTypes.string.isRequired,
-  navLinks: PropTypes.arrayOf(
-    PropTypes.shape({
-      path: PropTypes.string.isRequired,
-      label: PropTypes.string.isRequired,
-    })
-  ).isRequired,
 };
 
 export default Header;
