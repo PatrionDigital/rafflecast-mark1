@@ -2,7 +2,6 @@
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { sdk } from "@farcaster/frame-sdk";
-import FrameMeta from "@/components/FrameMeta";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import {
@@ -28,9 +27,6 @@ const LandingPage = () => {
   }, []);
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-6 font-mono tracking-wide bg-black">
-      {/* Add FrameMeta for default site sharing */}
-      <FrameMeta />
-
       {/* Add Farcaster font stylesheet */}
       <link rel="stylesheet" href="/farcaster/style.css" />
 
