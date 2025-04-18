@@ -29,11 +29,11 @@ const FrameMeta = ({ raffle }) => {
           version: "next",
           imageUrl: "https://picsum.photos/1200/630", // Replace with actual frame image
           button: {
-            title: "Join Raffle",
+            title: "Join the Cause!",
             action: {
               type: "launch_frame",
               name: raffle?.title || appName,
-              url: `${baseUrl}/entrant/raffles/browse?id=${effectiveRaffleId}`,
+              url: `${baseUrl}/raffles/browse?id=${effectiveRaffleId}`,
               splashBackgroundColor: "#820b8a",
             },
           },
@@ -43,11 +43,11 @@ const FrameMeta = ({ raffle }) => {
           version: "next",
           imageUrl: "https://picsum.photos/1200/630", // Replace with site og image
           button: {
-            title: "Join Raffle",
+            title: "Enlist!",
             action: {
               type: "launch_frame",
               name: appName,
-              url: `${baseUrl}/entrant/raffles/browse`,
+              url: `${baseUrl}/signup/`,
               splashBackgroundColor: "#820b8a",
             },
           },

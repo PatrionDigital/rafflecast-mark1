@@ -1,18 +1,18 @@
 {
   "accountAssociation": {
-    "header": "eyJmaWQiOjEzODM3LCJ0eXBlIjoiY3VzdG9keSIsImtleSI6IjB4ZTA3ZDcxMDBkYzIwOGY0NWJiN2UzMmQ0MWFmNTc3MGQxNzRlNmYwYiJ9",
-    "payload": "eyJkb21haW4iOiJyYWZmbGVjYXN0LW1hcmsxLnZlcmNlbC5hcHAifQ",
-    "signature": ""
+    "header": "eyJmaWQiOjEzODM3LCJ0eXBlIjoiY3VzdG9keSIsImtleSI6IjB4RTA3ZDcxMDBkYzIwOGY0NWJCN0UzMmQ0MWFmNTc3MGQxNzRlNkYwYiJ9",
+    "payload": "eyJkb21haW4iOiJzZWNvbmRvcmRlci5mdW4ifQ",
+    "signature": "MHhiM2NjNGJkNzMwM2NiYmQzNzI0MzRjNTM2OWY3ZjU1NmIyODU4Y2VhN2E2OTdjYmZlN2VmZmJkY2VmNmJjYzE3MTU2OTdhYjhjZmQ4NTdhZDQ2NGU3YTVjZDc3NTYwNDAwMzQzZjBlOWVlNThlYjQ0M2Q2MjYxMDhhMWM2N2E1ZTFj"
   },
   "frame": {
     "name": "SecondOrder.fun",
     "version": "1",
-    "iconUrl": "https://secondorder.fun/images/icon.png",
-    "homeUrl": "https://rsecondorder.fun",
+    "iconUrl": "https://secondorder.fun/images/logo.png",
+    "homeUrl": "https://secondorder.fun",
     "imageUrl": "https://secondorder.fun/images/image.png",
     "buttonTitle": "Join the Cause",
     "splashImageUrl": "https://secondorder.fun/images/splash.png",
-    "splashBackgroundColor": "#820b8a",
+    "splashBackgroundColor": "#353e34",
     "webhookUrl": "https://secondorder.fun/api/webhook"
   }
 }
