@@ -4,29 +4,16 @@ import { ConnectKitProvider, getDefaultConfig } from "connectkit";
 import PropTypes from "prop-types";
 import { WagmiProvider, http, createConfig } from "wagmi";
 import { base } from "wagmi/chains";
+import { injected } from "wagmi/connectors";
 
 // Create the Wagmi config
-const configOptions = getDefaultConfig({
-  // Your dApps chains
+const config = createConfig({
   chains: [base],
   transports: {
-    // RPC URL for each chain
     [base.id]: http("https://mainnet.base.org"),
   },
-
-  // Required API Keys
-  walletConnectProjectId: "f527dbe96a45f7e9b5d3f52b476b2d55",
-
-  // Required App Info
-  appName: "SecondOrder.fun",
-
-  // Optional App Info
-  appDescription: "Raffles for Farcaster",
-  appUrl: "https://secondorder.fun",
-  appIcon: "https://secondorder.fun/images/logo.png", // your app's icon, no bigger than 1024x1024px (max. 1MB)
+  connectors: [injected()],
 });
-
-const config = createConfig(configOptions);
 
 // Make wagmi config available globally for the frame provider
 if (typeof window !== "undefined") {
