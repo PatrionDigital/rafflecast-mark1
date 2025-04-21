@@ -1,3 +1,4 @@
+// Modified src/context/RaffleContext.jsx
 import { createContext, useEffect, useState, useMemo } from "react";
 import PropTypes from "prop-types";
 import {
@@ -10,7 +11,7 @@ import {
   onRaffleEntry,
   onRafflePhaseUpdated,
 } from "../utils/tursoUtils";
-import { checkLikeCondition } from "../utils/farcasterUtils";
+import { generatePrizeDistribution } from "../utils/zoraUtils";
 
 const RaffleContext = createContext();
 
@@ -29,7 +30,7 @@ export function RaffleProvider({ children }) {
 
       const intitialELigibilityStatus = fetchedRaffles.map((raffle) => ({
         raffleId: raffle.id,
-        status: "Ineligible",
+        status: "Eligible", // Since we're removing criteria, all raffles are eligible by default
       }));
       setEligibilityStatus(intitialELigibilityStatus);
     };
@@ -38,19 +39,15 @@ export function RaffleProvider({ children }) {
 
   useEffect(() => {
     const cleanupListeners = [
-      onRaffleCreated((data) => {
-        console.log("onRaffleCreated received:", data);
-        if (data && data.success && data.newRaffle) {
-          setRaffles((prev) => {
-            // Check if the raffle already exists
-            if (prev.some((raffle) => raffle.id === data.newRaffle.id)) {
-              return prev; // Skip adding if duplicate
-            }
-            return [...prev, data.newRaffle];
-          });
-          console.log("Raffle created successfully!");
+      onRaffleCreated((response) => {
+        console.log("onRaffleCreated received:", response);
+        if (response && response.success) {
+          console.log("Raffle created successfully:", response.id);
         } else {
-          console.log(`Error creating raffle: ${data.error}`);
+          console.error(
+            "Error creating raffle:",
+            response ? response.error : "Unknown error"
+          );
         }
       }),
       onRaffleEntry((data) => {
@@ -92,7 +89,25 @@ export function RaffleProvider({ children }) {
   }, []);
 
   const addRaffle = async (raffleData) => {
-    // TODO: Add Data validation
+    // Add default prize structure if not provided
+    if (!raffleData.prize) {
+      raffleData.prize = {
+        amount: 500,
+        currency: "USDC",
+        winnerCount: 10,
+        distribution: {
+          model: "equitable",
+          tiers: generatePrizeDistribution(500, 10),
+        },
+      };
+    }
+
+    // Ensure startDate and startTime are set to creation time if not provided
+    if (!raffleData.startDate || !raffleData.startTime) {
+      const now = new Date();
+      raffleData.startDate = now.toISOString().split("T")[0];
+      raffleData.startTime = now.toTimeString().split(" ")[0].substring(0, 5);
+    }
 
     // Optimistically Update the state
     setRaffles((prev) => [...prev, raffleData]);
@@ -153,7 +168,7 @@ export function RaffleProvider({ children }) {
         )
       );
     } catch (error) {
-      console.error("Errof updating raffle:", error.message);
+      console.error("Error updating raffle:", error.message);
     }
   };
 
@@ -173,23 +188,6 @@ export function RaffleProvider({ children }) {
 
   const getRafflesByPhase = async (phase) => {
     const filteredRaffles = raffles.filter((raffle) => raffle.phase === phase);
-
-    filteredRaffles.forEach((raffle) => {
-      if (typeof raffle.criteria === "string") {
-        try {
-          // Try to parse the criteria if it's a string
-          raffle.criteria = JSON.parse(raffle.criteria);
-        } catch (error) {
-          // Log an error if the JSON is invalid
-          console.error(
-            `Invalid criteria JSON for raffle ${raffle.id}:`,
-            raffle.criteria,
-            error
-          );
-        }
-      }
-    });
-
     return filteredRaffles;
   };
 
@@ -197,38 +195,11 @@ export function RaffleProvider({ children }) {
     const filteredRaffles = raffles.filter(
       (raffle) => raffle.creator === creator
     );
-
-    filteredRaffles.forEach((raffle) => {
-      if (typeof raffle.criteria === "string") {
-        try {
-          raffle.criteria = JSON.parse(raffle.criteria);
-        } catch (error) {
-          console.error(
-            `Invalid criteria JSON for raffle ${raffle.id}:`,
-            raffle.criteria,
-            error
-          );
-        }
-      }
-    });
-
     return filteredRaffles;
   };
 
   const getRaffleById = (raffleId) => {
-    const raffle = raffles.find((raffle) => raffle.id === raffleId);
-
-    // Check if the raffle exists and its criteria is a string
-    if (raffle && typeof raffle.criteria === "string") {
-      try {
-        // Parse the criteria and reinsert it back into the raffle object
-        raffle.criteria = JSON.parse(raffle.criteria);
-      } catch (error) {
-        console.error("Error parsing criteria:", error);
-      }
-    }
-
-    return raffle;
+    return raffles.find((raffle) => raffle.id === raffleId);
   };
 
   const getEntriesByRaffleId = (raffleId) => {
@@ -253,8 +224,13 @@ export function RaffleProvider({ children }) {
     );
   };
 
+  // Clear message from context
+  const clearMessage = () => {
+    // No-op function since we removed event messages
+  };
+
   // NOTE: Functions like addRaffle, addEntry etc are stable and don't need to be included in the dependency array
-  // as they only depend on raffles, entries, eligibilityStatus and eventMessage
+  // as they only depend on raffles, entries, eligibilityStatus
   const contextValue = useMemo(
     () => ({
       raffles,
@@ -270,7 +246,7 @@ export function RaffleProvider({ children }) {
       getEntriesByRaffleId,
       getEntriesByEntrant,
       updateEligibilityStatus,
-      checkLikeCondition,
+      clearMessage,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [raffles, entries, eligibilityStatus]

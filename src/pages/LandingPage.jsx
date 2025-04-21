@@ -2,8 +2,6 @@
 import { useEffect } from "react";
 import { sdk } from "@farcaster/frame-sdk";
 import FrameMeta from "@/components/FrameMeta";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
 
 const LandingPage = () => {
   // Initialize SendFox
@@ -31,12 +29,9 @@ const LandingPage = () => {
     initializePage();
   }, []);
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-6 font-mono tracking-wide bg-black">
+    <div className="flex flex-grow flex-col items-center justify-center p-6 font-mono tracking-wide bg-black">
       {/* Add FrameMeta for default site sharing */}
       <FrameMeta />
-
-      {/* Header */}
-      <Header />
 
       {/* Main Panel */}
       <div className="bg-black/70 border-enamel-red border-[0.5px] rounded-md w-full max-w-3xl p-2 md:p-3 backdrop-blur-sm shadow-inner">
@@ -103,7 +98,7 @@ const LandingPage = () => {
                     type="text"
                     name="a_password"
                     tabIndex="-1"
-                    value=""
+                    defaultValue=""
                     autoComplete="off"
                   />
                 </div>
@@ -128,9 +123,6 @@ const LandingPage = () => {
           </div>
         </div>
       </div>
-
-      {/* Footer */}
-      <Footer />
     </div>
   );
 };

@@ -3,7 +3,7 @@ import { HomeIcon, InformationCircleIcon } from "@heroicons/react/24/outline";
 
 const Header = () => {
   return (
-    <header className="w-full max-w-4xl flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+    <header className="w-full flex flex-col md:flex-row justify-between items-center bg-black p-4">
       {/* Logo + Title */}
       <div className="flex items-center space-x-4">
         {/* Logo */}

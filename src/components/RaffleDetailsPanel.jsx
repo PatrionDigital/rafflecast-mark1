@@ -25,9 +25,7 @@ const RaffleDetailsPanel = ({ raffle, onClose, isInFrame = false }) => {
   } = useRaffle();
 
   // Component state
-  const { linkedCast } = raffle.criteria || {};
   const { isAuthenticated, profile } = useProfile();
-  const [criteriaCastData, setCriteriaCastData] = useState({});
   const [selectedAddress, setSelectedAddress] = useState("");
   const [hasEntered, setHasEntered] = useState(false);
   const [creatorUsername, setCreatorUsername] = useState(null);
@@ -73,21 +71,6 @@ const RaffleDetailsPanel = ({ raffle, onClose, isInFrame = false }) => {
     try {
       const raffle = await getRaffleById(raffleId);
       console.log("Raffle:", raffle);
-
-      if (!raffle.criteria?.linkedCast) {
-        updateEligibilityStatus(raffleId, "No linked Cast");
-        console.log("Raffle does not have a specified cast.");
-        return;
-      }
-
-      const hasLiked = await checkLikeCondition(profile.fid, linkedCast);
-      if (hasLiked) {
-        updateEligibilityStatus(raffleId, "Eligible");
-        console.log("User has met Like condition.");
-      } else {
-        updateEligibilityStatus(raffleId, "Ineligible");
-        console.log("User must Like the linked Cast to join this raffle.");
-      }
     } catch (error) {
       console.error("Error checking eligibility:", error);
       updateEligibilityStatus(raffleId, "Error checking eligibility");
@@ -116,14 +99,6 @@ const RaffleDetailsPanel = ({ raffle, onClose, isInFrame = false }) => {
       }
 
       const username = castData.cast.author.username;
-
-      setCriteriaCastData((prev) => ({
-        ...prev,
-        [castHash]: {
-          username,
-          hashPrefix: castHash.slice(0, 10),
-        },
-      }));
     } catch (error) {
       console.error("Error fetching user data from cast hash:", error);
     }
@@ -153,15 +128,6 @@ const RaffleDetailsPanel = ({ raffle, onClose, isInFrame = false }) => {
   };
 
   useEffect(() => {
-    if (linkedCast && !criteriaCastData[linkedCast]) {
-      handleFetchUserFromCast(linkedCast);
-    }
-  }, [linkedCast, criteriaCastData]);
-
-  const criteriaUrl = criteriaCastData[linkedCast]
-    ? `https://warpcast.com/${criteriaCastData[linkedCast].username}/${criteriaCastData[linkedCast].hashPrefix}`
-    : "#";
-
   // Update the creator display section
   const creatorProfileLink = creatorUsername
     ? `https://warpcast.com/${creatorUsername}`
@@ -215,33 +181,6 @@ const RaffleDetailsPanel = ({ raffle, onClose, isInFrame = false }) => {
       </div>
 
       <div className="raffle-details-right">
-        <div className="raffle-details-criteria">
-          {criteriaCastData ? (
-            <button onClick={() => window.open(criteriaUrl, "_blank")}>
-              {`Like this cast to enter the raffle`}
-            </button>
-          ) : (
-            <p>Loading cast information...</p>
-          )}
-          {isAuthenticated && getCurrentEligibilityStatus() === "Eligible" && (
-            <div className="address-selector">
-              <select
-                value={selectedAddress}
-                onChange={(e) => setSelectedAddress(e.target.value)}
-                disabled={!profile}
-              >
-                <option value="">
-                  Select Ethereum Address to send rewards to
-                </option>
-                {profile?.verifications?.map((address, index) => (
-                  <option key={index} value={address}>
-                    {address}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
-        </div>
         <div className="raffle-actions">
           <button
             onClick={() => handleCheckEligibility(raffle.id)}
@@ -287,9 +226,6 @@ RaffleDetailsPanel.propTypes = {
     startDate: PropTypes.string.isRequired,
     closingDate: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
-    criteria: PropTypes.shape({
-      linkedCast: PropTypes.string,
-    }),
   }).isRequired,
   onClose: PropTypes.func.isRequired,
   isInFrame: PropTypes.bool,
