@@ -20,6 +20,7 @@
     "@wagmi/connectors": "^5.7.5",
     "@wagmi/core": "^2.16.3",
     "@windmill/react-ui": "^0.6.0",
+    "@zoralabs/coins-sdk": "^0.0.8",
     "axios": "^1.8.4",
     "buffer": "^6.0.3",
     "connectkit": "^1.8.2",

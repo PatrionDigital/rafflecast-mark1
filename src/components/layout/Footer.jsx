@@ -2,7 +2,7 @@ import { EnvelopeIcon } from "@heroicons/react/24/outline";
 
 const Footer = () => {
   return (
-    <footer className="mt-8 md:mt-12 text-xs text-cement/70 text-center w-full max-w-3xl">
+    <footer className="text-xs text-cement/70 text-center w-full bg-black p-4">
       <div className="flex justify-center items-center gap-6 mb-2">
         {/* Email Icon */}
         <a

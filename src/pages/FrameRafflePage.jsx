@@ -26,15 +26,6 @@ const FrameRafflePage = () => {
           throw new Error("Raffle not found in database");
         }
 
-        // Parse criteria if it's a string
-        if (fetchedRaffle && typeof fetchedRaffle.criteria === "string") {
-          try {
-            fetchedRaffle.criteria = JSON.parse(fetchedRaffle.criteria);
-          } catch (error) {
-            console.error("Error parsing criteria:", error);
-          }
-        }
-
         setRaffle(fetchedRaffle);
         setLoading(false);
       } catch (err) {

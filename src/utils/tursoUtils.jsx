@@ -22,27 +22,15 @@ export const addRaffleToDB = async (raffle) => {
     createdAt,
     updatedAt,
     phase,
-    criteria,
-    distributions,
+    ticketToken,
+    prize,
   } = raffle;
 
   try {
-    console.log("creator:", creator);
-    console.log("id:", id);
-    console.log("title:", title);
-    console.log("description:", description);
-    console.log("startDate:", startDate);
-    console.log("closingDate:", closingDate);
-    console.log("challengePeriod:", challengePeriod);
-    console.log("createdAt:", createdAt);
-    console.log("updatedAt:", updatedAt);
-    console.log("phase:", phase);
-    console.log("criteria:", JSON.stringify(criteria));
-    await client.execute(
-      `INSERT INTO raffles (creator, id, title, description, startDate, startTime, closingDate, closingTime, challengePeriod, createdAt, updatedAt, phase, criteria, distributions) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
-      [
-        creator,
+    const query = `
+      INSERT INTO raffles (
         id,
+        creator,
         title,
         description,
         startDate,
@@ -53,19 +41,40 @@ export const addRaffleToDB = async (raffle) => {
         createdAt,
         updatedAt,
         phase,
-        criteria,
-        distributions,
-      ]
-    );
+        ticketToken,
+        prize
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+
+    const params = [
+      id,
+      creator,
+      title,
+      description,
+      startDate,
+      startTime,
+      closingDate,
+      closingTime,
+      challengePeriod,
+      createdAt,
+      updatedAt,
+      phase,
+      ticketToken,
+      prize,
+    ];
+
+    await client.execute(query, params);
     // Emit success event
     eventEmitter.emit("raffleCreated", { success: true, id });
+    return { success: true };
   } catch (error) {
     // Emit error event
     eventEmitter.emit("raffleCreated", {
       success: false,
       error: error.message,
     });
-    throw error;
+    console.error("Error adding raffle to DB:", error);
+    return { success: false, error: error.message };
   }
 };
 
