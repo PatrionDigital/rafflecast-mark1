@@ -1,14 +1,14 @@
-// src/app/router.jsx
+// src/app/router.jsx - Updated router configuration
 import { createBrowserRouter } from "react-router-dom";
 
 import ErrorBoundary from "@/components/ErrorBoundary";
 import ParentLayout from "@/layouts/ParentLayout";
-import CreatorDashboardLayout from "@/layouts/CreatorDashboardLayout"; // Make sure this is imported
+import CreatorDashboardLayout from "@/layouts/CreatorDashboardLayout";
 import LandingPage from "@/pages/LandingPage";
 import SignupSuccessPage from "@/pages/SignupSuccessPage";
 import CreateRafflePage from "@/pages/CreateRafflePage";
-import RaffleSuccessPage from "@/pages/RaffleSuccessPage"; // Add this import
-import ManageRafflesPage from "@/pages/ManageRafflesPage"; // Make sure this is imported
+import RaffleSuccessPage from "@/pages/RaffleSuccessPage";
+import ManageRafflesPage from "@/pages/ManageRafflesPage";
 import FrameRafflePage from "@/pages/FrameRafflePage";
 
 export const router = createBrowserRouter([
@@ -55,8 +55,13 @@ export const router = createBrowserRouter([
             element: <RaffleSuccessPage />,
           },
           {
-            // Management page (might be duplicate with the index route)
+            // Manage all raffles
             path: "manage",
+            element: <ManageRafflesPage />,
+          },
+          {
+            // View specific raffle details
+            path: "manage/:raffleId",
             element: <ManageRafflesPage />,
           },
         ],

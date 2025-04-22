@@ -1,30 +1,35 @@
 // src/layouts/CreatorDashboardLayout.jsx
 import { Suspense } from "react";
-import { Outlet, Link, useLocation } from "react-router-dom";
-//import { useProfile } from "@farcaster/auth-kit";
+import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Card, CardBody, Button } from "@windmill/react-ui";
 import {
   PlusIcon,
   ListBulletIcon,
+  ArrowLeftIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
 
 const CreatorDashboardLayout = () => {
   const location = useLocation();
-  //const { isAuthenticated } = useProfile();
+  const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
+
+  // Check if we're on a specific page to adapt the UI
+  const isCreatePage = location.pathname.includes("/creator/new");
+  const isManagePage = location.pathname.includes("/creator/manage");
+  const isSuccessPage = location.pathname.includes("/creator/success");
 
   // If not authenticated, show login prompt
   if (!isAuthenticated) {
     return (
-      <div className="flex flex-grow container mx-auto px-4 py-6">
+      <div className="container mx-auto px-4 py-6">
         <Card>
           <CardBody className="text-center p-8">
             <h2 className="text-2xl font-bold text-cochineal-red mb-4">
               Authentication Required
             </h2>
-            <p className="mb-6">
+            <p className="mb-6 text-cement">
               Please sign in with Warpcast to access the creator dashboard.
             </p>
             {/* Authentication button would go here */}
@@ -34,32 +39,73 @@ const CreatorDashboardLayout = () => {
     );
   }
 
+  // Go back to manage page or home
+  const handleBack = () => {
+    if (isCreatePage || isSuccessPage) {
+      navigate("/creator/manage");
+    } else {
+      navigate("/");
+    }
+  };
+
   return (
     <div className="container mx-auto px-4 py-6">
       {/* Actions Bar */}
-      {location.pathname !== "/creator/create" && (
-        <div className="flex flex-wrap gap-2 mb-6">
-          <Button as={Link} to="/creator/create" iconLeft={PlusIcon}>
-            Create Raffle
-          </Button>
-          <Button
-            as={Link}
-            to="/creator/raffles/manage"
-            layout="outline"
-            iconLeft={ListBulletIcon}
-          >
-            Manage Raffles
-          </Button>
-          <Button
-            as={Link}
-            to="/profile"
-            layout="outline"
-            iconLeft={UserCircleIcon}
-          >
-            My Profile
-          </Button>
+      <div className="flex flex-wrap gap-2 mb-6 justify-between items-center">
+        {/* Left side - Back button or title */}
+        <div>
+          {isCreatePage || isSuccessPage ? (
+            <Button
+              layout="outline"
+              onClick={handleBack}
+              iconLeft={ArrowLeftIcon}
+              className="text-cochineal-red hover:text-enamel-red"
+            >
+              Back to Raffles
+            </Button>
+          ) : (
+            <h1 className="text-2xl font-bold text-cochineal-red">
+              Creator Dashboard
+            </h1>
+          )}
         </div>
-      )}
+
+        {/* Right side - Action buttons */}
+        <div className="flex flex-wrap gap-2">
+          {!isCreatePage && (
+            <Link to="/creator/new">
+              <Button
+                iconLeft={PlusIcon}
+                className="bg-cochineal-red hover:bg-enamel-red"
+              >
+                Create Raffle
+              </Button>
+            </Link>
+          )}
+
+          {!isManagePage && (
+            <Link to="/creator/manage">
+              <Button
+                layout="outline"
+                iconLeft={ListBulletIcon}
+                className="text-cochineal-red border-cochineal-red hover:bg-cochineal-red hover:text-white"
+              >
+                Manage Raffles
+              </Button>
+            </Link>
+          )}
+
+          <Link to="/profile">
+            <Button
+              layout="outline"
+              iconLeft={UserCircleIcon}
+              className="text-asphalt border-asphalt hover:bg-asphalt hover:text-white"
+            >
+              My Profile
+            </Button>
+          </Link>
+        </div>
+      </div>
 
       {/* Main Content Area */}
       <div className="dashboard-content">
