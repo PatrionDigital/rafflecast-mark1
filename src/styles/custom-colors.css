@@ -1,0 +1,64 @@
+/* Add these custom classes to ensure consistent styling */
+/* This can be added to your Tailwind configuration or as utility classes */
+
+/* You can add these to your existing styles or create a new file like src/styles/custom-colors.css */
+
+/* Button variants with our color palette */
+.btn-primary {
+  @apply bg-cochineal-red text-white hover:bg-enamel-red;
+}
+
+.btn-secondary {
+  @apply border border-fabric-red text-fabric-red hover:bg-fabric-red hover:text-white;
+}
+
+.btn-outline {
+  @apply border border-asphalt text-asphalt hover:bg-asphalt hover:text-white;
+}
+
+/* Text colors */
+.text-primary {
+  @apply text-cochineal-red;
+}
+
+.text-secondary {
+  @apply text-fabric-red;
+}
+
+.text-muted {
+  @apply text-cement;
+}
+
+.text-dark {
+  @apply text-asphalt;
+}
+
+/* Background colors */
+.bg-primary {
+  @apply bg-cochineal-red;
+}
+
+.bg-secondary {
+  @apply bg-fabric-red;
+}
+
+.bg-light {
+  @apply bg-pastel-rose;
+}
+
+.bg-dark {
+  @apply bg-asphalt;
+}
+
+/* Border colors */
+.border-primary {
+  @apply border-cochineal-red;
+}
+
+.border-secondary {
+  @apply border-fabric-red;
+}
+
+.border-muted {
+  @apply border-cement;
+}
