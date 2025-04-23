@@ -1,0 +1,472 @@
+/* src/styles/modals.css */
+/* All modal-related styles consolidated */
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(3px);
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: white;
+  border-radius: 12px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 600px;
+  max-height: 85vh;
+  overflow: auto;
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  animation: modalFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.entries-modal {
+  padding-bottom: 1.5rem;
+  max-height: 90vh;
+  max-width: 800px;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Close Button */
+.close-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.75rem;
+  cursor: pointer;
+  color: #888;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s;
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+}
+
+.close-button:hover {
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+/* Modal Title */
+.modal-content h2 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  color: var(--color-primary);
+  font-size: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #eee;
+}
+
+/* Loading and Empty States */
+.modal-loading,
+.modal-empty-state {
+  padding: 2rem;
+  text-align: center;
+  color: #666;
+}
+
+.modal-empty-state p {
+  margin: 0.5rem 0;
+}
+
+/* Modal Actions */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+
+.modal-actions .btn {
+  min-width: 100px;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.action-buttons button {
+  padding: 0.6rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.action-buttons button:first-child {
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+}
+
+.action-buttons button:first-child:hover {
+  background-color: var(--color-highlight);
+}
+
+.secondary-action {
+  background-color: #f5f5f5;
+  color: #555;
+  border: 1px solid #ddd;
+}
+
+.secondary-action:hover {
+  background-color: #e5e5e5;
+  color: #333;
+}
+
+/* Custom modal types */
+/* Share Modal */
+.share-modal {
+  width: 90%;
+  max-width: 550px;
+}
+
+.share-section {
+  margin-bottom: 20px;
+}
+
+.share-section h3 {
+  font-size: 18px;
+  margin-bottom: 8px;
+  color: var(--color-primary);
+}
+
+.share-description {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.share-link-container {
+  display: flex;
+  margin-bottom: 12px;
+}
+
+.share-link-input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px 0 0 4px;
+  font-size: 14px;
+  background-color: #f9f9f9;
+}
+
+.copy-button {
+  border-radius: 0 4px 4px 0;
+  margin: 0;
+  border: 1px solid var(--color-primary);
+  background-color: var(--color-primary);
+  color: white;
+  width: auto;
+  padding: 0 15px;
+}
+
+.copy-button:hover {
+  background-color: var(--color-highlight);
+}
+
+.share-options {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.share-button {
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin: 0 8px;
+  background-color: var(--color-accent);
+  color: white;
+}
+
+.share-button:hover {
+  background-color: var(--color-highlight);
+}
+
+.warpcast-button {
+  background-color: #a45eff;
+  color: white;
+  border: none;
+}
+
+.warpcast-button:hover {
+  background-color: #8a42e3;
+}
+
+/* Copy Toast */
+.copy-toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 14px;
+  z-index: 2000;
+  animation: fadeInOut 2s ease-in-out;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Entries Panel */
+.entries-panel {
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  height: fit-content;
+}
+
+.entries-list {
+  max-height: 70vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.entries-table {
+  width: 100%;
+  border-radius: 8px;
+  overflow-y: auto;
+  border: 1px solid #eee;
+  max-height: calc(70vh - 80px);
+  flex-grow: 1;
+}
+
+.entries-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.entries-list-header h4 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.entry-count {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #6b7280;
+}
+
+/* Table Styling */
+.raffle-entries-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.raffle-entries-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: #f8f9fa;
+}
+
+.raffle-entries-table th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: #495057;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.raffle-entries-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #eee;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.raffle-entries-table tr:last-child td {
+  border-bottom: none;
+}
+
+.truncated-wallet {
+  font-family: monospace;
+  background: #f8f9fa;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+/* Entry Details Table */
+.entry-details table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.5rem;
+}
+
+.entry-details tr:not(:last-child) {
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.entry-details td {
+  padding: 0.75rem 0.5rem;
+  vertical-align: top;
+}
+
+.entry-details td:first-child {
+  width: 140px;
+  color: #666;
+  font-weight: 500;
+}
+
+.entry-details td:last-child {
+  color: #333;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .modal-content {
+    width: 95%;
+    padding: 1.5rem;
+    max-height: 95vh;
+  }
+
+  .entries-table {
+    max-height: calc(75vh - 80px);
+  }
+
+  /* Hide the wallet column on medium screens */
+  .raffle-entries-table th:nth-child(3),
+  .raffle-entries-table td:nth-child(3) {
+    display: none;
+  }
+}
+
+@media (max-width: 576px) {
+  .entries-table {
+    max-height: calc(80vh - 80px);
+  }
+
+  /* Convert to vertical layout for small screens */
+  .raffle-entries-table {
+    display: block;
+  }
+
+  .raffle-entries-table thead {
+    display: none;
+  }
+
+  .raffle-entries-table tbody,
+  .raffle-entries-table tr {
+    display: block;
+    width: 100%;
+  }
+
+  .raffle-entries-table tr {
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #e9ecef;
+    padding: 0.5rem 0;
+  }
+
+  .raffle-entries-table td {
+    display: flex;
+    padding: 0.25rem 1rem;
+    border-bottom: none;
+    align-items: center;
+  }
+
+  .raffle-entries-table td:before {
+    content: attr(data-label);
+    font-weight: 600;
+    width: 100px;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+
+  /* Show wallet column again, but in vertical layout */
+  .raffle-entries-table td:nth-child(3) {
+    display: flex;
+  }
+
+  .entry-details table,
+  .entry-details tbody,
+  .entry-details tr,
+  .entry-details td {
+    display: block;
+    width: 100%;
+  }
+
+  .entry-details td:first-child {
+    padding-bottom: 0;
+    margin-top: 0.75rem;
+  }
+
+  .entry-details td:last-child {
+    padding-top: 0.25rem;
+  }
+
+  .share-options {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .share-button {
+    width: 100%;
+    margin: 0;
+  }
+}

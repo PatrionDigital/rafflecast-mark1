@@ -1,8 +1,0 @@
-/* src/index.css */
-/* Main stylesheet that imports all modular CSS files */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-@import "@/styles/layout.css";
-@import "@/styles/components.css";
-@import "@/styles/custom-colors.css";

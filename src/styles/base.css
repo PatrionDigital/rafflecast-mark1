@@ -1,5 +1,5 @@
 /* src/styles/base.css */
-/* Base styles, resets, and typography */
+/* Basic styles, resets, and typography */
 
 /* CSS Reset */
 *,
@@ -20,7 +20,7 @@ body {
   font-family: var(--font-family);
   line-height: 1.5;
   font-weight: 400;
-  color: var(--text-color);
+  color: var(--color-asphalt); /* Changed to asphalt for better readability */
   background-color: var(--color-background);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -43,16 +43,28 @@ h6 {
 }
 
 h1 {
-  font-size: 3.2em;
+  font-size: 2.5rem;
   line-height: 1.1;
 }
 
 h2 {
-  font-size: var(--font-size-xl);
+  font-size: 2rem;
 }
 
 h3 {
-  font-size: var(--font-size-lg);
+  font-size: 1.5rem;
+}
+
+h4 {
+  font-size: 1.25rem;
+}
+
+h5 {
+  font-size: 1.125rem;
+}
+
+h6 {
+  font-size: 1rem;
 }
 
 p {
@@ -62,13 +74,13 @@ p {
 
 a {
   font-weight: 500;
-  color: var(--link-color);
+  color: var(--color-cochineal-red);
   text-decoration: inherit;
   transition: color var(--transition-fast);
 }
 
 a:hover {
-  color: var(--link-hover-color);
+  color: var(--color-enamel-red);
 }
 
 /* Lists */
@@ -84,28 +96,27 @@ button {
   border-radius: var(--border-radius-md);
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
-  margin: 8px;
   font-size: var(--font-size-md);
   font-weight: 500;
   font-family: inherit;
-  background-color: var(--color-primary);
+  background-color: var(--color-cochineal-red);
   color: white;
   cursor: pointer;
   transition: all 0.25s ease;
 }
 
 button:hover:not(:disabled) {
-  background-color: var(--color-highlight);
+  background-color: var(--color-enamel-red);
 }
 
 button:focus,
 button:focus-visible {
-  outline: 2px solid var(--color-highlight);
+  outline: 2px solid var(--color-fabric-red);
   outline-offset: 2px;
 }
 
 button:disabled {
-  background-color: var(--color-disabled);
+  background-color: var(--color-cement);
   cursor: not-allowed;
   opacity: 0.7;
 }
@@ -132,8 +143,8 @@ input:focus,
 select:focus,
 textarea:focus {
   outline: none;
-  border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px rgba(120, 153, 212, 0.25);
+  border-color: var(--color-fabric-red);
+  box-shadow: 0 0 0 3px rgba(226, 81, 103, 0.25);
 }
 
 label {
@@ -176,21 +187,47 @@ pre {
   border-width: 0;
 }
 
-/* Mobile responsiveness base styles */
-@media (max-width: 576px) {
-  html {
-    font-size: 14px; /* Slightly smaller base font size on mobile */
-  }
+/* Farcaster font icon styles */
+.fc {
+  font-family: "Farcaster";
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
-  h1 {
-    font-size: 1.75rem;
-  }
+.fc-square-farcaster:before {
+  content: "\e900";
+}
 
-  h2 {
-    font-size: 1.5rem;
-  }
+/* Custom theme utilities */
+.text-primary {
+  color: var(--color-cochineal-red);
+}
 
-  button {
-    width: 100%; /* Full width buttons on mobile */
-  }
+.text-secondary {
+  color: var(--color-dark-rose);
+}
+
+.text-muted {
+  color: var(--color-cement);
+}
+
+.bg-primary {
+  background-color: var(--color-cochineal-red);
+}
+
+.bg-secondary {
+  background-color: var(--color-dark-rose);
+}
+
+.border-primary {
+  border-color: var(--color-cochineal-red);
+}
+
+.border-secondary {
+  border-color: var(--color-dark-rose);
 }
