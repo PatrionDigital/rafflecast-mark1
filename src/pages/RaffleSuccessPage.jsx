@@ -122,7 +122,7 @@ const RaffleSuccessPage = () => {
               </div>
             </Alert>
             <div className="flex justify-center mt-6">
-              <Link to="/creator/raffles/manage">
+              <Link to="/creator/manage">
                 <Button>Back to Raffles</Button>
               </Link>
             </div>
