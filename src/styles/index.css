@@ -1,0 +1,23 @@
+/* src/index.css */
+/* Main stylesheet that imports all modular CSS files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import CSS variables first */
+@import "./styles/variables.css";
+
+/* Base and layout styles */
+@import "./styles/base.css";
+@import "./styles/layout.css";
+
+/* Component styles */
+@import "./styles/components.css";
+@import "./styles/forms.css";
+@import "./styles/modals.css";
+
+/* Feature-specific styles */
+@import "./styles/raffle.css";
+@import "./styles/frames.css";
+
+/* Add any additional custom styles here */

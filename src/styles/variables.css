@@ -2,13 +2,27 @@
 /* Design tokens and variables for consistent styling */
 
 :root {
-  /* Color Palette */
-  --color-primary: #820b8a;
-  --color-secondary: #729b79;
-  --color-accent: #7899d4;
-  --color-highlight: #ff47da;
-  --color-background: #f2f4f3;
-  --color-disabled: #666666;
+  /* Color Palette from Tailwind Config */
+  --color-cochineal-red: #c82a54; /* Primary brand color */
+  --color-fabric-red: #e25167;
+  --color-enamel-red: #b2004b;
+  --color-asphalt: #353e34;
+  --color-cement: #a89e99;
+  --color-black: #130012;
+  --color-dark-rose: #af3a6b;
+  --color-pastel-rose: #f9d6d3;
+
+  /* Semantic color variables - using the Tailwind palette */
+  --color-primary: var(--color-cochineal-red);
+  --color-primary-rgb: 200, 42, 84;
+  --color-secondary: var(--color-dark-rose);
+  --color-secondary-rgb: 175, 58, 107;
+  --color-accent: var(--color-fabric-red);
+  --color-accent-rgb: 226, 81, 103;
+  --color-highlight: var(--color-enamel-red);
+  --color-highlight-rgb: 178, 0, 75;
+  --color-background: var(--color-pastel-rose);
+  --color-disabled: var(--color-cement);
 
   /* Text Colors */
   --text-color: var(--color-primary);
@@ -38,12 +52,22 @@
 
   /* Typography */
   --font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --font-family-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
   --font-size-xs: 0.75rem; /* 12px */
   --font-size-sm: 0.875rem; /* 14px */
   --font-size-md: 1rem; /* 16px */
   --font-size-lg: 1.125rem; /* 18px */
   --font-size-xl: 1.25rem; /* 20px */
   --font-size-2xl: 1.5rem; /* 24px */
+  --font-size-3xl: 1.875rem; /* 30px */
+  --font-size-4xl: 2.25rem; /* 36px */
+
+  /* Additional font sizes used in the codebase */
+  --font-size-small: var(--font-size-sm);
+  --font-size-medium: var(--font-size-md);
+  --font-size-large: var(--font-size-lg);
+  --font-size-huge: 3rem; /* 48px */
 
   /* Spacing */
   --spacing-xs: 0.25rem; /* 4px */
@@ -51,6 +75,8 @@
   --spacing-md: 1rem; /* 16px */
   --spacing-lg: 1.5rem; /* 24px */
   --spacing-xl: 2rem; /* 32px */
+  --spacing-2xl: 3rem; /* 48px */
+  --spacing-3xl: 4rem; /* 64px */
 
   /* Layout */
   --header-height: 60px;
@@ -62,11 +88,13 @@
   --border-radius-sm: 0.25rem; /* 4px */
   --border-radius-md: 0.5rem; /* 8px */
   --border-radius-lg: 1rem; /* 16px */
+  --border-radius-full: 9999px; /* Full rounded (for pills and circles) */
 
   /* Shadows */
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
 
   /* Transitions */
   --transition-fast: 150ms;

@@ -1,0 +1,103 @@
+# CSS Consolidation Implementation Plan
+
+## Step 1: Update Color Scheme
+
+Replace the old color palette with the Tailwind color palette throughout all CSS files:
+
+```
+/* Tailwind Color Palette */
+--color-cochineal-red: #c82a54;  // Primary brand color
+--color-fabric-red: #e25167;
+--color-enamel-red: #b2004b;
+--color-asphalt: #353e34;
+--color-cement: #a89e99;
+--color-black: #130012;
+--color-dark-rose: #af3a6b;
+--color-pastel-rose: #f9d6d3;
+```
+
+Map these to semantic variables:
+
+- `--color-primary`: var(--color-cochineal-red)
+- `--color-secondary`: var(--color-dark-rose)
+- `--color-accent`: var(--color-fabric-red)
+- `--color-highlight`: var(--color-enamel-red)
+- `--color-background`: var(--color-pastel-rose)
+- `--color-disabled`: var(--color-cement)
+
+## Step 2: File Organization
+
+1. Create the consolidated CSS files in the `/src/styles/` directory:
+
+   - `variables.css` - Updated with Tailwind colors
+   - `base.css` - Basic styles, resets, typography
+   - `layout.css` - Layout and grid systems
+   - `components.css` - All general component styles
+   - `forms.css` - All form-related styles
+   - `modals.css` - All modal-related styles
+   - `raffle.css` - All raffle-related styles
+   - `frames.css` - All Farcaster Frame related styles
+   - `index.css` - Main entry point that imports all other files
+
+2. Update the imports in `src/index.css` to only import the new consolidated files.
+
+## Step 3: Remove Unnecessary CSS Files
+
+Delete the following files as they are now consolidated:
+
+- `src/styles/auth-notice.css`
+- `src/styles/cast-lookup.css`
+- `src/styles/cast-popup.css`
+- `src/styles/cast-preview-fix.css`
+- `src/styles/custom-colors.css` (moved into variables.css)
+- `src/styles/entries-management.css`
+- `src/styles/error.css`
+- `src/styles/frame-debug.css`
+- `src/styles/grids.css` (now in layout.css)
+- `src/styles/manage-raffles.css`
+- `src/styles/messages.css`
+- `src/styles/minimal-frame.css`
+- `src/styles/progress-indicator.css`
+- `src/styles/raffle-entries-modal.css`
+- `src/styles/raffle-form.css`
+- `src/styles/raffle-summary-fixes.css`
+- `src/styles/raffle-summary.css`
+- `src/styles/share-modal.css`
+- `src/styles/status-message.css`
+- `src/styles/tabbed-summary.css`
+- `src/styles/utilities.css` (moved to Tailwind utilities)
+
+## Step 4: Maximize Use of Tailwind Classes
+
+1. Identify common CSS patterns that could be replaced with Tailwind utility classes
+2. Update component JSX to use Tailwind classes where possible instead of custom CSS
+3. Use Tailwind's @apply directive for complex, reusable components where needed
+
+## Step 5: Component Classes Updates
+
+1. Identify components that might be referencing the deleted CSS files
+2. Update any explicit style imports in components to use the new consolidated files
+3. Fix any classname references that might have changed during consolidation
+4. Standardize CSS class naming conventions (use kebab-case consistently)
+
+## Step 6: Testing and Verification
+
+1. Test all views and components to ensure styles are consistently applied
+2. Verify responsive design works across different screen sizes
+3. Check for any visual regressions by comparing screenshots
+4. Test interactive elements with various states (hover, active, disabled)
+5. Verify accessibility standards are maintained
+
+## Step 7: Performance Optimization
+
+1. Ensure CSS specificity is kept minimal to avoid conflicts
+2. Remove any duplicate styles across files
+3. Consider extracting commonly used combinations into component classes
+4. Test loading performance to ensure CSS bundle size is optimized
+
+## Implementation Approach
+
+1. Start with the core files (variables, base, layout)
+2. Implement component styles
+3. Implement feature-specific styles
+4. Remove old files one-by-one while testing each change

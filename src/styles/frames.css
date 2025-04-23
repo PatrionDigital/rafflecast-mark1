@@ -1,7 +1,5 @@
 /* src/styles/frames.css */
-/* Farcaster Frame specific styles */
-
-@import "./variables.css";
+/* All Farcaster Frame related styles consolidated */
 
 /* Frame container */
 .frame-container {
@@ -9,115 +7,188 @@
   max-width: 600px;
   margin: 0 auto;
   padding: 0;
-  background-color: var(--bg-light);
+  background-color: white;
+  transition: background-color 0.5s ease;
 }
 
-/* Loading and error states */
+/* Loading frame state */
+.loading-frame {
+  background-color: var(--color-primary) !important;
+  min-height: 100vh;
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Splash screen styling */
+.splash-screen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  padding: 20px;
+}
+
+.splash-screen img {
+  max-width: 200px;
+  margin-bottom: 20px;
+  animation: pulse 2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.8;
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 0.8;
+    transform: scale(0.95);
+  }
+}
+
+/* Loading states */
 .loading-container,
 .error-container {
-  padding: var(--spacing-md);
+  padding: 20px;
   text-align: center;
-  margin: var(--spacing-md) auto;
+  margin: 20px auto;
   max-width: 600px;
 }
 
 .error-container {
-  color: var(--error-color);
+  color: #e53e3e;
   border: 1px solid #f8d7da;
   background-color: #fff5f5;
-  border-radius: var(--border-radius-md);
+  border-radius: 8px;
+}
+
+/* Loading spinner */
+.loading-spinner {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s ease-in-out infinite;
+  margin-bottom: 10px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Debug info */
 .frame-debug {
-  margin-top: var(--spacing-md);
-  padding: var(--spacing-sm);
-  background-color: var(--bg-muted);
-  border: 1px solid var(--border-color);
-  font-size: var(--font-size-xs);
-  color: var(--text-color-secondary);
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border: 1px solid #eee;
+  font-size: 12px;
+  color: #666;
 }
 
-/* Frame debug tool */
+/* Mini App content area - after loading */
+.mini-app-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  transition: opacity 0.3s ease;
+}
+
+/* Frame Debug Tool */
 .frame-debug-container {
   max-width: 900px;
   margin: 0 auto;
-  padding: var(--spacing-md);
-  background-color: var(--bg-light);
-  border-radius: var(--border-radius-md);
-  box-shadow: var(--shadow-md);
-  margin-top: var(--spacing-md);
-  margin-bottom: var(--spacing-xl);
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  margin-top: 20px;
+  margin-bottom: 40px;
 }
 
 .frame-debug-container h1 {
   color: var(--color-primary);
-  margin-bottom: var(--spacing-sm);
+  margin-bottom: 10px;
   font-size: 28px;
   text-align: center;
 }
 
 .debug-description {
   text-align: center;
-  color: var(--text-color-secondary);
-  margin-bottom: var(--spacing-md);
-  font-size: var(--font-size-md);
+  color: #666;
+  margin-bottom: 20px;
+  font-size: 16px;
 }
 
 .frame-debug-selection {
-  margin: var(--spacing-lg) 0;
-  background-color: var(--bg-muted);
-  padding: var(--spacing-md);
-  border-radius: var(--border-radius-md);
+  margin: 25px 0;
+  background-color: #f8f8f8;
+  padding: 15px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .frame-debug-selection label {
-  margin-right: var(--spacing-md);
+  margin-right: 15px;
   font-weight: 500;
-  color: var(--text-color);
-  font-size: var(--font-size-md);
+  color: #444;
+  font-size: 16px;
 }
 
 .frame-debug-selection select {
-  padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: var(--border-radius-sm);
-  border: 1px solid var(--border-color);
-  font-size: var(--font-size-md);
+  padding: 10px 15px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  font-size: 16px;
   min-width: 350px;
-  background-color: var(--bg-light);
+  background-color: white;
   cursor: pointer;
 }
 
 .frame-debug-content {
-  margin-top: var(--spacing-lg);
+  margin-top: 30px;
 }
 
 .frame-debug-section {
-  margin-bottom: var(--spacing-lg);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-md);
-  padding: var(--spacing-md);
-  background-color: var(--bg-muted);
+  margin-bottom: 30px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 20px;
+  background-color: #f9f9f9;
 }
 
 .frame-debug-section h2 {
   color: var(--color-primary);
-  font-size: var(--font-size-lg);
-  margin-bottom: var(--spacing-md);
-  padding-bottom: var(--spacing-sm);
-  border-bottom: 1px solid var(--border-color);
+  font-size: 20px;
+  margin-bottom: 15px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #eee;
 }
 
 .debug-code-block {
-  background-color: var(--bg-light);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-sm);
-  padding: var(--spacing-md);
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 15px;
   position: relative;
-  margin-bottom: var(--spacing-sm);
+  margin-bottom: 10px;
   overflow-x: auto;
   max-height: 300px;
 }
@@ -133,22 +204,22 @@
   white-space: pre-wrap;
   word-wrap: break-word;
   margin: 0;
-  font-size: var(--font-size-sm);
-  color: var(--text-color);
+  font-size: 14px;
+  color: #333;
 }
 
 .debug-code-block button {
   position: absolute;
-  top: var(--spacing-sm);
-  right: var(--spacing-sm);
-  padding: var(--spacing-xs) var(--spacing-sm);
-  font-size: var(--font-size-xs);
+  top: 10px;
+  right: 10px;
+  padding: 5px 10px;
+  font-size: 12px;
   background-color: var(--color-primary);
   color: white;
   border: none;
-  border-radius: var(--border-radius-sm);
+  border-radius: 4px;
   cursor: pointer;
-  transition: background-color var(--transition-fast);
+  transition: background-color 0.2s;
 }
 
 .debug-code-block button:hover {
@@ -156,102 +227,95 @@
 }
 
 .debug-code-block button.copied {
-  background-color: var(--success-color);
+  background-color: #4caf50;
 }
 
 .frame-preview {
-  margin: var(--spacing-md) auto;
+  margin: 15px auto;
   max-width: 600px;
-  background-color: var(--bg-light);
-  padding: var(--spacing-sm);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-sm);
-  box-shadow: var(--shadow-sm);
+  background-color: white;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .frame-preview-image {
   width: 100%;
   height: auto;
-  border-radius: var(--border-radius-sm);
+  border-radius: 4px;
   display: block;
 }
 
 .debug-instructions {
-  padding-left: var(--spacing-md);
+  padding-left: 20px;
 }
 
 .debug-instructions li {
-  margin-bottom: var(--spacing-sm);
-  color: var(--text-color);
+  margin-bottom: 10px;
+  color: #444;
 }
 
 .debug-note {
-  margin-top: var(--spacing-md);
-  padding: var(--spacing-sm);
-  background-color: #fff3cd; /* Slight yellow background */
-  border-left: 4px solid var(--warning-color);
-  border-radius: 0 var(--border-radius-sm) var(--border-radius-sm) 0;
+  margin-top: 15px;
+  padding: 10px;
+  background-color: #fff8e1;
+  border-left: 4px solid #ffc107;
+  border-radius: 0 4px 4px 0;
 }
 
 .debug-note p {
   margin: 0;
-  color: var(--text-color-secondary);
-  font-size: var(--font-size-sm);
+  color: #666;
+  font-size: 14px;
 }
 
 .frame-debug-actions {
   display: flex;
   justify-content: center;
-  gap: var(--spacing-md);
-  margin-top: var(--spacing-md);
+  gap: 15px;
+  margin-top: 15px;
 }
 
 .action-button {
   background-color: var(--color-accent);
   color: white;
   border: none;
-  border-radius: var(--border-radius-sm);
-  padding: var(--spacing-sm) var(--spacing-md);
-  font-size: var(--font-size-sm);
+  border-radius: 4px;
+  padding: 10px 15px;
+  font-size: 14px;
   cursor: pointer;
-  transition: background-color var(--transition-fast);
+  transition: background-color 0.2s;
   display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 
 .action-button:hover {
-  background-color: #6385c0; /* Darker shade of accent */
+  background-color: #6385c0;
 }
 
 .action-button.warpcast {
-  background-color: #a45eff; /* Warpcast purple */
+  background-color: #a45eff;
 }
 
 .action-button.warpcast:hover {
-  background-color: #8a42e3; /* Darker Warpcast purple */
+  background-color: #8a42e3;
 }
 
 .action-button.validator {
-  background-color: var(--success-color);
+  background-color: #2e7d32;
 }
 
 .action-button.validator:hover {
-  background-color: #218838; /* Darker green */
+  background-color: #388e3c;
 }
 
-/* Frame validator */
-.frame-validator {
-  padding: var(--spacing-md);
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-/* Responsive adjustments */
+/* Responsive adaptations */
 @media (max-width: 768px) {
   .frame-debug-selection {
     flex-direction: column;
-    gap: var(--spacing-sm);
+    gap: 10px;
   }
 
   .frame-debug-selection select {
