@@ -204,7 +204,7 @@ const ManageRafflesPage = () => {
 
   if (!isAuthenticated) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="bg-black/70 border-enamel-red border-[0.5px] rounded-md w-full max-w-3xl p-3 md:p-3 backdrop-blur-sm shadow-inner">
         <Card className="max-w-md mx-auto">
           <CardBody className="text-center p-8">
             <h2 className="text-2xl font-bold text-cochineal-red mb-4">
@@ -221,7 +221,7 @@ const ManageRafflesPage = () => {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-8 text-center">
+      <div className="bg-black/70 border-enamel-red border-[0.5px] rounded-md w-full max-w-3xl p-2 md:p-3 backdrop-blur-sm shadow-inner">
         <div className="w-16 h-16 border-4 border-t-cochineal-red border-b-cochineal-red rounded-full animate-spin mx-auto mb-4"></div>
         <p className="text-cement">Loading your raffles...</p>
       </div>
@@ -262,7 +262,8 @@ const ManageRafflesPage = () => {
         </Card>
       ) : (
         <div className="space-y-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 bg-black/70 border-enamel-red border-[0.5px] rounded-md p-2 md:p-3 backdrop-blur-smshadow-inner">
+            {/*<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 bg-black/70 border-enamel-red border-[0.5px] rounded-md w-full max-w-3xl p-2 md:p-3 backdrop-blur-sm shadow-inner justify-center"> */}
             {currentRaffles.map((raffle) => (
               <RaffleCard
                 key={raffle.id}

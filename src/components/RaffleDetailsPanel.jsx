@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { v4 as uuidv4 } from "uuid";
-import { Badge, Button } from "@windmill/react-ui";
+import { Badge, Button, Card } from "@windmill/react-ui";
 import {
   XMarkIcon,
   ShareIcon,
@@ -156,7 +156,7 @@ const RaffleDetailsPanel = ({ raffle, onClose, isInFrame = false }) => {
     : "#";
 
   return (
-    <div className="relative bg-white rounded-lg shadow-xl overflow-hidden max-w-4xl w-full">
+    <Card className="relative shadow-xl overflow-hidden max-w-4xl w-full">
       <FrameMeta raffle={raffle} />
 
       {/* Header with Close Button */}
@@ -166,6 +166,7 @@ const RaffleDetailsPanel = ({ raffle, onClose, isInFrame = false }) => {
           <button
             className="p-1 rounded-full hover:bg-enamel-red transition-colors"
             onClick={onClose}
+            aria-label="Close"
           >
             <XMarkIcon className="w-6 h-6" />
           </button>
@@ -236,7 +237,7 @@ const RaffleDetailsPanel = ({ raffle, onClose, isInFrame = false }) => {
               <h3 className="text-lg font-semibold text-asphalt mb-2">
                 Ticket Token
               </h3>
-              <div className="bg-gray-50 p-3 rounded-md">
+              <Card className="relative shadow-xl overflow-hidden max-w-4xl w-full p-3">
                 <div className="grid grid-cols-2 gap-2">
                   <div>
                     <span className="text-sm text-cement">Name:</span>
@@ -253,7 +254,7 @@ const RaffleDetailsPanel = ({ raffle, onClose, isInFrame = false }) => {
                     </p>
                   </div>
                 </div>
-              </div>
+              </Card>
             </div>
           )}
 
@@ -263,7 +264,7 @@ const RaffleDetailsPanel = ({ raffle, onClose, isInFrame = false }) => {
               <h3 className="text-lg font-semibold text-asphalt mb-2">
                 Prize Pool
               </h3>
-              <div className="bg-gray-50 p-3 rounded-md">
+              <Card className="relative shadow-xl overflow-hidden max-w-4xl w-full p-3">
                 <div className="mb-2">
                   <span className="text-sm text-cement">Total Amount:</span>
                   <p className="font-medium">
@@ -276,14 +277,14 @@ const RaffleDetailsPanel = ({ raffle, onClose, isInFrame = false }) => {
                     {prize.distribution.model || "equitable"}
                   </div>
                 )}
-              </div>
+              </Card>
             </div>
           )}
         </div>
 
         {/* Right Column - Actions */}
         <div className="md:w-1/3 space-y-4">
-          <div className="bg-gray-50 p-4 rounded-lg">
+          <Card className="relative shadow-xl overflow-hidden max-w-4xl w-full p-3">
             <h3 className="text-lg font-semibold text-asphalt mb-4">
               Participation
             </h3>
@@ -349,7 +350,7 @@ const RaffleDetailsPanel = ({ raffle, onClose, isInFrame = false }) => {
                 Share Raffle
               </Button>
             </div>
-          </div>
+          </Card>
         </div>
       </div>
 
@@ -357,7 +358,7 @@ const RaffleDetailsPanel = ({ raffle, onClose, isInFrame = false }) => {
       {showShareModal && (
         <ShareModal raffle={raffle} onClose={() => setShowShareModal(false)} />
       )}
-    </div>
+    </Card>
   );
 };
 
