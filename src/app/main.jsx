@@ -9,7 +9,7 @@ import { router } from "@/app/router";
 import Web3Provider from "@/utils/Web3Provider.jsx";
 
 import "@farcaster/auth-kit/styles.css";
-import "@/index.css";
+import "@/styles/index.css";
 
 // Determine if we're in a Frame/Mini App context by checking the URL
 const isInFrameContext = () => {

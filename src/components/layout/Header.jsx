@@ -1,7 +1,14 @@
 // components/Header.jsx
-import { HomeIcon, InformationCircleIcon } from "@heroicons/react/24/outline";
+import {
+  HomeIcon,
+  InformationCircleIcon,
+  UserCircleIcon,
+} from "@heroicons/react/24/outline";
+import { useProfile, SignInButton } from "@farcaster/auth-kit";
 
 const Header = () => {
+  const { isAuthenticated } = useProfile();
+
   return (
     <header className="w-full flex flex-col md:flex-row justify-between items-center bg-black p-4">
       {/* Logo + Title */}
@@ -38,6 +45,24 @@ const Header = () => {
           <InformationCircleIcon className="w-5 h-5" />
           <span>About</span>
         </a>
+
+        {/* Profile */}
+        {isAuthenticated ? (
+          <a
+            href="/profile"
+            className="flex items-center space-x-1 hover:text-cochineal-red transition"
+          >
+            <UserCircleIcon className="w-5 h-5" />
+            <span>Profile</span>
+          </a>
+        ) : (
+          <SignInButton>
+            <button className="flex items-center space-x-1 hover:text-cochineal-red transition">
+              <UserCircleIcon className="w-5 h-5" />
+              <span>Login with Farcaster</span>
+            </button>
+          </SignInButton>
+        )}
       </nav>
     </header>
   );

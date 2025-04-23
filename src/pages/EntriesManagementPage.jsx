@@ -10,7 +10,6 @@ import {
 } from "@/components/EntriesManagement";
 import Pagination from "@/components/Pagination";
 import { useRaffle } from "@/hooks/useRaffle";
-import "@/styles/entries-management.css";
 
 const EntriesManagementPage = ({ itemsPerPage = 4 }) => {
   const { entries, clearMessage } = useRaffle();
