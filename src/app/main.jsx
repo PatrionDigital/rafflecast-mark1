@@ -1,12 +1,12 @@
+// src/app/main.jsx
 import { AuthKitProvider } from "@farcaster/auth-kit";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { RouterProvider } from "react-router-dom";
 
 import { RaffleProvider } from "@/context/RaffleContext.jsx";
 import { MessageProvider } from "@/context/MessageContext";
-import { router } from "@/app/router";
 import Web3Provider from "@/utils/Web3Provider.jsx";
+import App from "./App";
 
 import "@farcaster/auth-kit/styles.css";
 import "@/styles/index.css";
@@ -36,7 +36,7 @@ root.render(
       <Web3Provider>
         <MessageProvider>
           <RaffleProvider>
-            <RouterProvider router={router} />
+            <App />
           </RaffleProvider>
         </MessageProvider>
       </Web3Provider>

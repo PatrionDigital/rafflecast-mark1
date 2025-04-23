@@ -1,27 +1,11 @@
-/* src/styles/base.css */
-/* Basic styles, resets, and typography */
-
-/* CSS Reset */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html {
-  font-size: 16px;
-  scroll-behavior: smooth;
-}
-
+/* Add this to src/styles/base.css */
 body {
   margin: 0;
   font-family: var(--font-family);
   line-height: 1.5;
   font-weight: 400;
-  color: var(--color-asphalt); /* Changed to asphalt for better readability */
-  background-color: var(--color-background);
+  color: var(--color-cement);
+  background-color: var(--color-black);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -29,205 +13,30 @@ body {
   min-height: 100vh;
 }
 
-/* Typography */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  margin-top: 0;
-  margin-bottom: var(--spacing-md);
-  font-weight: 600;
-  line-height: 1.2;
+/* Add this to your src/styles/index.css or create a new file for overrides */
+/* Windmill component overrides */
+.app-wrapper {
+  background-color: var(--color-black);
+  min-height: 100vh;
 }
 
-h1 {
-  font-size: 2.5rem;
-  line-height: 1.1;
+/* This ensures that all Windmill cards have proper background color */
+.card {
+  background-color: white !important;
 }
 
-h2 {
-  font-size: 2rem;
+/* Add specific overrides for Windmill active badges */
+.badge {
+  background-color: transparent;
 }
 
-h3 {
-  font-size: 1.5rem;
-}
-
-h4 {
-  font-size: 1.25rem;
-}
-
-h5 {
-  font-size: 1.125rem;
-}
-
-h6 {
-  font-size: 1rem;
-}
-
-p {
-  margin-top: 0;
-  margin-bottom: var(--spacing-md);
-}
-
-a {
-  font-weight: 500;
-  color: var(--color-cochineal-red);
-  text-decoration: inherit;
-  transition: color var(--transition-fast);
-}
-
-a:hover {
-  color: var(--color-enamel-red);
-}
-
-/* Lists */
-ul,
-ol {
-  margin-top: 0;
-  margin-bottom: var(--spacing-md);
-  padding-left: var(--spacing-lg);
-}
-
-/* Buttons */
-button {
-  border-radius: var(--border-radius-md);
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: var(--font-size-md);
-  font-weight: 500;
-  font-family: inherit;
-  background-color: var(--color-cochineal-red);
+.badge.active {
+  background-color: var(--color-primary);
   color: white;
-  cursor: pointer;
-  transition: all 0.25s ease;
 }
 
-button:hover:not(:disabled) {
-  background-color: var(--color-enamel-red);
-}
-
-button:focus,
-button:focus-visible {
-  outline: 2px solid var(--color-fabric-red);
-  outline-offset: 2px;
-}
-
-button:disabled {
-  background-color: var(--color-cement);
-  cursor: not-allowed;
-  opacity: 0.7;
-}
-
-/* Forms */
-input,
-select,
-textarea {
-  display: block;
-  width: 100%;
-  padding: var(--spacing-sm) var(--spacing-md);
-  font-family: inherit;
-  font-size: var(--font-size-md);
-  line-height: 1.5;
-  color: var(--text-color);
-  background-color: var(--bg-light);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-sm);
-  transition: border-color var(--transition-fast),
-    box-shadow var(--transition-fast);
-}
-
-input:focus,
-select:focus,
-textarea:focus {
-  outline: none;
-  border-color: var(--color-fabric-red);
-  box-shadow: 0 0 0 3px rgba(226, 81, 103, 0.25);
-}
-
-label {
-  display: inline-block;
-  margin-bottom: var(--spacing-xs);
-  font-weight: 500;
-}
-
-/* Images */
-img {
-  max-width: 100%;
-  height: auto;
-}
-
-/* Code */
-code,
-pre {
-  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-  font-size: 0.9em;
-}
-
-pre {
-  padding: var(--spacing-md);
-  margin-bottom: var(--spacing-md);
-  overflow: auto;
-  background-color: var(--bg-muted);
-  border-radius: var(--border-radius-sm);
-}
-
-/* Accessibility */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
-}
-
-/* Farcaster font icon styles */
-.fc {
-  font-family: "Farcaster";
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-.fc-square-farcaster:before {
-  content: "\e900";
-}
-
-/* Custom theme utilities */
-.text-primary {
+/* Active tab on Windmill component */
+.active-tab {
   color: var(--color-cochineal-red);
-}
-
-.text-secondary {
-  color: var(--color-dark-rose);
-}
-
-.text-muted {
-  color: var(--color-cement);
-}
-
-.bg-primary {
-  background-color: var(--color-cochineal-red);
-}
-
-.bg-secondary {
-  background-color: var(--color-dark-rose);
-}
-
-.border-primary {
   border-color: var(--color-cochineal-red);
-}
-
-.border-secondary {
-  border-color: var(--color-dark-rose);
 }

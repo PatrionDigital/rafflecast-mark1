@@ -33,9 +33,11 @@ const ParentLayout = () => {
   const navLinks = matches[0]?.handle?.navLinks || [];
 
   return (
-    <div className="app-wrapper min-h-screen min-v-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-black text-cement">
       <Header title="SecondOrder.fun" navLinks={navLinks} />
-      <Outlet />
+      <main className="flex-grow">
+        <Outlet />
+      </main>
       <Footer />
     </div>
   );

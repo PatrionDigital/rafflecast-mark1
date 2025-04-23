@@ -1,8 +1,8 @@
-// src/components/RaffleCard.jsx - Refactored with Tailwind
+// src/components/RaffleCard.jsx - Updated to use Windmill Card
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { getCreatorUsername } from "../utils/farcasterUtils";
-import { Badge, Button } from "@windmill/react-ui";
+import { Badge, Button, Card, CardBody } from "@windmill/react-ui";
 
 const RaffleCard = ({ raffle, onClick }) => {
   const [creatorUsername, setCreatorUsername] = useState(null);
@@ -54,22 +54,22 @@ const RaffleCard = ({ raffle, onClick }) => {
   };
 
   return (
-    <div className="border border-gray-200 rounded-lg overflow-hidden bg-white shadow hover:shadow-md transition-all duration-200 transform hover:-translate-y-1">
-      <div className="p-4 border-b border-gray-200">
+    <Card className="transition-all duration-200 transform hover:-translate-y-1">
+      <div className="p-4 border-b border-opacity-20">
         <h3 className="text-lg font-semibold text-cochineal-red truncate">
           {raffle.title}
         </h3>
         <div className="flex items-center mt-1">
-          <span className="text-xs text-gray-500">
+          <span className="text-xs text-cement">
             Created by {creatorUsername ? `@${creatorUsername}` : "Unknown"}
           </span>
         </div>
       </div>
 
-      <div className="p-4">
+      <CardBody>
         <div className="flex justify-between items-center mb-2">
-          <span className="text-sm text-gray-600">Closes:</span>
-          <span className="text-sm font-medium">
+          <span className="text-sm text-cement">Closes:</span>
+          <span className="text-sm font-medium text-cement">
             {formatDate(raffle.closingDate)}
           </span>
         </div>
@@ -77,21 +77,16 @@ const RaffleCard = ({ raffle, onClick }) => {
         <div className="mt-4">
           <Badge>{raffle.phase}</Badge>
         </div>
-      </div>
+      </CardBody>
 
-      <div className="p-4 border-t border-gray-200">
-        <Button
-          className="w-full bg-cochineal-red hover:bg-enamel-red text-white"
-          onClick={() => onClick(raffle)}
-        >
+      <div className="p-4 border-t border-opacity-20">
+        <Button className="w-full text-white" onClick={() => onClick(raffle)}>
           View Details
         </Button>
       </div>
-    </div>
+    </Card>
   );
 };
-
-export default RaffleCard;
 
 RaffleCard.propTypes = {
   raffle: PropTypes.shape({
@@ -103,3 +98,5 @@ RaffleCard.propTypes = {
   }).isRequired,
   onClick: PropTypes.func.isRequired,
 };
+
+export default RaffleCard;
