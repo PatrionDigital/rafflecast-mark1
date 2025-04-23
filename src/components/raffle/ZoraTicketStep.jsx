@@ -94,7 +94,7 @@ const ZoraTicketStep = ({
 
   return (
     <div className="space-y-6">
-      <h3 className="text-xl font-bold text-gray-800">
+      <h3 className="text-xl font-bold text-fabric-red">
         Step 3: Ticket Creation
       </h3>
 
@@ -145,11 +145,13 @@ const ZoraTicketStep = ({
 
       <Card>
         <CardBody>
-          <h4 className="text-lg font-semibold mb-4">Create Ticket Token</h4>
+          <h4 className="text-lg font-semibold text-cement mb-4">
+            Create Ticket Token
+          </h4>
           <div className="space-y-4">
             <div className="flex items-start mb-4">
-              <InformationCircleIcon className="w-5 h-5 mr-2 text-blue-500 flex-shrink-0 mt-0.5" />
-              <p className="text-sm text-gray-600">
+              <InformationCircleIcon className="w-5 h-5 mr-2 text-dark-rose flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-dark-rose">
                 Each raffle has its own token that participants will buy as
                 tickets.
               </p>

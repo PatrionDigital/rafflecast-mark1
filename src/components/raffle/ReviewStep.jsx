@@ -39,14 +39,16 @@ const ReviewStep = ({ raffleData, onEdit, onSubmit, isSubmitting }) => {
 
   return (
     <div className="space-y-6">
-      <h3 className="text-xl font-bold text-gray-800">
+      <h3 className="text-xl font-bold text-fabric-red">
         Step 4: Review and Submit
       </h3>
 
       <Card>
         <CardBody>
           <div className="flex justify-between items-start mb-4">
-            <h4 className="text-lg font-semibold">Raffle Information</h4>
+            <h4 className="text-lg text-dark-rose font-semibold">
+              Raffle Information
+            </h4>
             <Button size="small" layout="outline" onClick={() => onEdit(1)}>
               Edit
             </Button>
@@ -54,14 +56,16 @@ const ReviewStep = ({ raffleData, onEdit, onSubmit, isSubmitting }) => {
 
           <div className="space-y-4">
             <div>
-              <h5 className="font-medium text-gray-700">Title</h5>
-              <p className="mt-1">{raffleData.title}</p>
+              <h5 className="font-medium text-cement">Title</h5>
+              <p className="mt-1 text-pastel-rose">{raffleData.title}</p>
             </div>
 
             {raffleData.description && (
               <div>
-                <h5 className="font-medium text-gray-700">Description</h5>
-                <p className="mt-1">{raffleData.description}</p>
+                <h5 className="font-medium text-cement">Description</h5>
+                <p className="mt-1 text-pastel-rose">
+                  {raffleData.description}
+                </p>
               </div>
             )}
           </div>
@@ -72,7 +76,9 @@ const ReviewStep = ({ raffleData, onEdit, onSubmit, isSubmitting }) => {
       <Card>
         <CardBody>
           <div className="flex justify-between items-start mb-4">
-            <h4 className="text-lg font-semibold">Time Settings</h4>
+            <h4 className="text-lg text-dark-rose font-semibold">
+              Time Settings
+            </h4>
             <Button size="small" layout="outline" onClick={() => onEdit(2)}>
               Edit
             </Button>
@@ -82,16 +88,18 @@ const ReviewStep = ({ raffleData, onEdit, onSubmit, isSubmitting }) => {
             <div className="flex items-center">
               <ClockIcon className="w-5 h-5 mr-2 text-blue-500" />
               <div>
-                <h5 className="font-medium text-gray-700">Start Time</h5>
-                <p className="mt-1">Immediately upon creation</p>
+                <h5 className="font-medium text-cement">Start Time</h5>
+                <p className="mt-1 text-pastel-rose">
+                  Immediately upon creation
+                </p>
               </div>
             </div>
 
             <div className="flex items-center">
               <ClockIcon className="w-5 h-5 mr-2 text-red-500" />
               <div>
-                <h5 className="font-medium text-gray-700">End Time</h5>
-                <p className="mt-1">
+                <h5 className="font-medium text-cement">End Time</h5>
+                <p className="mt-1 text-pastel-rose">
                   {formatDate(raffleData.closingDate, raffleData.closingTime)}
                 </p>
               </div>
@@ -100,10 +108,10 @@ const ReviewStep = ({ raffleData, onEdit, onSubmit, isSubmitting }) => {
             <div className="flex items-center">
               <ClockIcon className="w-5 h-5 mr-2 text-green-500" />
               <div>
-                <h5 className="font-medium text-gray-700">
+                <h5 className="font-medium text-cement">
                   Challenge Period Ends
                 </h5>
-                <p className="mt-1">
+                <p className="mt-1 text-pastel-rose">
                   {formatChallengeDate(raffleData.challengePeriod)}
                 </p>
               </div>
@@ -116,7 +124,9 @@ const ReviewStep = ({ raffleData, onEdit, onSubmit, isSubmitting }) => {
       <Card>
         <CardBody>
           <div className="flex justify-between items-start mb-4">
-            <h4 className="text-lg font-semibold">Ticket Token</h4>
+            <h4 className="text-lg text-dark-rose font-semibold">
+              Ticket Token
+            </h4>
             <Button size="small" layout="outline" onClick={() => onEdit(3)}>
               Edit
             </Button>
@@ -127,8 +137,8 @@ const ReviewStep = ({ raffleData, onEdit, onSubmit, isSubmitting }) => {
               <div className="flex items-center">
                 <TagIcon className="w-5 h-5 mr-2 text-purple-500" />
                 <div>
-                  <h5 className="font-medium text-gray-700">Token</h5>
-                  <p className="mt-1">
+                  <h5 className="font-medium text-cement">Token</h5>
+                  <p className="mt-1 text-pastel-rose">
                     {raffleData.ticketToken.name} (
                     {raffleData.ticketToken.symbol})
                   </p>
@@ -136,8 +146,8 @@ const ReviewStep = ({ raffleData, onEdit, onSubmit, isSubmitting }) => {
               </div>
 
               <div>
-                <h5 className="font-medium text-gray-700">Contract Address</h5>
-                <code className="block mt-1 p-2 bg-gray-100 rounded-md text-xs font-mono overflow-x-auto">
+                <h5 className="font-medium text-cement">Contract Address</h5>
+                <code className="block mt-1 p-2 bg-asphalt rounded-md text-xs text-cement font-mono overflow-x-auto">
                   {raffleData.ticketToken.contractAddress}
                 </code>
               </div>
@@ -160,7 +170,9 @@ const ReviewStep = ({ raffleData, onEdit, onSubmit, isSubmitting }) => {
       <Card>
         <CardBody>
           <div className="flex justify-between items-start mb-4">
-            <h4 className="text-lg font-semibold">Prize Distribution</h4>
+            <h4 className="text-lg text-dark-rose font-semibold">
+              Prize Distribution
+            </h4>
             {/* No edit button for now since we're using defaults */}
           </div>
 
@@ -168,8 +180,8 @@ const ReviewStep = ({ raffleData, onEdit, onSubmit, isSubmitting }) => {
             <div className="flex items-center">
               <CurrencyDollarIcon className="w-5 h-5 mr-2 text-green-500" />
               <div>
-                <h5 className="font-medium text-gray-700">Prize Pool</h5>
-                <p className="mt-1">
+                <h5 className="font-medium text-cement">Prize Pool</h5>
+                <p className="mt-1 text-pastel-rose">
                   ${raffleData.prize?.amount || 500}{" "}
                   {raffleData.prize?.currency || "USDC"}
                 </p>
@@ -177,7 +189,7 @@ const ReviewStep = ({ raffleData, onEdit, onSubmit, isSubmitting }) => {
             </div>
 
             <div>
-              <h5 className="font-medium text-gray-700">Winner Distribution</h5>
+              <h5 className="font-medium text-cement">Winner Distribution</h5>
               <div className="mt-2">
                 <Table>
                   <TableHeader>

@@ -1,4 +1,4 @@
-// src/pages/ManageRafflesPage.jsx
+// src/pages/ManageRafflesPage.jsx - Refactored with Tailwind
 import { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -14,7 +14,7 @@ import { settleRaffle } from "@/utils/raffleUtils";
 
 // Main Component
 const ManageRafflesPage = () => {
-  const { raffleId } = useParams(); // Get raffleId from URL params
+  const { raffleId } = useParams();
   const navigate = useNavigate();
   const { isAuthenticated, profile } = useAuth();
   const { getRafflesByCreator, getEntriesByRaffleId, getRaffleById } =

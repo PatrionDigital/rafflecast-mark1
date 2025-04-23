@@ -112,7 +112,7 @@ const RaffleSuccessPage = () => {
                   <h3 className="text-sm font-medium text-red-800">
                     {error || "Raffle not found"}
                   </h3>
-                  <div className="mt-2 text-sm text-red-700">
+                  <div className="mt-2 text-sm text-enamel-red">
                     <p>
                       We couldn&apos;t load the raffle details. Please try again
                       later.
@@ -147,7 +147,7 @@ const RaffleSuccessPage = () => {
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center">
               <CheckCircleIcon className="h-8 w-8 text-green-500 mr-2" />
-              <h2 className="text-2xl font-semibold text-gray-700">
+              <h2 className="text-2xl font-semibold text-cement">
                 Raffle Created Successfully!
               </h2>
             </div>
@@ -164,11 +164,11 @@ const RaffleSuccessPage = () => {
           <div className="space-y-6">
             {/* Basic Info */}
             <div>
-              <h3 className="text-lg font-semibold text-gray-700 mb-3">
-                {raffle.title}
+              <h3 className="text-lg font-semibold text-cement mb-3">
+                Raffle Title: {raffle.title}
               </h3>
               {raffle.description && (
-                <p className="text-gray-600 mb-4">{raffle.description}</p>
+                <p className="text-pastel-rose mb-4">{raffle.description}</p>
               )}
             </div>
 
@@ -176,26 +176,26 @@ const RaffleSuccessPage = () => {
               {/* Dates Section */}
               <Card className="col-span-1">
                 <CardBody className="p-4">
-                  <h4 className="font-medium text-gray-700 mb-3 flex items-center">
+                  <h4 className="font-medium text-dark-rose mb-3 flex items-center">
                     <ClockIcon className="h-5 w-5 mr-1 text-blue-500" />
                     Timing
                   </h4>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Start:</span>
-                      <span className="font-medium">
+                      <span className="text-cement">Start:</span>
+                      <span className="font-medium text-pastel-rose">
                         {formatDate(raffle.startDate, raffle.startTime)}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Ends:</span>
-                      <span className="font-medium">
+                      <span className="text-cement">Ends:</span>
+                      <span className="font-medium text-pastel-rose">
                         {formatDate(raffle.closingDate, raffle.closingTime)}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Challenge Period:</span>
-                      <span className="font-medium">
+                      <span className="text-cement">Challenge Period:</span>
+                      <span className="font-medium text-pastel-rose">
                         {formatDate(raffle.challengePeriod)}
                       </span>
                     </div>
@@ -206,33 +206,33 @@ const RaffleSuccessPage = () => {
               {/* Ticket Token Section */}
               <Card className="col-span-1">
                 <CardBody className="p-4">
-                  <h4 className="font-medium text-gray-700 mb-3 flex items-center">
+                  <h4 className="font-medium text-dark-rose mb-3 flex items-center">
                     <TagIcon className="h-5 w-5 mr-1 text-purple-500" />
                     Raffle Tickets
                   </h4>
                   {raffle.ticketToken ? (
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Token:</span>
-                        <span className="font-medium">
+                        <span className="text-cement">Token:</span>
+                        <span className="font-medium text-pastel-rose">
                           {raffle.ticketToken.name}
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Symbol:</span>
-                        <span className="font-medium">
+                        <span className="text-cement">Symbol:</span>
+                        <span className="font-medium text-pastel-rose">
                           {raffle.ticketToken.symbol}
                         </span>
                       </div>
                       <div>
-                        <span className="text-gray-600">Contract:</span>
-                        <div className="font-mono text-xs bg-gray-100 p-1 rounded mt-1 overflow-x-auto">
+                        <span className="text-cement">Contract:</span>
+                        <div className="font-mono text-xs bg-asphalt p-1 rounded mt-1 overflow-x-auto">
                           {raffle.ticketToken.contractAddress}
                         </div>
                       </div>
                     </div>
                   ) : (
-                    <p className="text-gray-600 text-sm italic">
+                    <p className="text-enamel-red text-sm italic">
                       No ticket token information available
                     </p>
                   )}
@@ -243,18 +243,18 @@ const RaffleSuccessPage = () => {
             {/* Prize Distribution Section */}
             <Card>
               <CardBody className="p-4">
-                <h4 className="font-medium text-gray-700 mb-3 flex items-center">
+                <h4 className="font-medium text-dark-rose mb-3 flex items-center">
                   <CurrencyDollarIcon className="h-5 w-5 mr-1 text-green-500" />
                   Prize Distribution
                 </h4>
                 <div className="flex justify-between mb-3">
-                  <span className="text-gray-600">Total Prize Pool:</span>
-                  <span className="font-medium">
+                  <span className="text-cement">Total Prize Pool:</span>
+                  <span className="font-medium text-pastel-rose">
                     ${raffle.prize?.amount || 500}{" "}
                     {raffle.prize?.currency || "USDC"}
                   </span>
                 </div>
-                <div className="grid grid-cols-2 gap-2 text-sm">
+                <div className="grid grid-cols-2 gap-2 text-pastel-rose text-sm">
                   <div className="flex items-center">
                     <Badge className="bg-yellow-100 text-yellow-800 mr-2">
                       1st
@@ -310,10 +310,10 @@ const RaffleSuccessPage = () => {
 
           {/* Navigation Buttons */}
           <div className="flex flex-col sm:flex-row gap-3 mt-6">
-            <Link to="/creator/raffles/manage" className="flex-1">
+            <Link to="/creator/manage" className="flex-1">
               <Button className="w-full">Manage Your Raffles</Button>
             </Link>
-            <Link to="/creator/raffles/new" className="flex-1">
+            <Link to="/creator/new" className="flex-1">
               <Button layout="outline" className="w-full">
                 Create Another Raffle
               </Button>

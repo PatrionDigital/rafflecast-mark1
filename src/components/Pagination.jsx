@@ -1,4 +1,4 @@
-// src/components/Pagination.jsx
+// src/components/Pagination.jsx - Refactored with Tailwind
 import PropTypes from "prop-types";
 
 /**
@@ -68,27 +68,39 @@ const Pagination = ({
   if (totalItems <= itemsPerPage) return null;
 
   return (
-    <div className="pagination-controls">
+    <div className="flex justify-center items-center mt-6 gap-1">
       <button
-        className="pagination-button"
+        className={`w-10 h-10 flex items-center justify-center rounded-md ${
+          currentPage === 1
+            ? "text-gray-400 cursor-not-allowed bg-gray-100"
+            : "text-gray-700 hover:bg-gray-100 border border-gray-300"
+        }`}
         onClick={() => handlePageChange(currentPage - 1)}
         disabled={currentPage === 1}
+        aria-label="Previous page"
       >
         &lt;
       </button>
 
       {getPageNumbers().map((page, index) =>
         page === "..." ? (
-          <span key={`ellipsis-${index}`} className="pagination-ellipsis">
+          <span
+            key={`ellipsis-${index}`}
+            className="w-10 h-10 flex items-center justify-center text-gray-500"
+          >
             ...
           </span>
         ) : (
           <button
             key={`page-${page}`}
-            className={`pagination-button ${
-              currentPage === page ? "active" : ""
+            className={`w-10 h-10 flex items-center justify-center rounded-md ${
+              currentPage === page
+                ? "bg-cochineal-red text-white font-medium"
+                : "text-gray-700 hover:bg-gray-100 border border-gray-300"
             }`}
             onClick={() => handlePageChange(page)}
+            aria-label={`Page ${page}`}
+            aria-current={currentPage === page ? "page" : undefined}
           >
             {page}
           </button>
@@ -96,9 +108,14 @@ const Pagination = ({
       )}
 
       <button
-        className="pagination-button"
+        className={`w-10 h-10 flex items-center justify-center rounded-md ${
+          currentPage === totalPages
+            ? "text-gray-400 cursor-not-allowed bg-gray-100"
+            : "text-gray-700 hover:bg-gray-100 border border-gray-300"
+        }`}
         onClick={() => handlePageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
+        aria-label="Next page"
       >
         &gt;
       </button>

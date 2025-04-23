@@ -39,7 +39,7 @@ const BasicInfoStep = ({
 
   return (
     <div className="space-y-6">
-      <h3 className="text-xl font-bold text-gray-800">
+      <h3 className="text-xl font-bold text-fabric-red">
         Step 1: Basic Information
       </h3>
 

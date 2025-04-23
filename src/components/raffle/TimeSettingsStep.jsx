@@ -52,10 +52,11 @@ const TimeSettingsStep = ({
 
   return (
     <div className="space-y-6">
-      <h3 className="text-xl font-bold text-gray-800">Step 2: Time Settings</h3>
+      <h3 className="text-xl font-bold text-fabric-red">
+        Step 2: Time Settings
+      </h3>
 
       <Alert type="info" className="flex items-start">
-        <InformationCircleIcon className="w-5 h-5 mr-2 flex-shrink-0 mt-0.5" />
         <span>
           The raffle will start immediately when created. You only need to set
           when it ends.
@@ -66,7 +67,9 @@ const TimeSettingsStep = ({
         <CardBody>
           <div className="space-y-6">
             <div>
-              <h4 className="text-lg font-semibold mb-4">Raffle End Time</h4>
+              <h4 className="text-lg font-semibold text-cement mb-4">
+                Raffle End Time
+              </h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Label>
                   <span>Closing Date</span>
@@ -91,13 +94,15 @@ const TimeSettingsStep = ({
                   />
                 </Label>
               </div>
-              <HelperText>
+              <HelperText className="text-dark-rose">
                 This is when the raffle will stop accepting new entries.
               </HelperText>
             </div>
 
             <div>
-              <h4 className="text-lg font-semibold mb-4">Challenge Period</h4>
+              <h4 className="text-lg font-semibold text-cement mb-4">
+                Challenge Period
+              </h4>
               <Label>
                 <span>Challenge Period Ends</span>
                 <Input
@@ -112,7 +117,7 @@ const TimeSettingsStep = ({
                   </HelperText>
                 )}
               </Label>
-              <HelperText>
+              <HelperText className="text-dark-rose">
                 The challenge period allows time for verification before rewards
                 are distributed. It should be set after the closing date.
               </HelperText>

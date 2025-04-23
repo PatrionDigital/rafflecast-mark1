@@ -7,14 +7,14 @@ import { v4 as uuidv4 } from "uuid";
 import { Card, CardBody, Alert } from "@windmill/react-ui";
 
 // Step Components
-import BasicInfoStep from "../components/raffle/BasicInfoStep";
-import TimeSettingsStep from "../components/raffle/TimeSettingsStep";
-import ZoraTicketStep from "../components/raffle/ZoraTicketStep";
-import ReviewStep from "../components/raffle/ReviewStep";
+import BasicInfoStep from "@/components/raffle/BasicInfoStep";
+import TimeSettingsStep from "@/components/raffle/TimeSettingsStep";
+import ZoraTicketStep from "@/components/raffle/ZoraTicketStep";
+import ReviewStep from "@/components/raffle/ReviewStep";
 
 // Hooks and Utils
-import { useRaffle } from "../hooks/useRaffle";
-import { generatePrizeDistribution } from "../utils/zoraUtils";
+import { useRaffle } from "@/hooks/useRaffle";
+import { generatePrizeDistribution } from "@/utils/zoraUtils";
 
 const CreateRafflePage = () => {
   const navigate = useNavigate();
@@ -220,23 +220,23 @@ const CreateRafflePage = () => {
             </Alert>
           )}
 
-          {/* Progress Indicator */}
-          <div className="flex items-center mb-8">
+          <div className="flex items-center mb-8 w-full">
             {["Basic Info", "Time Settings", "Ticket Creation", "Review"].map(
               (step, index) => (
-                <div key={index} className="flex items-center flex-1">
+                <div key={index} className="relative flex items-center w-full">
+                  {/* Step Circle */}
                   <div
                     className={`
-                    flex items-center justify-center w-10 h-10 rounded-full 
-                    text-sm font-medium border-2 z-10 
-                    ${
-                      formStep > index + 1
-                        ? "bg-green-500 text-white border-green-500"
-                        : formStep === index + 1
-                        ? "bg-cochineal-red text-white border-cochineal-red"
-                        : "bg-white text-gray-500 border-gray-300"
-                    }
-                  `}
+          flex items-center justify-center w-10 h-10 rounded-full 
+          text-sm font-medium border-2 z-10 shrink-0
+          ${
+            formStep > index + 1
+              ? "bg-green-500 text-white border-green-500"
+              : formStep === index + 1
+              ? "bg-cochineal-red text-white border-cochineal-red"
+              : "bg-white text-gray-500 border-gray-300"
+          }
+        `}
                   >
                     {formStep > index + 1 ? (
                       <svg
@@ -258,6 +258,7 @@ const CreateRafflePage = () => {
                     )}
                   </div>
 
+                  {/* Connector */}
                   {index < 3 && (
                     <div
                       className={`flex-1 h-1 ${
@@ -266,21 +267,12 @@ const CreateRafflePage = () => {
                     ></div>
                   )}
 
+                  {/* Step Label */}
                   <span
                     className={`
-                    absolute mt-14 text-xs font-medium
-                    ${
-                      formStep === index + 1
-                        ? "text-cochineal-red"
-                        : "text-gray-500"
-                    }
-                  `}
-                    style={{
-                      left: `calc(${index * 33.33 + 16.665}% - ${
-                        index > 0 ? index * 3 : 0
-                      }rem)`,
-                      transform: "translateX(-50%)",
-                    }}
+          absolute left-1/2 transform -translate-x-1/2 mt-14 text-xs font-medium
+          ${formStep === index + 1 ? "text-cochineal-red" : "text-gray-500"}
+        `}
                   >
                     {step}
                   </span>
