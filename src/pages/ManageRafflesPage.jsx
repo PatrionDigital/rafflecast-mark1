@@ -63,44 +63,24 @@ const ManageRafflesPage = () => {
   }, []);
 
   // Parse JSON string fields in raffles
+  const parseRaffle = (raffle) => {
+    const parsed = { ...raffle };
+    if (parsed.ticketToken && typeof parsed.ticketToken === 'string') {
+      try {
+        parsed.ticketToken = JSON.parse(parsed.ticketToken);
+      } catch {}
+    }
+    if (parsed.prize && typeof parsed.prize === 'string') {
+      try {
+        parsed.prize = JSON.parse(parsed.prize);
+      } catch {}
+    }
+    return parsed;
+  };
+
   const parseRaffleData = (raffleData) => {
     // Create a copy to avoid mutating the original data
-    const parsedRaffles = raffleData.map((raffle) => {
-      const parsedRaffle = { ...raffle };
-
-      // Parse ticketToken if it's a string
-      if (
-        typeof parsedRaffle.ticketToken === "string" &&
-        parsedRaffle.ticketToken
-      ) {
-        try {
-          parsedRaffle.ticketToken = JSON.parse(parsedRaffle.ticketToken);
-        } catch (error) {
-          console.error(
-            `Error parsing ticketToken for raffle ${parsedRaffle.id}:`,
-            error
-          );
-          // Keep the original string if parsing fails
-        }
-      }
-
-      // Parse prize if it's a string
-      if (typeof parsedRaffle.prize === "string" && parsedRaffle.prize) {
-        try {
-          parsedRaffle.prize = JSON.parse(parsedRaffle.prize);
-        } catch (error) {
-          console.error(
-            `Error parsing prize for raffle ${parsedRaffle.id}:`,
-            error
-          );
-          // Keep the original string if parsing fails
-        }
-      }
-
-      return parsedRaffle;
-    });
-
-    return parsedRaffles;
+    return raffleData.map(parseRaffle);
   };
 
   // Load raffles when component mounts
@@ -110,7 +90,7 @@ const ManageRafflesPage = () => {
 
       setLoading(true);
       try {
-        const fetchedRaffles = getRafflesByCreator(profile.fid);
+        const fetchedRaffles = await getRafflesByCreator(profile.fid);
         // Parse JSON string fields
         const parsedRaffles = parseRaffleData(fetchedRaffles);
         setRaffles(parsedRaffles);
@@ -152,14 +132,13 @@ const ManageRafflesPage = () => {
     setEntries([]);
   };
 
-  const handleViewDetails = (raffleId) => {
-    // Instead of just showing the modal, update the URL without reloading the page
-    navigate(`/creator/manage/${raffleId}`, { replace: true });
-
-    // Find the raffle in our already parsed collection
-    const raffle = raffles.find((r) => r.id === raffleId);
+  const handleViewDetails = (raffleOrId) => {
+    let raffle = raffleOrId;
+    if (typeof raffleOrId === 'string') {
+      raffle = raffles.find((r) => r.id === raffleOrId);
+    }
     if (raffle) {
-      setSelectedRaffle(raffle);
+      setSelectedRaffle(parseRaffle(raffle));
       setShowDetailsPanel(true);
     }
   };
@@ -199,7 +178,7 @@ const ManageRafflesPage = () => {
   };
 
   const handleRaffleClick = (raffle) => {
-    handleViewDetails(raffle.id);
+    handleViewDetails(parseRaffle(raffle));
   };
 
   if (!isAuthenticated) {
@@ -296,7 +275,7 @@ const ManageRafflesPage = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 overflow-y-auto">
           <div className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-white rounded-lg shadow-xl">
             <RaffleDetailsPanel
-              raffle={selectedRaffle}
+              raffle={parseRaffle(selectedRaffle)}
               onClose={handleCloseDetailsPanel}
               isInFrame={false}
             />

@@ -4,12 +4,15 @@ import { createBrowserRouter } from "react-router-dom";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import ParentLayout from "@/layouts/ParentLayout";
 import CreatorDashboardLayout from "@/layouts/CreatorDashboardLayout";
+import EntrantDashboardLayout from "@/layouts/EntrantDashboardLayout";
 import LandingPage from "@/pages/LandingPage";
 import SignupSuccessPage from "@/pages/SignupSuccessPage";
 import CreateRafflePage from "@/pages/CreateRafflePage";
 import RaffleSuccessPage from "@/pages/RaffleSuccessPage";
 import ManageRafflesPage from "@/pages/ManageRafflesPage";
+import BrowseRafflesPage from "@/pages/BrowseRafflesPage";
 import FrameRafflePage from "@/pages/FrameRafflePage";
+import EntriesManagementPage from "@/pages/EntriesManagementPage";
 
 export const router = createBrowserRouter([
   {
@@ -63,6 +66,23 @@ export const router = createBrowserRouter([
             // View specific raffle details
             path: "manage/:raffleId",
             element: <ManageRafflesPage />,
+          },
+        ],
+      },
+      // Entrant dashboard routes
+      {
+        path: "entrant",
+        element: <EntrantDashboardLayout />,
+        children: [
+          {
+            // Show all raffles created by user (default route)
+            index: true,
+            element: <BrowseRafflesPage />,
+          },
+          {
+            // View all this user's raffle entries
+            path: "manage",
+            element: <EntriesManagementPage />,
           },
         ],
       },

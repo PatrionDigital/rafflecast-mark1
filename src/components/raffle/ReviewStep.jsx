@@ -133,25 +133,36 @@ const ReviewStep = ({ raffleData, onEdit, onSubmit, isSubmitting }) => {
           </div>
 
           {raffleData.ticketToken ? (
-            <div className="space-y-4">
-              <div className="flex items-center">
-                <TagIcon className="w-5 h-5 mr-2 text-purple-500" />
-                <div>
-                  <h5 className="font-medium text-cement">Token</h5>
-                  <p className="mt-1 text-pastel-rose">
-                    {raffleData.ticketToken.name} (
-                    {raffleData.ticketToken.symbol})
-                  </p>
+            (() => {
+              // Robustly parse ticketToken if it's a string
+              let ticketTokenObj = raffleData.ticketToken;
+              if (typeof ticketTokenObj === 'string') {
+                try {
+                  ticketTokenObj = JSON.parse(ticketTokenObj);
+                } catch {
+                  ticketTokenObj = {};
+                }
+              }
+              return (
+                <div className="space-y-4">
+                  <div className="flex items-center">
+                    <TagIcon className="w-5 h-5 mr-2 text-purple-500" />
+                    <div>
+                      <h5 className="font-medium text-cement">Token</h5>
+                      <p className="mt-1 text-pastel-rose">
+                        {ticketTokenObj.name} ({ticketTokenObj.symbol})
+                      </p>
+                    </div>
+                  </div>
+                  <div>
+                    <h5 className="font-medium text-cement">Contract Address</h5>
+                    <code className="block mt-1 p-2 bg-asphalt rounded-md text-xs text-cement font-mono overflow-x-auto">
+                      {ticketTokenObj.contractAddress || ticketTokenObj.address || 'N/A'}
+                    </code>
+                  </div>
                 </div>
-              </div>
-
-              <div>
-                <h5 className="font-medium text-cement">Contract Address</h5>
-                <code className="block mt-1 p-2 bg-asphalt rounded-md text-xs text-cement font-mono overflow-x-auto">
-                  {raffleData.ticketToken.contractAddress}
-                </code>
-              </div>
-            </div>
+              );
+            })()
           ) : (
             <Alert type="warning">
               <div className="flex items-center">

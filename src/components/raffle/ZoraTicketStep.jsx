@@ -80,7 +80,7 @@ const ZoraTicketStep = ({
         id: `zora-${Date.now()}`,
         name: coinName,
         symbol: coinSymbol,
-        contracAddress: `0x${Math.random().toString(16).slice(2, 42)}`,
+        contractAddress: `0x${Math.random().toString(16).slice(2, 42)}`,
         createdAt: new Date().toISOString(),
       };
 
@@ -196,7 +196,7 @@ const ZoraTicketStep = ({
                     Token: {coinData.name} ({coinData.symbol})
                   </p>
                   <p className="text-sm font-mono text-xs">
-                    Address: {coinData.contracAddress}
+                    Address: {coinData.contractAddress}
                   </p>
                 </div>
               </Alert>

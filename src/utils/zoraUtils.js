@@ -9,6 +9,31 @@
 // Mock data for initial development
 const MOCK_COINS = [];
 
+// Correct import per ZoraCoins.md
+import { tradeCoin } from "@zoralabs/coins-sdk";
+import { createPublicClient, createWalletClient, http, parseEther } from "viem";
+import { base } from "viem/chains";
+
+// You may want to move these to config/env
+const RPC_URL = "https://mainnet.base.org";
+
+const publicClient = createPublicClient({
+  chain: base,
+  transport: http(RPC_URL),
+});
+
+// Helper to get walletClient for a given account (address/Hex)
+export function getWalletClient(account) {
+  return createWalletClient({
+    account,
+    chain: base,
+    transport: http(RPC_URL),
+  });
+}
+
+// Dummy contract address to use for all Zora Coin operations (replace with real one per raffle)
+const DUMMY_CONTRACT_ADDRESS = "0xDUMMY_CONTRACT_ADDRESS";
+
 /**
  * Create a new Zora coin to be used as raffle tickets
  * @param {Object} coinData - Information for the new coin
@@ -28,10 +53,6 @@ export const createZoraCoin = async (coinData) => {
   }
 
   try {
-    // In actual implementation, we would call the Zora SDK here
-    // const sdk = new CoinsSDK();
-    // const newCoin = await sdk.createCoin(coinData);
-
     // For now, return mock data
     const mockCoin = {
       id: `zora-${Date.now()}`,
@@ -66,10 +87,6 @@ export const createZoraCoin = async (coinData) => {
  */
 export const getZoraCoin = async (coinId) => {
   try {
-    // In actual implementation, we would call the Zora SDK here
-    // const sdk = new CoinsSDK();
-    // const coin = await sdk.getCoin(coinId);
-
     // For now, return mock data
     const mockCoin = MOCK_COINS.find((coin) => coin.id === coinId);
 
@@ -84,6 +101,95 @@ export const getZoraCoin = async (coinId) => {
   } catch (error) {
     console.error(`Error fetching Zora coin ${coinId}:`, error);
     throw error;
+  }
+};
+
+/**
+ * Buy Zora Coins for a user using the real Zora SDK
+ * @param {string} userAddress - Wallet address of user
+ * @param {string} coinAddress - Contract address of the Zora coin
+ * @param {string|number|bigint} ethAmount - Amount of ETH to spend (in ETH)
+ * @param {object} [options] - Optional: { minAmountOut, tradeReferrer }
+ * @returns {Promise<Object>} Transaction result
+ */
+export const buyZoraCoins = async (
+  userAddress,
+  coinAddress,
+  ethAmount,
+  options = {}
+) => {
+  try {
+    const walletClient = getWalletClient(userAddress);
+    const orderSize =
+      typeof ethAmount === "bigint"
+        ? ethAmount
+        : parseEther(ethAmount.toString());
+    const params = {
+      direction: "buy",
+      target: coinAddress,
+      args: {
+        recipient: userAddress,
+        orderSize,
+        minAmountOut: options.minAmountOut ?? 0n,
+        tradeReferrer: options.tradeReferrer,
+      },
+    };
+    const result = await tradeCoin(params, walletClient, publicClient);
+    return result;
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+};
+
+/**
+ * Sell Zora Coins for a user using the real Zora SDK
+ * @param {string} userAddress - Wallet address of user
+ * @param {string} coinAddress - Contract address of the Zora coin
+ * @param {string|number|bigint} coinAmount - Amount of coins to sell (in coin decimals)
+ * @param {object} [options] - Optional: { minAmountOut, tradeReferrer }
+ * @returns {Promise<Object>} Transaction result
+ */
+export const sellZoraCoins = async (
+  userAddress,
+  coinAddress,
+  coinAmount,
+  options = {}
+) => {
+  try {
+    const walletClient = getWalletClient(userAddress);
+    const orderSize =
+      typeof coinAmount === "bigint"
+        ? coinAmount
+        : parseEther(coinAmount.toString());
+    const params = {
+      direction: "sell",
+      target: coinAddress,
+      args: {
+        recipient: userAddress,
+        orderSize,
+        minAmountOut: options.minAmountOut ?? 0n,
+        tradeReferrer: options.tradeReferrer,
+      },
+    };
+    const result = await tradeCoin(params, walletClient, publicClient);
+    return result;
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+};
+
+/**
+ * Get Zora Coin balance for a user
+ * @param {string} userAddress - Wallet address of user
+ * @param {string} coinAddress - Contract address of the Zora coin
+ * @returns {Promise<number>} Balance of the user
+ */
+export const getZoraCoinBalance = async (userAddress, coinAddress) => {
+  try {
+    // For now, mock response:
+    return Math.floor(Math.random() * 1000); // Random balance
+  } catch (error) {
+    return 0;
   }
 };
 
