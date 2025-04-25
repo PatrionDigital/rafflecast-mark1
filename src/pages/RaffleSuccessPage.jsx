@@ -17,6 +17,23 @@ const RaffleSuccessPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Utility to parse ticketToken and prize fields robustly
+  const parseRaffle = (raffle) => {
+    console.log("Parsing raffle:", raffle);
+    const parsed = { ...raffle };
+    if (parsed.ticketToken && typeof parsed.ticketToken === "string") {
+      try {
+        parsed.ticketToken = JSON.parse(parsed.ticketToken);
+      } catch {}
+    }
+    if (parsed.prize && typeof parsed.prize === "string") {
+      try {
+        parsed.prize = JSON.parse(parsed.prize);
+      } catch {}
+    }
+    return parsed;
+  };
+
   useEffect(() => {
     const loadRaffle = async () => {
       if (!raffleId) {
@@ -24,7 +41,6 @@ const RaffleSuccessPage = () => {
         setLoading(false);
         return;
       }
-
       try {
         const fetchedRaffle = await getRaffleById(raffleId);
         if (!fetchedRaffle) {
@@ -32,25 +48,7 @@ const RaffleSuccessPage = () => {
           setLoading(false);
           return;
         }
-
-        // Parse JSON fields if they're strings
-        if (typeof fetchedRaffle.ticketToken === "string") {
-          try {
-            fetchedRaffle.ticketToken = JSON.parse(fetchedRaffle.ticketToken);
-          } catch (e) {
-            console.error("Error parsing ticketToken:", e);
-          }
-        }
-
-        if (typeof fetchedRaffle.prize === "string") {
-          try {
-            fetchedRaffle.prize = JSON.parse(fetchedRaffle.prize);
-          } catch (e) {
-            console.error("Error parsing prize:", e);
-          }
-        }
-
-        setRaffle(fetchedRaffle);
+        setRaffle(parseRaffle(fetchedRaffle));
       } catch (err) {
         console.error("Error loading raffle:", err);
         setError("Failed to load raffle details");
@@ -58,7 +56,6 @@ const RaffleSuccessPage = () => {
         setLoading(false);
       }
     };
-
     loadRaffle();
   }, [raffleId, getRaffleById]);
 

@@ -123,20 +123,21 @@ const CreateRafflePage = () => {
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         phase: "Active",
+        // Ensure ticketToken is always stringified and includes contractAddress
         ticketToken: JSON.stringify({
           id: ticketToken.id,
           name: ticketToken.name,
           symbol: ticketToken.symbol,
-          contractAddress: ticketToken.contractAddress,
+          contractAddress: ticketToken.contractAddress || ticketToken.address || "",
         }),
+        // Ensure prize is stringified and distribution is an array (for UI parsing)
         prize: JSON.stringify({
           amount: prizeAmount,
           currency: prizeCurrency,
           winnerCount: winnerCount,
-          distribution: {
-            model: "equitable",
-            tiers: generatePrizeDistribution(prizeAmount, winnerCount),
-          },
+          distribution: Array.isArray(generatePrizeDistribution(prizeAmount, winnerCount))
+            ? generatePrizeDistribution(prizeAmount, winnerCount)
+            : Object.values(generatePrizeDistribution(prizeAmount, winnerCount)),
         }),
       };
 

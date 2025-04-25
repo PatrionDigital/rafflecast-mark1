@@ -1,5 +1,6 @@
 // src/pages/BrowseRafflesPage.jsx
-import { useProfile } from "@farcaster/auth-kit";
+//import { useProfile } from "@farcaster/auth-kit";
+import { useAuth } from "@/hooks/useAuth";
 import { useEffect, useState, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 
@@ -17,7 +18,8 @@ const BrowseRafflesPage = () => {
   const [searchParams] = useSearchParams();
 
   // Farcaster Auth-kit Profile
-  const { isAuthenticated } = useProfile();
+  //const { isAuthenticated } = useProfile();
+  const { isAuthenticated } = useAuth();
 
   // Custom hooks
   const { getRafflesByPhase, getRaffleById } = useRaffle();
@@ -28,6 +30,22 @@ const BrowseRafflesPage = () => {
 
   const stableGetRaffleById = useCallback(getRaffleById, [getRaffleById]);
 
+  // Utility to parse ticketToken and prize fields robustly
+  const parseRaffle = (raffle) => {
+    const parsed = { ...raffle };
+    if (parsed.ticketToken && typeof parsed.ticketToken === 'string') {
+      try {
+        parsed.ticketToken = JSON.parse(parsed.ticketToken);
+      } catch {}
+    }
+    if (parsed.prize && typeof parsed.prize === 'string') {
+      try {
+        parsed.prize = JSON.parse(parsed.prize);
+      } catch {}
+    }
+    return parsed;
+  };
+
   // Check for direct raffle linking via URL parameter
   useEffect(() => {
     const directRaffleId = searchParams.get("id");
@@ -37,7 +55,7 @@ const BrowseRafflesPage = () => {
         try {
           const directRaffle = await stableGetRaffleById(directRaffleId);
           if (directRaffle) {
-            setSelectedRaffle(directRaffle);
+            setSelectedRaffle(parseRaffle(directRaffle));
             setIsGridVisible(false);
           }
         } catch (error) {
@@ -70,13 +88,19 @@ const BrowseRafflesPage = () => {
   }, [stableGetRafflesByPhase]);
 
   const handleRaffleClick = (raffle) => {
-    setSelectedRaffle(raffle);
+    setSelectedRaffle(parseRaffle(raffle));
     setIsGridVisible(false);
   };
 
   const handleCloseDetails = () => {
     setSelectedRaffle(null);
     setIsGridVisible(true);
+  };
+
+  // Add handler to open details panel for a raffle by ID
+  const handleViewDetails = (raffle) => {
+    setSelectedRaffle(parseRaffle(raffle));
+    setIsGridVisible(false);
   };
 
   return (
@@ -102,7 +126,7 @@ const BrowseRafflesPage = () => {
                   <RaffleCard
                     key={raffle.id}
                     raffle={raffle}
-                    onClick={() => handleRaffleClick(raffle)}
+                    onClick={() => handleViewDetails(raffle)}
                   />
                 ))
               ) : (
@@ -112,7 +136,7 @@ const BrowseRafflesPage = () => {
 
             {selectedRaffle && (
               <RaffleDetailsPanel
-                raffle={selectedRaffle}
+                raffle={parseRaffle(selectedRaffle)}
                 onClose={handleCloseDetails}
                 isInFrame={false}
               />

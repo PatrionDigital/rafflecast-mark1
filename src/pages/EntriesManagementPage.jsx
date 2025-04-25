@@ -1,6 +1,7 @@
 // src/pages/EntriesManagementPage.jsx
 // src/pages/EntriesManagementPage.jsx - Updated import section
-import { useProfile } from "@farcaster/auth-kit";
+//import { useProfile } from "@farcaster/auth-kit";
+import { useAuth } from "@/hooks/useAuth";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 
@@ -13,7 +14,8 @@ import { useRaffle } from "@/hooks/useRaffle";
 
 const EntriesManagementPage = ({ itemsPerPage = 4 }) => {
   const { entries, clearMessage } = useRaffle();
-  const { isAuthenticated, profile } = useProfile();
+  //const { isAuthenticated, profile } = useProfile();
+  const { isAuthenticated, profile } = useAuth();
   const [filteredEntries, setFilteredEntries] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);

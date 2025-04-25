@@ -79,11 +79,12 @@ export const addRaffleToDB = async (raffle) => {
 };
 
 export const addEntryToDB = async (entryData) => {
-  const { id, raffleId, participant, enteredAt, prizeWallet } = entryData;
+  // Updated for new schema: id, raffleId, userId, createdAt, updatedAt, positionWallet
+  const { id, raffleId, userId, createdAt, updatedAt, positionWallet } = entryData;
   try {
     await client.execute(
-      `INSERT INTO entries (id, raffleId, participant, enteredAt, prizeWallet) VALUES (?,?,?,?,?)`,
-      [id, raffleId, participant, enteredAt, prizeWallet]
+      `INSERT INTO entries (id, raffleId, userId, createdAt, updatedAt, positionWallet) VALUES (?, ?, ?, ?, ?, ?)`,
+      [id, raffleId, userId, createdAt, updatedAt, positionWallet]
     );
     // Emit success event
     eventEmitter.emit("raffleEntry", { success: true, id });
