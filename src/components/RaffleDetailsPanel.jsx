@@ -16,11 +16,7 @@ import { useAuth } from "@/hooks/useAuth";
 // Custom hooks
 import { useRaffle } from "../hooks/useRaffle";
 import { getCreatorUsername } from "../utils/farcasterUtils";
-import {
-  buyZoraCoins,
-  sellZoraCoins,
-  getZoraCoinBalance,
-} from "../utils/zoraUtils";
+import { buyCoin, sellCoin, getTokenDetails } from "../utils/zoraUtils";
 
 // Components
 import ShareModal from "./ShareModal";
@@ -59,7 +55,7 @@ const RaffleDetailsPanel = ({
   // --- Robust parsing utility ---
   function robustParse(objOrStr) {
     if (!objOrStr) return null;
-    if (typeof objOrStr === 'string') {
+    if (typeof objOrStr === "string") {
       try {
         return JSON.parse(objOrStr);
       } catch {
@@ -341,20 +337,20 @@ const RaffleDetailsPanel = ({
                           </tr>
                         </thead>
                         <tbody>
-                          {(Array.isArray(prize?.distribution) ? prize.distribution : Array.isArray(prize) ? prize : []).map((tier, idx) => (
+                          {(Array.isArray(prize?.distribution)
+                            ? prize.distribution
+                            : Array.isArray(prize)
+                            ? prize
+                            : []
+                          ).map((tier, idx) => (
                             <tr key={idx}>
                               <td className="px-2 py-1 font-semibold">
                                 {tier.position ||
-                                  `${idx + 1}${[
-                                    "st",
-                                    "nd",
-                                    "rd",
-                                    "th",
-                                  ][Math.min(idx, 3)]}`}
+                                  `${idx + 1}${
+                                    ["st", "nd", "rd", "th"][Math.min(idx, 3)]
+                                  }`}
                               </td>
-                              <td className="px-2 py-1">
-                                {tier.winners || 1}
-                              </td>
+                              <td className="px-2 py-1">{tier.winners || 1}</td>
                               <td className="px-2 py-1">
                                 ${tier.amount} {prize.currency || "USDC"}
                               </td>

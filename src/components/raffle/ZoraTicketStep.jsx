@@ -15,7 +15,7 @@ import {
   InformationCircleIcon,
   CurrencyDollarIcon,
 } from "@heroicons/react/24/outline";
-import { createZoraCoin } from "../../utils/zoraUtils";
+import { getTokenDetails, buyCoin } from "../../utils/zoraUtils";
 
 const ZoraTicketStep = ({
   raffleTitle,
