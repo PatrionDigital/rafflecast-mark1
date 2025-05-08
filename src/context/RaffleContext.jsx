@@ -1,6 +1,7 @@
-// Modified src/context/RaffleContext.jsx
+// src/context/RaffleContext.jsx
 import { createContext, useEffect, useState, useMemo } from "react";
 import PropTypes from "prop-types";
+import { v4 as uuidv4 } from "uuid";
 import {
   fetchRaffles,
   fetchEntries,
@@ -11,7 +12,11 @@ import {
   onRaffleEntry,
   onRafflePhaseUpdated,
 } from "../utils/tursoUtils";
-import { generatePrizeDistribution } from "../utils/zoraUtils";
+import { 
+  getTokenDetails, 
+  getTokenPriceData, 
+  simulateCoinPurchase 
+} from "../utils/zoraUtils";
 
 const RaffleContext = createContext();
 
@@ -19,6 +24,12 @@ export function RaffleProvider({ children }) {
   const [raffles, setRaffles] = useState([]);
   const [entries, setEntries] = useState([]);
   const [eligibilityStatus, setEligibilityStatus] = useState([]);
+
+  const [userTokens, setUserTokens] = useState([]); // User's token positions
+  const [tokenPrices, setTokenPrices] = useState({}); // Current prices of relevant tokens
+  const [tokenTransactions, setTokenTransactions] = useState([]); // History of token transactions
+  const [loadingTokens, setLoadingTokens] = useState(false); // Loading state for token operations
+  const [tokenError, setTokenError] = useState(null); // Error state for token operations
 
   useEffect(() => {
     const loadData = async () => {
@@ -224,6 +235,293 @@ export function RaffleProvider({ children }) {
     );
   };
 
+  // Fetch token details for a specific raffle
+  const fetchTokenDetails = async (raffleId) => {
+    if (!raffleId) {
+      console.error("No raffle ID provided");
+      return null;
+    }
+    
+    setLoadingTokens(true);
+    setTokenError(null);
+    
+    try {
+      const raffle = await getRaffleById(raffleId);
+      if (!raffle || !raffle.ticketToken) {
+        throw new Error("Raffle or ticket token not found");
+      }
+      
+      // Parse token data if it's a string
+      const tokenData = typeof raffle.ticketToken === 'string' 
+        ? JSON.parse(raffle.ticketToken) 
+        : raffle.ticketToken;
+        
+      // Get token details from Zora
+      const tokenDetails = await getTokenDetails(tokenData.contractAddress);
+      
+      // Update token prices state
+      setTokenPrices(prevPrices => ({
+        ...prevPrices,
+        [tokenData.contractAddress]: {
+          price: tokenDetails.priceUSD,
+          updatedAt: new Date().toISOString()
+        }
+      }));
+      
+      return tokenDetails;
+    } catch (error) {
+      console.error("Error fetching token details:", error);
+      setTokenError("Failed to load token information. Please try again.");
+      return null;
+    } finally {
+      setLoadingTokens(false);
+    }
+  };
+
+  // Get token positions for the current user
+  const getUserTokenPositions = async (userAddress) => {
+    if (!isAuthenticated || !profile?.fid) {
+      console.log("User is not authenticated");
+      return [];
+    }
+    
+    setLoadingTokens(true);
+    setTokenError(null);
+    
+    try {
+      // Get all entries for the current user
+      const userEntries = getEntriesByEntrant(profile.fid);
+      
+      // For each entry, get the raffle and token details
+      const positions = await Promise.all(
+        userEntries.map(async (entry) => {
+          const raffle = await getRaffleById(entry.raffleId);
+          if (!raffle || !raffle.ticketToken) return null;
+          
+          // Parse token data if it's a string
+          const tokenData = typeof raffle.ticketToken === 'string' 
+            ? JSON.parse(raffle.ticketToken) 
+            : raffle.ticketToken;
+          
+          // Fetch token price data
+          const priceData = await getTokenPriceData(tokenData.contractAddress);
+          
+          // Update token prices state
+          setTokenPrices(prevPrices => ({
+            ...prevPrices,
+            [tokenData.contractAddress]: {
+              price: priceData.currentPriceUSD,
+              change24h: priceData.change24hPercent,
+              updatedAt: new Date().toISOString()
+            }
+          }));
+          
+          // Mock token balance for now - would be replaced with actual on-chain balance check
+          const tokenBalance = 100 + Math.floor(Math.random() * 900);
+          
+          return {
+            entryId: entry.id,
+            raffleId: entry.raffleId,
+            raffleTitle: raffle.title,
+            tokenAddress: tokenData.contractAddress,
+            tokenSymbol: tokenData.symbol,
+            tokenName: tokenData.name,
+            balance: tokenBalance,
+            value: tokenBalance * parseFloat(priceData.currentPriceUSD),
+            purchasedAt: entry.enteredAt,
+            currentPrice: priceData.currentPriceUSD,
+            priceChange24h: priceData.change24hPercent
+          };
+        })
+      );
+      
+      // Filter out null entries and update state
+      const validPositions = positions.filter(p => p !== null);
+      setUserTokens(validPositions);
+      
+      return validPositions;
+    } catch (error) {
+      console.error("Error fetching user token positions:", error);
+      setTokenError("Failed to load your token positions. Please try again.");
+      return [];
+    } finally {
+      setLoadingTokens(false);
+    }
+  };
+
+  // Purchase tokens for a raffle
+  const purchaseRaffleTokens = async (raffleId, amountInETH, walletAddress) => {
+    if (!raffleId || !amountInETH || !walletAddress) {
+      console.error("Missing required parameters for token purchase");
+      return { success: false, error: "Missing required parameters" };
+    }
+    
+    setLoadingTokens(true);
+    setTokenError(null);
+    
+    try {
+      const raffle = await getRaffleById(raffleId);
+      if (!raffle || !raffle.ticketToken) {
+        throw new Error("Raffle or ticket token not found");
+      }
+      
+      // Parse token data if it's a string
+      const tokenData = typeof raffle.ticketToken === 'string' 
+        ? JSON.parse(raffle.ticketToken) 
+        : raffle.ticketToken;
+      
+      // Simulate purchase to get expected output
+      const simulation = await simulateCoinPurchase({
+        coinAddress: tokenData.contractAddress,
+        amountInETH
+      });
+      
+      // Execute the purchase - for now, we'll simulate the transaction
+      // In production, this would use buyCoin from zoraUtils
+      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate transaction time
+      
+      // Record the transaction
+      const transaction = {
+        id: uuidv4(),
+        type: 'buy',
+        raffleId,
+        tokenAddress: tokenData.contractAddress,
+        tokenSymbol: tokenData.symbol,
+        amountInETH,
+        tokenAmount: parseFloat(simulation.amountOut) / 1e18, // Convert from wei
+        timestamp: new Date().toISOString(),
+        status: 'completed',
+        txHash: `0x${Math.random().toString(16).substring(2, 42)}` // Mock tx hash
+      };
+      
+      // Update transaction history
+      setTokenTransactions(prev => [transaction, ...prev]);
+      
+      // Update user tokens
+      await getUserTokenPositions();
+      
+      return { 
+        success: true, 
+        transaction,
+        expectedTokens: parseFloat(simulation.amountOut) / 1e18
+      };
+    } catch (error) {
+      console.error("Error purchasing tokens:", error);
+      setTokenError(`Failed to purchase tokens: ${error.message}`);
+      return { success: false, error: error.message };
+    } finally {
+      setLoadingTokens(false);
+    }
+  };
+
+  // Sell tokens for a raffle
+  const sellRaffleTokens = async (tokenAddress, tokenAmount, walletAddress) => {
+    if (!tokenAddress || !tokenAmount || !walletAddress) {
+      console.error("Missing required parameters for token sale");
+      return { success: false, error: "Missing required parameters" };
+    }
+    
+    setLoadingTokens(true);
+    setTokenError(null);
+    
+    try {
+      // Find the raffle for this token
+      const raffleBatch = raffles.filter(r => {
+        const tokenData = typeof r.ticketToken === 'string' 
+          ? JSON.parse(r.ticketToken) 
+          : r.ticketToken;
+        return tokenData && tokenData.contractAddress === tokenAddress;
+      });
+      
+      if (!raffleBatch.length) {
+        throw new Error("No raffle found for this token");
+      }
+      
+      const raffle = raffleBatch[0];
+      
+      // Execute the sale - for now, we'll simulate the transaction
+      // In production, this would use sellCoin from zoraUtils
+      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate transaction time
+      
+      // Calculate ETH received (simple approximation)
+      const tokenPrice = tokenPrices[tokenAddress]?.price || 0.000001;
+      const ethReceived = tokenAmount * parseFloat(tokenPrice);
+      
+      // Record the transaction
+      const transaction = {
+        id: uuidv4(),
+        type: 'sell',
+        raffleId: raffle.id,
+        tokenAddress,
+        tokenSymbol: typeof raffle.ticketToken === 'string' 
+          ? JSON.parse(raffle.ticketToken).symbol 
+          : raffle.ticketToken.symbol,
+        amountInETH: ethReceived,
+        tokenAmount,
+        timestamp: new Date().toISOString(),
+        status: 'completed',
+        txHash: `0x${Math.random().toString(16).substring(2, 42)}` // Mock tx hash
+      };
+      
+      // Update transaction history
+      setTokenTransactions(prev => [transaction, ...prev]);
+      
+      // Update user tokens
+      await getUserTokenPositions();
+      
+      return { 
+        success: true, 
+        transaction,
+        ethReceived
+      };
+    } catch (error) {
+      console.error("Error selling tokens:", error);
+      setTokenError(`Failed to sell tokens: ${error.message}`);
+      return { success: false, error: error.message };
+    } finally {
+      setLoadingTokens(false);
+    }
+  };
+
+  // Refresh token prices
+  const refreshTokenPrices = async () => {
+    if (!userTokens.length) return;
+    
+    try {
+      const uniqueTokenAddresses = [...new Set(userTokens.map(t => t.tokenAddress))];
+      
+      // Fetch updated prices for all tokens
+      const updatedPrices = await Promise.all(
+        uniqueTokenAddresses.map(async (address) => {
+          const priceData = await getTokenPriceData(address);
+          return [address, {
+            price: priceData.currentPriceUSD,
+            change24h: priceData.change24hPercent,
+            updatedAt: new Date().toISOString()
+          }];
+        })
+      );
+      
+      // Update token prices state
+      const newPrices = Object.fromEntries(updatedPrices);
+      setTokenPrices(prevPrices => ({
+        ...prevPrices,
+        ...newPrices
+      }));
+      
+      // Also update user tokens with the new prices
+      setUserTokens(prev => prev.map(token => ({
+        ...token,
+        currentPrice: newPrices[token.tokenAddress]?.price || token.currentPrice,
+        priceChange24h: newPrices[token.tokenAddress]?.change24h || token.priceChange24h,
+        value: token.balance * parseFloat(newPrices[token.tokenAddress]?.price || token.currentPrice)
+      })));
+    } catch (error) {
+      console.error("Error refreshing token prices:", error);
+      setTokenError("Failed to refresh token prices");
+    }
+  };
+
   // Clear message from context
   const clearMessage = () => {
     // No-op function since we removed event messages
@@ -233,6 +531,7 @@ export function RaffleProvider({ children }) {
   // as they only depend on raffles, entries, eligibilityStatus
   const contextValue = useMemo(
     () => ({
+      // Existing properties
       raffles,
       entries,
       eligibilityStatus,
@@ -247,9 +546,32 @@ export function RaffleProvider({ children }) {
       getEntriesByEntrant,
       updateEligibilityStatus,
       clearMessage,
+      
+      // New token-related properties
+      userTokens,
+      tokenPrices,
+      tokenTransactions,
+      loadingTokens,
+      tokenError,
+      
+      // New token-related methods
+      fetchTokenDetails,
+      getUserTokenPositions,
+      purchaseRaffleTokens,
+      sellRaffleTokens,
+      refreshTokenPrices
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [raffles, entries, eligibilityStatus]
+    // Update dependencies array to include new state variables
+    [
+      raffles, 
+      entries, 
+      eligibilityStatus, 
+      userTokens, 
+      tokenPrices, 
+      tokenTransactions, 
+      loadingTokens, 
+      tokenError
+    ]
   );
 
   return (

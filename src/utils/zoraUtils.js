@@ -1,200 +1,415 @@
 // src/utils/zoraUtils.js
-
-/**
- * Utility functions for working with Zora Coins SDK
- * Note: Initial implementation with mock functions
- * that will be replaced with actual SDK calls
- */
-
-// Mock data for initial development
-const MOCK_COINS = [];
-
-// Correct import per ZoraCoins.md
-import { tradeCoin } from "@zoralabs/coins-sdk";
-import { createPublicClient, createWalletClient, http, parseEther } from "viem";
+import { tradeCoin, simulateBuy, getTradeFromLogs, tradeCoinCall } from "@zoralabs/coins-sdk";
+import { 
+  Address, 
+  createWalletClient, 
+  createPublicClient, 
+  http, 
+  parseEther, 
+  Hex 
+} from "viem";
 import { base } from "viem/chains";
 
-// You may want to move these to config/env
-const RPC_URL = "https://mainnet.base.org";
+/**
+ * Configuration for the Zora SDK
+ */
+const ZORA_CONFIG = {
+  // Default to Base network (Ethereum chain ID 8453)
+  chainId: base.id, 
+  // API endpoint - would use real endpoints in production
+  apiEndpoint: "https://api.zora.co/coins",
+  // Rate limits and throttling configuration
+  maxRequestsPerMinute: 60,
+};
 
-const publicClient = createPublicClient({
-  chain: base,
-  transport: http(RPC_URL),
-});
-
-// Helper to get walletClient for a given account (address/Hex)
-export function getWalletClient(account) {
-  return createWalletClient({
-    account,
+/**
+ * Initialize wallet and public clients
+ * @param {string} rpcUrl - RPC URL to use for connection
+ * @param {string} accountAddress - Account address to use for wallet client
+ * @returns {Object} Object containing walletClient and publicClient
+ */
+export const initClients = (rpcUrl, accountAddress) => {
+  const publicClient = createPublicClient({
     chain: base,
-    transport: http(RPC_URL),
+    transport: http(rpcUrl),
   });
-}
 
-// Dummy contract address to use for all Zora Coin operations (replace with real one per raffle)
-const DUMMY_CONTRACT_ADDRESS = "0xDUMMY_CONTRACT_ADDRESS";
+  const walletClient = createWalletClient({
+    account: accountAddress,
+    chain: base,
+    transport: http(rpcUrl),
+  });
 
-/**
- * Create a new Zora coin to be used as raffle tickets
- * @param {Object} coinData - Information for the new coin
- * @param {string} coinData.name - Name of the coin
- * @param {string} coinData.symbol - Symbol for the coin (1-5 characters)
- * @param {string} coinData.description - Optional description of the coin
- * @returns {Promise<Object>} The created coin data
- */
-export const createZoraCoin = async (coinData) => {
-  // Validate inputs
-  if (!coinData.name || !coinData.symbol) {
-    throw new Error("Name and symbol are required for coin creation");
-  }
-
-  if (!/^[A-Z0-9]{1,5}$/.test(coinData.symbol)) {
-    throw new Error("Symbol must be 1-5 uppercase letters or numbers");
-  }
-
-  try {
-    // For now, return mock data
-    const mockCoin = {
-      id: `zora-${Date.now()}`,
-      name: coinData.name,
-      symbol: coinData.symbol,
-      contractAddress: `0x${Math.random().toString(16).slice(2, 42)}`,
-      createdAt: new Date().toISOString(),
-      metadata: {
-        description:
-          coinData.description || `Ticket token for ${coinData.name} raffle`,
-        image: "https://placeholder.com/logo.png", // Default image
-      },
-    };
-
-    // Store in mock database
-    MOCK_COINS.push(mockCoin);
-
-    // Simulate network delay
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    return mockCoin;
-  } catch (error) {
-    console.error("Error creating Zora coin:", error);
-    throw new Error(`Failed to create token: ${error.message}`);
-  }
+  return { publicClient, walletClient };
 };
 
 /**
- * Get details for a specific Zora coin
- * @param {string} coinId - The ID of the coin
- * @returns {Promise<Object>} Coin details
+ * Error handling wrapper for SDK calls
+ * @param {Function} sdkCall - Async function making SDK call
+ * @param {string} errorMessage - Custom error message prefix
+ * @returns {Promise<any>} Result of the SDK call
  */
-export const getZoraCoin = async (coinId) => {
+export const safeSDKCall = async (sdkCall, errorMessage = "SDK call failed") => {
   try {
-    // For now, return mock data
-    const mockCoin = MOCK_COINS.find((coin) => coin.id === coinId);
-
-    if (!mockCoin) {
-      throw new Error(`Coin with ID ${coinId} not found`);
+    return await sdkCall();
+  } catch (error) {
+    console.error(`${errorMessage}:`, error);
+    
+    // Categorize errors for better user feedback
+    if (error.message?.includes("network") || error.message?.includes("connection")) {
+      throw new Error(`Network error: Please check your connection`);
     }
-
-    // Simulate network delay
-    await new Promise((resolve) => setTimeout(resolve, 500));
-
-    return mockCoin;
-  } catch (error) {
-    console.error(`Error fetching Zora coin ${coinId}:`, error);
-    throw error;
+    
+    if (error.message?.includes("rate limit")) {
+      throw new Error(`Rate limited: Please try again in a moment`);
+    }
+    
+    throw new Error(`${errorMessage}: ${error.message}`);
   }
 };
 
 /**
- * Buy Zora Coins for a user using the real Zora SDK
- * @param {string} userAddress - Wallet address of user
- * @param {string} coinAddress - Contract address of the Zora coin
- * @param {string|number|bigint} ethAmount - Amount of ETH to spend (in ETH)
- * @param {object} [options] - Optional: { minAmountOut, tradeReferrer }
+ * Buy coins using the tradeCoin function from Zora SDK
+ * @param {Object} params - Buy parameters
+ * @param {Address} params.coinAddress - The coin contract address
+ * @param {Address} params.recipientAddress - Address to receive the purchased coins
+ * @param {string|number} params.amountInETH - Amount of ETH to spend (will be parsed with parseEther)
+ * @param {bigint|string|number} params.minAmountOut - Minimum amount of coins to receive (optional)
+ * @param {Address} params.referrerAddress - Optional referrer address
+ * @param {Object} walletClient - Viem wallet client
+ * @param {Object} publicClient - Viem public client
  * @returns {Promise<Object>} Transaction result
  */
-export const buyZoraCoins = async (
-  userAddress,
-  coinAddress,
-  ethAmount,
-  options = {}
-) => {
-  try {
-    const walletClient = getWalletClient(userAddress);
-    const orderSize =
-      typeof ethAmount === "bigint"
-        ? ethAmount
-        : parseEther(ethAmount.toString());
-    const params = {
+export const buyCoin = async (params, walletClient, publicClient) => {
+  const { coinAddress, recipientAddress, amountInETH, minAmountOut, referrerAddress } = params;
+  
+  if (!coinAddress || !recipientAddress || !amountInETH) {
+    throw new Error("Missing required parameters for coin purchase");
+  }
+
+  // Mock implementation for development without clients
+  if (!walletClient || !publicClient) {
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    return {
+      hash: `0x${Math.random().toString(16).slice(2, 42)}`,
+      trade: {
+        coinAmount: parseEther((amountInETH * 1000).toString()), // Simulated coin amount
+        ethAmount: parseEther(amountInETH.toString()),
+        recipient: recipientAddress,
+        timestamp: Math.floor(Date.now() / 1000)
+      }
+    };
+  }
+  
+  // Actual implementation using tradeCoin
+  return safeSDKCall(async () => {
+    const buyParams = {
       direction: "buy",
       target: coinAddress,
       args: {
-        recipient: userAddress,
-        orderSize,
-        minAmountOut: options.minAmountOut ?? 0n,
-        tradeReferrer: options.tradeReferrer,
-      },
+        recipient: recipientAddress,
+        orderSize: parseEther(amountInETH.toString()),
+        minAmountOut: minAmountOut ? (typeof minAmountOut === 'bigint' ? minAmountOut : parseEther(minAmountOut.toString())) : 0n,
+        tradeReferrer: referrerAddress || "0x0000000000000000000000000000000000000000"
+      }
     };
-    const result = await tradeCoin(params, walletClient, publicClient);
-    return result;
-  } catch (error) {
-    return { success: false, error: error.message };
-  }
+    
+    return await tradeCoin(buyParams, walletClient, publicClient);
+  }, `Failed to buy coin ${coinAddress}`);
 };
 
 /**
- * Sell Zora Coins for a user using the real Zora SDK
- * @param {string} userAddress - Wallet address of user
- * @param {string} coinAddress - Contract address of the Zora coin
- * @param {string|number|bigint} coinAmount - Amount of coins to sell (in coin decimals)
- * @param {object} [options] - Optional: { minAmountOut, tradeReferrer }
+ * Simulate a coin purchase to see expected output
+ * @param {Object} params - Simulation parameters
+ * @param {Address} params.coinAddress - The coin contract address
+ * @param {string|number} params.amountInETH - Amount of ETH to spend (will be parsed with parseEther)
+ * @param {Object} publicClient - Viem public client
+ * @returns {Promise<Object>} Simulation result
+ */
+export const simulateCoinPurchase = async (params, publicClient) => {
+  const { coinAddress, amountInETH } = params;
+  
+  if (!coinAddress || !amountInETH) {
+    throw new Error("Missing required parameters for purchase simulation");
+  }
+
+  // Mock implementation for development without client
+  if (!publicClient) {
+    await new Promise(resolve => setTimeout(resolve, 800));
+    const coinAmount = amountInETH * 1000; // Simplistic simulation
+    return {
+      orderSize: parseEther(amountInETH.toString()),
+      amountOut: parseEther(coinAmount.toString()),
+      priceImpact: amountInETH > 1 ? 0.015 : 0.005 // Higher impact for larger purchases
+    };
+  }
+  
+  // Actual implementation using simulateBuy
+  return safeSDKCall(async () => {
+    return await simulateBuy({
+      target: coinAddress,
+      requestedOrderSize: parseEther(amountInETH.toString()),
+      publicClient
+    });
+  }, `Failed to simulate purchase for coin ${coinAddress}`);
+};
+
+/**
+ * Sell coins using the tradeCoin function from Zora SDK
+ * @param {Object} params - Sell parameters
+ * @param {Address} params.coinAddress - The coin contract address
+ * @param {Address} params.recipientAddress - Address to receive ETH
+ * @param {string|number} params.coinAmount - Amount of coins to sell (will be parsed with parseEther)
+ * @param {string|number} params.minETHOut - Minimum ETH to receive (optional)
+ * @param {Address} params.referrerAddress - Optional referrer address
+ * @param {Object} walletClient - Viem wallet client
+ * @param {Object} publicClient - Viem public client
  * @returns {Promise<Object>} Transaction result
  */
-export const sellZoraCoins = async (
-  userAddress,
-  coinAddress,
-  coinAmount,
-  options = {}
-) => {
-  try {
-    const walletClient = getWalletClient(userAddress);
-    const orderSize =
-      typeof coinAmount === "bigint"
-        ? coinAmount
-        : parseEther(coinAmount.toString());
-    const params = {
+export const sellCoin = async (params, walletClient, publicClient) => {
+  const { coinAddress, recipientAddress, coinAmount, minETHOut, referrerAddress } = params;
+  
+  if (!coinAddress || !recipientAddress || !coinAmount) {
+    throw new Error("Missing required parameters for coin sale");
+  }
+
+  // Mock implementation for development without clients
+  if (!walletClient || !publicClient) {
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    const ethAmount = Number(coinAmount) / 1000; // Simple conversion for mocking
+    return {
+      hash: `0x${Math.random().toString(16).slice(2, 42)}`,
+      trade: {
+        coinAmount: parseEther(coinAmount.toString()),
+        ethAmount: parseEther(ethAmount.toString()),
+        recipient: recipientAddress,
+        timestamp: Math.floor(Date.now() / 1000)
+      }
+    };
+  }
+  
+  // Actual implementation using tradeCoin
+  return safeSDKCall(async () => {
+    const sellParams = {
       direction: "sell",
       target: coinAddress,
       args: {
-        recipient: userAddress,
-        orderSize,
-        minAmountOut: options.minAmountOut ?? 0n,
-        tradeReferrer: options.tradeReferrer,
-      },
+        recipient: recipientAddress,
+        orderSize: parseEther(coinAmount.toString()),
+        minAmountOut: minETHOut ? parseEther(minETHOut.toString()) : 0n,
+        tradeReferrer: referrerAddress || "0x0000000000000000000000000000000000000000"
+      }
     };
-    const result = await tradeCoin(params, walletClient, publicClient);
-    return result;
-  } catch (error) {
-    return { success: false, error: error.message };
-  }
+    
+    return await tradeCoin(sellParams, walletClient, publicClient);
+  }, `Failed to sell coin ${coinAddress}`);
 };
 
 /**
- * Get Zora Coin balance for a user
- * @param {string} userAddress - Wallet address of user
- * @param {string} coinAddress - Contract address of the Zora coin
- * @returns {Promise<number>} Balance of the user
+ * Create parameters for tradeCoin call (for use with WAGMI)
+ * @param {Object} tradeParams - Trade parameters exactly as specified in tradeCoin docs
+ * @returns {Object} Contract call parameters for WAGMI
  */
-export const getZoraCoinBalance = async (userAddress, coinAddress) => {
-  try {
-    // For now, mock response:
-    return Math.floor(Math.random() * 1000); // Random balance
-  } catch (error) {
-    return 0;
-  }
+export const createTradeCallParams = (tradeParams) => {
+  // Directly use tradeCoinCall
+  return tradeCoinCall(tradeParams);
 };
 
 /**
- * Helper function to generate prize distribution tiers
+ * Extract trade details from transaction logs
+ * @param {Object} receipt - Transaction receipt
+ * @param {string} direction - Trade direction ('buy' or 'sell')
+ * @returns {Object|null} Trade details or null if not found
+ */
+export const extractTradeFromLogs = (receipt, direction) => {
+  if (!receipt) return null;
+  
+  // Use getTradeFromLogs to extract trade details
+  return getTradeFromLogs(receipt, direction);
+};
+
+/**
+ * Fetch token details by address
+ * @param {Address} tokenAddress - Contract address of the token
+ * @returns {Promise<Object>} Token details
+ */
+export const getTokenDetails = async (tokenAddress) => {
+  if (!tokenAddress) throw new Error("Token address is required");
+  
+  return safeSDKCall(async () => {
+    // Mock implementation for development
+    await new Promise(resolve => setTimeout(resolve, 800));
+    
+    // Generate consistent mock data based on the address
+    const addressSum = tokenAddress.split('').reduce((sum, char) => sum + char.charCodeAt(0), 0);
+    const mockSupply = 990000000 - (addressSum % 500000);
+    const mockPrice = (0.000001 + (addressSum % 1000) / 10000000).toFixed(8);
+    const mockHolders = 50 + (addressSum % 500);
+    
+    return {
+      address: tokenAddress,
+      name: `${tokenName(tokenAddress)}`,
+      symbol: `${tokenSymbol(tokenAddress)}`,
+      decimals: 18,
+      totalSupply: mockSupply.toString(),
+      circulatingSupply: (mockSupply * 0.3).toString(),
+      priceUSD: mockPrice,
+      marketCapUSD: (mockSupply * 0.3 * parseFloat(mockPrice)).toFixed(2),
+      holders: mockHolders,
+      createdAt: new Date(Date.now() - (86400000 * 30)).toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+  }, `Failed to fetch token details for ${tokenAddress}`);
+};
+
+/**
+ * Get current token price and market data
+ * @param {Address} tokenAddress - Contract address of the token
+ * @returns {Promise<Object>} Current price and market data
+ */
+export const getTokenPriceData = async (tokenAddress) => {
+  if (!tokenAddress) throw new Error("Token address is required");
+  
+  return safeSDKCall(async () => {
+    // Mock implementation for development
+    await new Promise(resolve => setTimeout(resolve, 600));
+    
+    // Generate consistent mock data based on the address
+    const addressSum = tokenAddress.split('').reduce((sum, char) => sum + char.charCodeAt(0), 0);
+    const basePrice = 0.000001 + (addressSum % 1000) / 10000000;
+    
+    // Add some randomness to simulate price fluctuations
+    const priceNoise = (Math.random() - 0.5) * 0.00000005;
+    const currentPrice = basePrice + priceNoise;
+    
+    // Calculate 24h change with slight randomness
+    const change24h = ((Math.random() - 0.45) * 8).toFixed(2);
+    
+    return {
+      address: tokenAddress,
+      currentPriceUSD: currentPrice.toFixed(8),
+      change24hPercent: change24h,
+      high24h: (currentPrice * (1 + Math.random() * 0.05)).toFixed(8),
+      low24h: (currentPrice * (1 - Math.random() * 0.05)).toFixed(8),
+      volume24hUSD: (Math.random() * 5000 + 1000).toFixed(2),
+      updatedAt: new Date().toISOString(),
+    };
+  }, `Failed to fetch price data for ${tokenAddress}`);
+};
+
+/**
+ * Get price history for a token
+ * @param {Address} tokenAddress - Contract address of the token
+ * @param {string} timeframe - Timeframe for history (1h, 24h, 7d, 30d, etc.)
+ * @returns {Promise<Array>} Array of price data points for charting
+ */
+export const getTokenPriceHistory = async (tokenAddress, timeframe = '7d') => {
+  if (!tokenAddress) throw new Error("Token address is required");
+  
+  return safeSDKCall(async () => {
+    // Mock implementation for development
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Determine number of data points based on timeframe
+    let dataPoints = 24;
+    let intervalMs = 3600000; // 1 hour in milliseconds
+    
+    switch (timeframe) {
+      case '1h':
+        dataPoints = 60;
+        intervalMs = 60000; // 1 minute
+        break;
+      case '24h':
+        dataPoints = 24;
+        intervalMs = 3600000; // 1 hour
+        break;
+      case '7d':
+        dataPoints = 168;
+        intervalMs = 3600000; // 1 hour
+        break;
+      case '30d':
+        dataPoints = 30;
+        intervalMs = 86400000; // 1 day
+        break;
+      case '90d':
+        dataPoints = 90;
+        intervalMs = 86400000; // 1 day
+        break;
+      default:
+        dataPoints = 24;
+        intervalMs = 3600000; // 1 hour
+    }
+    
+    // Generate mock price data points
+    const endTime = Date.now();
+    const startTime = endTime - (dataPoints * intervalMs);
+    
+    // Get base price for consistency
+    const addressSum = tokenAddress.split('').reduce((sum, char) => sum + char.charCodeAt(0), 0);
+    const basePrice = 0.000001 + (addressSum % 1000) / 10000000;
+    
+    // Generate price data with random walk pattern
+    let currentPrice = basePrice;
+    const priceHistory = [];
+    
+    for (let i = 0; i < dataPoints; i++) {
+      const timestamp = new Date(startTime + (i * intervalMs));
+      
+      // Random walk with some momentum
+      const percentChange = (Math.random() - 0.5) * 0.03; // -1.5% to +1.5%
+      currentPrice = currentPrice * (1 + percentChange);
+      
+      // Add some randomness to volume
+      const volume = Math.random() * 1000 + 100;
+      
+      priceHistory.push({
+        timestamp: timestamp.toISOString(),
+        priceUSD: currentPrice.toFixed(8),
+        volumeUSD: volume.toFixed(2),
+      });
+    }
+    
+    return priceHistory;
+  }, `Failed to fetch price history for ${tokenAddress}`);
+};
+
+// Helper function to generate token name from address
+const tokenName = (address) => {
+  // Use the last 6 characters of the address to generate a name
+  const suffix = address.slice(-6);
+  const nameMap = {
+    '000000': 'Zero Token',
+    'ffffff': 'Peak Token',
+    'a': 'Alpha',
+    'b': 'Beta', 
+    'c': 'Crypto',
+    'd': 'Delta',
+    'e': 'Echo',
+    'f': 'Fox',
+  };
+  
+  // Check if the suffix starts with any of the patterns
+  for (const [pattern, name] of Object.entries(nameMap)) {
+    if (suffix.startsWith(pattern)) {
+      return `${name} ${suffix.substring(1, 3)}`;
+    }
+  }
+  
+  // Default name generation
+  return `Token ${suffix.substring(0, 3)}`;
+};
+
+// Helper function to generate token symbol from address
+const tokenSymbol = (address) => {
+  // Use last 6 characters of the address
+  const suffix = address.slice(-6);
+  
+  // Convert to uppercase symbols
+  return suffix.substring(0, 3).toUpperCase();
+};
+
+/**
+ * Generate prize distribution tiers
  * @param {number} amount - Total prize amount
  * @param {number} winnerCount - Number of winners
  * @returns {Array} Array of prize tiers with positions, percentages and winner counts
